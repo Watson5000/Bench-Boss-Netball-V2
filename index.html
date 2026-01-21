@@ -5,11 +5,14 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#111111" />
   <link rel="manifest" href="manifest.json">
-  <title>Bench Boss: Netball (V2)</title>
-<!-- Build: v2-001 -->
+  <title>Bench Boss: Netball</title>
+
+  <!-- Favicons / iOS -->
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
   <style>
     :root { --pad: 12px; --r: 14px; --b: 1px solid #ddd; }
-
     body { margin:0; font-family:-apple-system,system-ui,Segoe UI,Roboto,Arial; background:#f6f6f6; }
 
     header{
@@ -21,25 +24,24 @@
       border-bottom: 1px solid rgba(255,255,255,.10);
       box-shadow: 0 10px 24px rgba(0,0,0,.18);
     }
-    header h1{ margin:0; font-size:18px; letter-spacing:.2px; }
+    header h1{margin:0;font-size:18px;letter-spacing:.2px;}
     .brandRow{display:flex;align-items:center;gap:12px;min-width:0;}
     .brandLogo{
-      width:40px;height:40px;border-radius:12px;
-      object-fit:cover;
+      width:40px;height:40px;border-radius:12px;object-fit:cover;
       background:rgba(255,255,255,.10);
       border:1px solid rgba(255,255,255,.18);
-      box-shadow: 0 6px 14px rgba(0,0,0,.25);
+      box-shadow:0 6px 14px rgba(0,0,0,.25);
     }
     .brandTitle{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
     .badge{
-      font-size:11px; padding:4px 8px; border-radius:999px;
-      background: rgba(255,255,255,.12);
-      border: 1px solid rgba(255,255,255,.16);
-      font-weight:950; letter-spacing:.2px;
+      font-size:11px;padding:4px 8px;border-radius:999px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.16);
+      font-weight:950;letter-spacing:.2px;
     }
     header .sub{
-      opacity:.92; font-size:12px; margin-top:6px;
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      opacity:.92;font-size:12px;margin-top:6px;
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
     }
     header .sub .dot{opacity:.6;}
     header .sub .byline{opacity:.85;font-weight:800;}
@@ -51,40 +53,63 @@
       backdrop-filter: blur(6px);
     }
 
-    main { padding: var(--pad); display:grid; gap: var(--pad); }
-    .card { background:#fff; border: var(--b); border-radius: var(--r); padding: var(--pad); }
-    .row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    .grow { flex:1; min-width: 140px; }
-    .seg { display:flex; gap:8px; flex-wrap:wrap; }
-    .seg button { border: var(--b); background:#fff; padding:10px 12px; border-radius:999px; font-weight:900; }
+    main{padding:var(--pad);display:grid;gap:var(--pad);}
+    .card{background:#fff;border:var(--b);border-radius:var(--r);padding:var(--pad);}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+    .grow{flex:1;}
+    .seg{display:flex;gap:8px;flex-wrap:wrap;}
+    .seg button{border:var(--b);background:#fff;padding:10px 12px;border-radius:999px;font-weight:950;}
     .seg button.active{
-      background:#111; color:#fff; border-color:#111;
-      box-shadow: 0 0 0 4px rgba(0,0,0,0.12);
-      transform: scale(1.03);
+      background:#111;color:#fff;border-color:#111;
+      box-shadow:0 0 0 4px rgba(0,0,0,.12);
+      transform:scale(1.04);
     }
-    button.primary { background:#111; color:#fff; border:1px solid #111; border-radius:12px; padding:12px 14px; font-weight:950; }
-    button.ghost { background:#fff; border: var(--b); border-radius:12px; padding:12px 14px; font-weight:950; }
-    button.small { padding:8px 10px; border-radius:10px; font-weight:950; }
-    button.danger { border-color:#c62828; color:#c62828; }
-    button:disabled{ opacity:.55; }
+    button.primary{background:#111;color:#fff;border:1px solid #111;border-radius:12px;padding:12px 14px;font-weight:950;}
+    button.ghost{background:#fff;border:var(--b);border-radius:12px;padding:12px 14px;font-weight:950;}
+    button.small{padding:8px 10px;border-radius:10px;font-weight:950;}
+    button.danger{border-color:#c62828;color:#c62828;}
+    select,input[type="text"],input[type="date"]{border:var(--b);border-radius:12px;padding:10px 12px;font-size:16px;background:#fff;}
+    textarea{width:100%;min-height:70px;border:var(--b);border-radius:12px;padding:10px 12px;font-size:16px;background:#fff;}
+    .grid7{display:grid;grid-template-columns:1fr;gap:10px;}
+    @media (min-width:780px){.grid7{grid-template-columns:1fr 1fr;}}
+    .posRow{display:flex;gap:10px;align-items:center;}
+    .posTag{width:54px;min-width:54px;text-align:center;padding:8px 0;border-radius:10px;background:#f0f0f0;border:var(--b);font-weight:950;}
+    .muted{color:#666;font-size:13px;}
+    .list{display:grid;gap:8px;}
+    .pill{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:var(--b);border-radius:12px;background:#fff;gap:10px;}
+    .right{text-align:right;}
+    .kbd{font-family:ui-monospace,Menlo,monospace;font-size:12px;padding:2px 6px;border-radius:8px;background:#eee;border:1px solid #ddd;}
+    table{width:100%;border-collapse:collapse;}
+    th,td{border:var(--b);padding:8px 10px;text-align:left;}
+    th{background:#fafafa;}
+    details summary{cursor:pointer;font-weight:950;}
+    .warn{padding:10px 12px;border-radius:12px;border:1px solid #ffe082;background:#fff8e1;}
+    .scoreBig{font-size:40px;font-weight:950;line-height:1;}
 
-    select, input[type="text"], input[type="date"], input[type="number"] {
-      border: var(--b); border-radius:12px; padding:10px 12px; font-size:16px; background:#fff;
+    .modalBack{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.45);
+      display:none; align-items:center; justify-content:center;
+      padding:16px; z-index:9999;
     }
-    textarea { width:100%; min-height:70px; border: var(--b); border-radius:12px; padding:10px 12px; font-size:16px; background:#fff; }
+    .modal{
+      width:min(820px, 100%);
+      background:#fff;
+      border:1px solid #ddd;
+      border-radius:16px;
+      padding:14px;
+    }
+    .modal h3{margin:0 0 6px 0}
+    .modal textarea{min-height:160px;font-family:ui-monospace,Menlo,monospace;font-size:12px;}
 
-    .muted { color:#666; font-size:13px; }
-    .warn { padding:10px 12px; border-radius:12px; border:1px solid #ffe082; background:#fff8e1; }
-    .kbd { font-family: ui-monospace, Menlo, monospace; font-size:12px; padding:2px 6px; border-radius:8px; background:#eee; border:1px solid #ddd; }
-    .scoreBig { font-size:40px; font-weight:950; line-height:1; }
-    .pill { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; border: var(--b); border-radius:12px; background:#fff; gap:10px; }
-    .list { display:grid; gap:8px; }
-    .right { text-align:right; }
-
-    /* FINAL banner */
     .finalBanner{
-      display:none; padding:12px 14px; border-radius:14px; border:1px solid #ddd;
-      background:#f3f3f3; font-weight:950; margin-top:10px;
+      display:none;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid #ddd;
+      background:#f3f3f3;
+      font-weight:950;
+      margin-top:10px;
     }
     .finalBanner.win{ background:#e8f5e9; border-color:#c8e6c9; }
     .finalBanner.loss{ background:#ffebee; border-color:#ffcdd2; }
@@ -92,65 +117,26 @@
     .finalBanner .small{ font-size:12px; font-weight:900; opacity:.85; }
     .finalBanner .big{ font-size:18px; font-weight:950; margin-top:4px; }
 
-    /* Modal */
-    .modalBack{
-      position:fixed; inset:0; background:rgba(0,0,0,.45);
-      display:none; align-items:center; justify-content:center;
-      padding:16px; z-index:9999;
-    }
-    .modal{
-      width:min(920px, 100%);
-      background:#fff; border:1px solid #ddd; border-radius:16px;
-      padding:14px; max-height:86vh; overflow:auto;
-    }
-    .modal h3{margin:0 0 6px 0}
-
-    /* Positions grid */
-    .gridWrap{
-      overflow:auto;
-      border: 1px solid #ddd;
-      border-radius: 14px;
+    .rollBtn{
+      border:1px solid #ddd;
       background:#fff;
+      border-radius:12px;
+      padding:6px 8px;
+      font-weight:950;
+      line-height:1;
+      margin-right:8px;
     }
-    table.posGrid{
-      width:100%;
-      border-collapse:separate;
-      border-spacing:0;
-      min-width: 780px;
-    }
-    .posGrid th, .posGrid td{
-      border-bottom: 1px solid #eee;
-      border-right: 1px solid #eee;
-      padding: 8px;
-      vertical-align: top;
-      background:#fff;
-    }
-    .posGrid th:first-child, .posGrid td:first-child{
-      position: sticky; left: 0; z-index: 2;
-      background:#fafafa; border-right: 1px solid #ddd;
-      min-width: 86px; font-weight:950;
-    }
-    .posGrid thead th{
-      position: sticky; top: 0; z-index: 3;
-      background:#fafafa; border-bottom: 1px solid #ddd;
-      font-weight:950; text-align:center; min-width: 190px;
-    }
-    .colHead{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
-    .colTag{ display:inline-flex; align-items:center; gap:6px; font-weight:950; }
-    .liveCol{ background:#fff8e1 !important; }
-    .benchChips{ display:flex; flex-wrap:wrap; gap:6px; }
-    .chip{
-      border:1px solid #ddd; background:#fff; border-radius:999px;
-      padding:4px 8px; font-size:12px; font-weight:900; white-space:nowrap;
-    }
+    .card.collapsed .rollBody{ display:none; }
 
     .miniDanger{
-      border:1px solid #c62828; color:#c62828; background:#fff;
-      border-radius:12px; padding:10px 12px; font-weight:950; line-height:1;
+      border:1px solid #c62828;
+      color:#c62828;
+      background:#fff;
+      border-radius:12px;
+      padding:10px 12px;
+      font-weight:950;
+      line-height:1;
     }
-
-    .prefRow{ display:flex; gap:8px; flex-wrap:wrap; }
-    .prefRow input{ flex:1; min-width:120px; }
   </style>
 </head>
 
@@ -162,12 +148,10 @@
       <div>
         <div class="brandTitle">
           <h1>Bench Boss: Netball</h1>
-          <span class="badge">V2 BETA</span>
+          <span class="badge">BETA</span>
         </div>
         <div class="sub">
-          <span>Competitions → Teams → Games</span>
-          <span class="dot">•</span>
-          <span>All periods positions on one screen</span>
+          <span>Competition • teams • games • rotations • OT</span>
           <span class="dot">•</span>
           <span class="byline">Designed by Matt Watson</span>
           <span id="saveState" class="muted"></span>
@@ -184,32 +168,44 @@
   <section class="card" id="welcomeCard">
     <div style="font-weight:950; font-size:18px;">Welcome 👋</div>
     <div class="muted" style="margin-top:6px;">
-      Create a <b>Competition</b> (Parkville season / Tournament / Practice day), then add one or more <b>Teams</b> under it.
+      This version uses <b>Competition → Team → Games</b>.<br>
+      Start by adding a <b>Competition</b> (Parkville, Tournament, Practice), then add your team(s) under it.
     </div>
     <div style="height:10px"></div>
     <button class="primary" id="welcomeAddCompBtn">+ Add Competition</button>
   </section>
 
-  <!-- TOP: COMPETITION + TEAMS + GAME NAV -->
+  <!-- TOP: COMP + TEAM + GAME -->
   <section class="card" id="topCard">
     <div class="row">
       <div class="grow">
         <div class="muted">Competitions</div>
         <div class="seg" id="compSeg"></div>
       </div>
-      <button class="primary small" id="addCompBtn">+ Competition</button>
-      <button class="ghost small danger" id="deleteCompBtn">Delete</button>
+      <button class="primary small" id="addCompBtn">+ Add Comp</button>
+      <button class="ghost small danger" id="deleteCompBtn">Delete Comp</button>
     </div>
 
     <div style="height:12px"></div>
 
     <div class="row">
       <div class="grow">
-        <div class="muted">Teams (in this competition)</div>
+        <div class="muted">Competition name</div>
+        <input id="compName" type="text" placeholder="e.g. Parkville Winter 2026" />
+      </div>
+
+      <div class="grow">
+        <div class="muted">Format (this competition)</div>
+        <div style="font-weight:950; font-size:16px;"><span id="formatLabel">4 quarters</span></div>
+      </div>
+
+      <div class="grow">
+        <div class="muted">Teams (in this comp)</div>
         <div class="seg" id="teamSeg"></div>
       </div>
-      <button class="primary small" id="addTeamBtn">+ Team</button>
-      <button class="ghost small danger" id="deleteTeamBtn">Delete</button>
+
+      <button class="primary small" id="addTeamBtn">+ Add Team</button>
+      <button class="ghost small danger" id="deleteTeamBtn">Delete Team</button>
     </div>
 
     <div style="height:12px"></div>
@@ -221,34 +217,29 @@
       </div>
 
       <div class="grow">
-        <div class="muted">Format</div>
-        <div style="font-weight:950; font-size:16px;"><span id="formatLabel">4 quarters</span></div>
-      </div>
-
-      <div class="grow">
         <div class="muted">Current Game</div>
         <div style="font-weight:950; font-size:18px;">
-          <span id="gameLabel">Game 1</span> <span class="muted" id="gameCountLabel"></span>
+          <span id="roundLabel">Game 1</span> <span class="muted" id="roundCountLabel"></span>
         </div>
       </div>
 
       <button class="ghost small" id="prevGameBtn">◀ Prev</button>
       <button class="ghost small" id="nextGameBtn">Next ▶</button>
       <button class="primary small" id="addGameBtn">+ Add Game</button>
-      <button class="ghost small danger" id="resetTeamBtn">Reset Team</button>
+      <button class="ghost small danger" id="resetTeamBtn" title="Reset this team (players + games)">Reset Team</button>
     </div>
 
     <div class="row" style="margin-top:10px;">
       <div class="muted">Games:</div>
-      <div class="seg" id="gameSeg"></div>
+      <div class="seg" id="roundSeg"></div>
     </div>
 
     <div style="height:10px"></div>
 
     <div class="row">
       <div class="grow">
-        <div class="muted">Game name (optional)</div>
-        <input id="gameName" type="text" placeholder="e.g. vs Hawks / Semi Final" />
+        <div class="muted">Game name</div>
+        <input id="roundName" type="text" placeholder="e.g. vs Hawks / Semi Final" />
       </div>
       <div class="grow">
         <div class="muted">Date</div>
@@ -258,35 +249,47 @@
         <div class="muted">Opponent</div>
         <input id="opponent" type="text" placeholder="e.g. Raptors" />
       </div>
-
       <div class="row">
-        <button class="ghost small" id="resetGameBtn">Reset This Game</button>
-        <button class="ghost small" id="playersBtn">Players</button>
-        <button class="primary small" id="syncBtn">Sync</button>
+        <button class="ghost small" id="newGameBtn" title="Reset this game only">Reset This Game</button>
+        <button class="ghost small" id="copySummaryBtn">Copy Game Summary</button>
+        <button class="ghost small" id="syncBtn">Sync</button>
       </div>
     </div>
   </section>
 
-  <!-- LIVE -->
-  <section class="card" id="liveCard">
+  <!-- PLAYERS -->
+<section class="card" id="setupCard">
+  <div class="row">
+    <div class="grow">
+      <div style="font-weight:950;margin-bottom:6px;">Players (for this team)</div>
+      <div class="muted">Tap to edit names + preferred positions</div>
+    </div>
+    <button class="primary small" id="editPlayersBtn">Edit Players</button>
+  </div>
+
+  <div style="height:10px"></div>
+  <div class="muted" id="playersQuickSummary"></div>
+</section>
+
+  <!-- PERIOD / SCORE / TIMER -->
+  <section class="card" id="periodCard">
     <div class="row">
-      <div class="grow" style="font-weight:950;">Live (scoring + timer)</div>
-      <div class="muted">Applies to the <b>LIVE</b> period only</div>
+      <div class="grow" style="font-weight:950;">Period (editing)</div>
+      <div class="seg" id="periodSeg"></div>
     </div>
 
-    <div style="height:10px"></div>
+    <div class="muted" style="margin-top:8px;">
+      Editing: <b id="editingPeriod">Q1</b> • Live scoring: <b id="livePeriodLabel">Q1</b>
+    </div>
 
-    <div class="row">
-      <div class="grow">
-        <div class="muted">Live period</div>
-        <div class="seg" id="livePeriodSeg"></div>
-      </div>
-
+    <div class="row" style="margin-top:10px;">
+      <button class="ghost small" id="setLiveToEditingBtn">Set live = editing</button>
       <button class="primary small" id="periodFinishedBtn">Period finished → Next</button>
       <button class="primary small" id="startOTBtn" style="display:none;">Start OT (OT1 + OT2)</button>
       <button class="ghost small danger" id="reopenBtn" style="display:none;">Re-open game</button>
     </div>
 
+    <!-- TIMER -->
     <div class="row" style="margin-top:10px;">
       <div class="muted">Timer:</div>
       <div style="font-weight:950; font-size:18px;">
@@ -295,8 +298,6 @@
       </div>
 
       <select id="minutesSelect" style="max-width:170px;"></select>
-      <select id="otMinutesSelect" style="max-width:170px;"></select>
-
       <button class="primary small" id="timerStartBtn">Start</button>
       <button class="ghost small" id="timerResetBtn">Reset</button>
     </div>
@@ -308,6 +309,7 @@
         <div class="scoreBig" id="homeScore">0</div>
         <div class="muted" id="homeLabel">Home</div>
       </div>
+
       <div class="right">
         <div class="scoreBig" id="awayScore">0</div>
         <div class="muted" id="awayLabel">Away</div>
@@ -315,7 +317,7 @@
     </div>
 
     <div class="finalBanner" id="finalBanner">
-      <div class="small">FINAL</div>
+      <div class="small" id="finalBannerTop">FINAL</div>
       <div class="big" id="finalBannerText">Result</div>
     </div>
 
@@ -331,64 +333,75 @@
 
       <button class="primary" id="awayPlus">Away +1</button>
       <button class="ghost" id="awayMinus">Away −1</button>
-      <button class="ghost" id="undoBtn">Undo</button>
+      <button class="ghost" id="undoBtn" title="Undo last event (Live period)">Undo</button>
     </div>
 
     <div style="height:10px"></div>
     <div class="warn muted" id="liveWarnBox" style="display:none;"></div>
-
-    <div style="height:10px"></div>
-    <details>
-      <summary>Goal Log (LIVE)</summary>
-      <div style="height:10px"></div>
-      <div class="list" id="goalLog"></div>
-    </details>
   </section>
 
   <!-- POSITIONS -->
   <section class="card" id="positionsCard">
     <div class="row">
-      <div class="grow" style="font-weight:950;">Playing Positions (this game)</div>
-      <div class="muted">All periods on one screen • Bench shown per period</div>
+      <div class="grow" style="font-weight:950;">Positions (On Court)</div>
+      <div class="muted">Bench auto-updates (editing period)</div>
+    </div>
+
+    <div class="row" style="margin-top:10px;">
+      <div class="grow" style="font-weight:950;">Editing period (positions)</div>
+      <div class="seg" id="periodSegPos"></div>
     </div>
 
     <div style="height:10px"></div>
 
-    <div class="row" id="tournTools" style="display:none;">
-      <button class="primary small" id="generateDayBtn">Generate Day</button>
-      <button class="ghost small" id="addGameHereBtn">Add Game</button>
-
-      <label class="pill" style="padding:8px 10px;">
-        <input type="checkbox" id="finalsToggle" />
-        <span style="font-weight:950;">Activate Finals</span>
-      </label>
-
-      <button class="ghost small" id="addSemiBtn" style="display:none;">Add Semi Final</button>
-      <button class="ghost small" id="addGFBtn" style="display:none;">Add Grand Final</button>
-
-      <div class="muted">Generate fills remaining pool games from your current point. Finals are manual.</div>
+    <div class="row" style="margin-bottom:10px;">
+      <div class="muted">Copy positions from this period to:</div>
+      <select id="copyTargetPeriod" style="max-width:170px;"></select>
+      <button class="ghost small" id="copyPositionsBtn">Copy</button>
+      <button class="ghost small" id="copyToNextBtn">Copy to next</button>
     </div>
 
-    <div style="height:10px"></div>
+    <div class="grid7" id="positionsGrid"></div>
 
-    <div class="gridWrap">
-      <table class="posGrid" id="posGrid"></table>
-    </div>
-
-    <div style="height:10px"></div>
+    <div style="height:12px"></div>
 
     <div class="row">
-      <div class="muted">Copy positions:</div>
-      <select id="copyFromSel" style="max-width:170px;"></select>
-      <select id="copyToSel" style="max-width:170px;"></select>
-      <button class="ghost small" id="copyBtn">Copy</button>
+      <div class="grow" style="font-weight:950;">Bench (this period)</div>
+      <div class="muted" id="benchCount"></div>
     </div>
+    <div class="list" id="benchList"></div>
+  </section>
 
-    <div style="height:10px"></div>
+  <!-- STATS -->
+  <section class="card" id="statsCard">
+    <div class="row">
+      <div class="grow" style="font-weight:950;">Stats</div>
+      <div class="muted">This game</div>
+    </div>
+    <div style="height:12px"></div>
+    <div class="list" id="statsList"></div>
+
+    <div style="height:12px"></div>
     <details>
-      <summary>Totals (regulation only)</summary>
+      <summary>Goal Log (LIVE period)</summary>
       <div style="height:10px"></div>
-      <div class="list" id="totalsList"></div>
+      <div class="list" id="goalLog"></div>
+    </details>
+  </section>
+
+  <!-- SUMMARY -->
+  <section class="card" id="summaryCard">
+    <div class="row">
+      <div class="grow" style="font-weight:950;">Period Summary (this game)</div>
+    </div>
+    <div style="height:10px"></div>
+    <div id="periodTableWrap"></div>
+
+    <div style="height:12px"></div>
+    <details>
+      <summary>All Periods Positions</summary>
+      <div style="height:10px"></div>
+      <div id="allPeriodsPositions"></div>
     </details>
   </section>
 
@@ -406,32 +419,34 @@
   <div class="modalBack" id="howtoBack">
     <div class="modal">
       <div class="row">
-        <h3 class="grow">Quick How-to (V2)</h3>
+        <h3 class="grow">Quick How-to</h3>
         <button class="ghost small" id="howtoClose">Close</button>
       </div>
 
       <div class="muted">
-        <div style="font-weight:950; color:#111; margin:10px 0 6px;">Competitions → Teams → Games</div>
-        <div>• Make a Competition (Parkville, Tournament, Practice).</div>
-        <div>• Add Teams under that competition (players can differ per comp/team).</div>
+        <div style="font-weight:950; color:#111; margin:10px 0 6px;">Competition → Team → Games</div>
+        <div>• Create a <b>Competition</b> (Parkville / Tournament / Practice).</div>
+        <div>• Add one or more <b>Teams</b> under that competition.</div>
+        <div>• Each team has its own <b>Games</b>.</div>
 
-        <div style="font-weight:950; color:#111; margin:12px 0 6px;">Players modal</div>
-        <div>• Tap <b>Players</b> to add/edit names + 2 preferred positions.</div>
-        <div>• Preferred positions accept typing: type <span class="kbd">W</span> then pick <b>WA</b>/<b>WD</b>, etc.</div>
+        <div style="font-weight:950; color:#111; margin:12px 0 6px;">Editing vs Live</div>
+        <div>• <b>Editing</b> period = set on-court positions + bench plan.</div>
+        <div>• <b>Live</b> period = where scoring + undo applies.</div>
+        <div>• Use <b>Set live = editing</b> to align them.</div>
 
-        <div style="font-weight:950; color:#111; margin:12px 0 6px;">Positions screen</div>
-        <div>• You can see all periods for this game on one screen.</div>
-        <div>• Each dropdown shows <b>Name • court-time</b> (regulation only).</div>
-        <div>• Bench is shown per period so you can call it out.</div>
+        <div style="font-weight:950; color:#111; margin:12px 0 6px;">Bench planning</div>
+        <div>• Choose each bench player’s <b>Next</b> position.</div>
+        <div>• Tap <b>Sub In</b> to put them straight into that position.</div>
+        <div>• Court time is inferred from your plan until you <b>Sub In</b>, then it can become <b>0.5</b> for that period.</div>
 
-        <div style="font-weight:950; color:#111; margin:12px 0 6px;">Generate Day (tournament only)</div>
-        <div>• Asks how many pool games you want today.</div>
-        <div>• Keeps games already played/filled, and generates from “where you are now”.</div>
-        <div>• If a target half already has selections, it will ask to <b>overwrite</b> or <b>fill blanks only</b>.</div>
+        <div style="font-weight:950; color:#111; margin:12px 0 6px;">Timer + halftime alert</div>
+        <div>• League mode (quarters) can optionally alert at halfway (“Make a change”).</div>
+        <div>• Halves mode does <b>not</b> show the halfway alert.</div>
 
         <div style="font-weight:950; color:#111; margin:12px 0 6px;">Overtime</div>
-        <div>• If tied at end, start <b>OT</b> → app plays <b>OT1 and OT2 always</b>.</div>
-        <div>• In <b>OT2</b>, if time hits 0 and still tied → flips to <b>play-on</b> until a team leads by <b>2</b> (auto-end).</div>
+        <div>• If tied at end → <b>Start OT</b> (always plays <b>OT1 and OT2</b>).</div>
+        <div>• In OT2, if time hits 0 and still tied → flips to <b>play-on</b> until a team leads by <b>2</b> (auto-end).</div>
+        <div>• Use <b>Re-open game</b> if you ended by mistake.</div>
       </div>
 
       <div class="row" style="margin-top:12px;">
@@ -442,92 +457,11 @@
     </div>
   </div>
 
-  <!-- ADD COMP MODAL -->
-  <div class="modalBack" id="compBack">
-    <div class="modal">
-      <div class="row">
-        <h3 class="grow">Add Competition</h3>
-        <button class="ghost small" id="compClose">Close</button>
-      </div>
-      <div class="row">
-        <div class="grow">
-          <div class="muted">Competition name</div>
-          <input id="newCompName" type="text" placeholder="e.g. Parkville Season / Tournament Day / Practice Round Robin" />
-        </div>
-      </div>
-      <div class="row" style="margin-top:10px;">
-        <button class="primary" id="compCreateBtn">Create</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ADD TEAM MODAL -->
-  <div class="modalBack" id="teamBack">
-    <div class="modal">
-      <div class="row">
-        <h3 class="grow">Add Team</h3>
-        <button class="ghost small" id="teamClose">Close</button>
-      </div>
-      <div class="row">
-        <div class="grow">
-          <div class="muted">Team name</div>
-          <input id="newTeamName" type="text" placeholder="e.g. Tigers U15 / Tournament Squad" />
-        </div>
-      </div>
-      <div style="height:10px"></div>
-      <div class="row">
-        <div class="grow">
-          <div class="muted">Format</div>
-          <label style="display:flex;align-items:center;gap:8px;margin:8px 0;">
-            <input type="radio" name="newFormat" value="quarters" checked />
-            <span><b>4 quarters</b> (league)</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:8px;margin:8px 0;">
-            <input type="radio" name="newFormat" value="halves" />
-            <span><b>2 halves</b> (tournament)</span>
-          </label>
-          <div class="muted">Tournament default <b>8 min</b>. League default <b>10 min</b>. OT default <b>3 min</b>.</div>
-        </div>
-      </div>
-      <div class="row" style="margin-top:10px;">
-        <button class="primary" id="teamCreateBtn">Create</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- PLAYERS MODAL -->
-  <div class="modalBack" id="playersBack">
-    <div class="modal">
-      <div class="row">
-        <h3 class="grow">Players</h3>
-        <button class="ghost small" id="playersClose">Close</button>
-      </div>
-
-      <div class="muted">
-        Add/edit names + 2 preferred positions (optional). Max 15. Min 7.
-      </div>
-
-      <div style="height:10px"></div>
-      <div class="row">
-        <button class="primary small" id="addPlayerBtn">+ Add player</button>
-      </div>
-
-      <div style="height:12px"></div>
-
-      <datalist id="posList">
-        <option value="GS"></option><option value="GA"></option><option value="WA"></option>
-        <option value="C"></option><option value="WD"></option><option value="GD"></option><option value="GK"></option>
-      </datalist>
-
-      <div class="list" id="playersList"></div>
-    </div>
-  </div>
-
-  <!-- SYNC MODAL -->
+  <!-- SYNC MODAL (TEAM EXPORT/IMPORT) -->
   <div class="modalBack" id="syncBack">
     <div class="modal">
       <div class="row">
-        <h3 class="grow">Sync (Export / Import)</h3>
+        <h3 class="grow">Sync (Export / Import) – This Team</h3>
         <button class="ghost small" id="syncClose">Close</button>
       </div>
       <div class="muted">
@@ -543,1802 +477,1939 @@
       </div>
     </div>
   </div>
+
+  <!-- ADD COMP MODAL -->
+  <div class="modalBack" id="compBack">
+    <div class="modal">
+      <div class="row">
+        <h3 class="grow">Add Competition</h3>
+        <button class="ghost small" id="compClose">Close</button>
+      </div>
+
+      <div class="row">
+        <div class="grow">
+          <div class="muted">Competition name</div>
+          <input id="newCompName" type="text" placeholder="e.g. Parkville Winter 2026 / State Titles" />
+        </div>
+      </div>
+
+      <div style="height:10px"></div>
+
+      <div class="row">
+        <div class="grow">
+          <div class="muted">Format</div>
+          <label style="display:flex;align-items:center;gap:8px;margin:8px 0;">
+            <input type="radio" name="newCompFormat" value="quarters" checked />
+            <span><b>4 quarters</b> (league)</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;margin:8px 0;">
+            <input type="radio" name="newCompFormat" value="halves" />
+            <span><b>2 halves</b> (tournament)</span>
+          </label>
+          <div class="muted">Tournament default <b>8 min</b>. League default <b>10 min</b>. OT default <b>3 min</b>.</div>
+        </div>
+      </div>
+
+      <div style="height:12px"></div>
+      <button class="primary" id="compCreateBtn">Create Competition</button>
+    </div>
+  </div>
+
+  <!-- ADD TEAM MODAL -->
+  <div class="modalBack" id="teamBack">
+    <div class="modal">
+      <div class="row">
+        <h3 class="grow">Add Team (under this competition)</h3>
+        <button class="ghost small" id="teamClose">Close</button>
+      </div>
+
+      <div class="row">
+        <div class="grow">
+          <div class="muted">Team name</div>
+          <input id="newTeamName" type="text" placeholder="e.g. Tigers U15 / Tigers A" />
+        </div>
+      </div>
+
+      <div style="height:12px"></div>
+
+      <div class="row">
+        <div class="grow">
+          <div class="muted">Import players from (optional)</div>
+          <select id="importPlayersSource"></select>
+        </div>
+        <button class="ghost small" id="importPlayersBtn" type="button">Import Players</button>
+      </div>
+      <div class="muted" id="importPlayersStatus" style="margin-top:6px;"></div>
+
+      <div style="height:12px"></div>
+      <button class="primary" id="teamCreateBtn">Create Team</button>
+    </div>
+  </div>
+<!-- PLAYERS MODAL -->
+<div class="modalBack" id="playersBack">
+  <div class="modal">
+    <div class="row">
+      <h3 class="grow">Players</h3>
+      <button class="ghost small" id="playersClose">Close</button>
+    </div>
+
+    <div class="muted" style="margin-bottom:10px;">
+      Enter player name and up to 2 preferred positions
+    </div>
+
+    <table class="playersTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Pos 1</th>
+          <th>Pos 2</th>
+          <th>Del</th>
+        </tr>
+      </thead>
+      <tbody id="playersTableBody"></tbody>
+    </table>
+
+    <div class="row" style="margin-top:12px;">
+      <button class="ghost small" id="playersAddRow">+ Add</button>
+      <div class="grow"></div>
+      <button class="primary small" id="playersSave">Save</button>
+    </div>
+  </div>
+</div>
 </main>
 
 <script>
-/* =========================
-   STORAGE + CONSTANTS
-========================= */
-const BB2_INDEX_KEY = "bb2_comp_index_v1";
-const BB2_TEAM_PREFIX = "bb2_team_v1_";
-const HOWTO_FLAG_KEY  = "bb2_howto_seen_v1";
+  /* ===============================
+     STORAGE + CONSTANTS
+  =============================== */
+  const APP_KEY = "bb_competitions_v1_cleanstart";
+  const HOWTO_FLAG_KEY = "bb_howto_seen_v1";
 
-const POSITIONS = ["GS","GA","WA","C","WD","GD","GK"];
-const LEAGUE_MINUTES = [10,12,15];
-const TOURN_MINUTES  = [5,6,7,8,9,10];
-const OT_MINUTES_OPTS = [2,3,4,5];
+  // Legacy keys (if you ever want to migrate from your previous build)
+  const LEGACY_TEAMS_INDEX_KEY = "netball_teams_index_v3_notdefault";
+  const LEGACY_TEAM_KEY_PREFIX = "netball_team_v3_";
 
-const MIN_PLAYERS = 7;
-const MAX_PLAYERS = 15;
+  const POSITIONS = ["GS","GA","WA","C","WD","GD","GK"];
 
-/* =========================
-   HELPERS
-========================= */
-function safeJSONParse(raw){ try { return raw ? JSON.parse(raw) : null; } catch { return null; } }
-function saveJSON(key, obj){ localStorage.setItem(key, JSON.stringify(obj)); }
-function loadJSON(key){ return safeJSONParse(localStorage.getItem(key)); }
+  const LEAGUE_MINUTES = [10,12,15];
+  const TOURN_MINUTES  = [5,6,7,8,9,10];
 
-function uid(){ return crypto.randomUUID(); }
-function escapeHtml(str){ return (str||"").replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-function clamp0(n){ return Math.max(0, n); }
+  const OT_DEFAULT     = 3;
+  const TOURN_DEFAULT  = 8;
+  const LEAGUE_DEFAULT = 10;
 
-function markHowtoSeen(){ localStorage.setItem(HOWTO_FLAG_KEY, "1"); }
-function hasSeenHowto(){ return localStorage.getItem(HOWTO_FLAG_KEY) === "1"; }
+  const MIN_PLAYERS = 7;
+  const MAX_PLAYERS = 15;
 
-/* =========================
-   DATA MODEL
-========================= */
-function defaultIndex(){ return { comps: [], currentCompId: null }; }
+  let pendingImportedPlayers = null;
 
-function teamKey(compId, teamId){ return `${BB2_TEAM_PREFIX}${compId}_${teamId}`; }
+  function safeJSONParse(raw){ try { return raw ? JSON.parse(raw) : null; } catch { return null; } }
 
-function basePeriods(format){ return (format==="halves") ? 2 : 4; }
-function periodLabel(teamState, idx){
-  const base = basePeriods(teamState.format);
-  if(idx < base) return (teamState.format==="halves") ? `H${idx+1}` : `Q${idx+1}`;
-  return `OT${idx-base+1}`;
-}
+  function loadApp(){ return safeJSONParse(localStorage.getItem(APP_KEY)); }
+  function saveApp(app){ localStorage.setItem(APP_KEY, JSON.stringify(app)); }
 
-function emptyPeriod(){ return { assignments:{}, homeScore:0, awayScore:0, events:[] }; }
-
-function newPlayers10(){
-  return Array.from({length:10}, (_,i)=>({ id: uid(), name:`Player ${i+1}`, pref1:"", pref2:"" }));
-}
-
-function initPlayerStats(players){
-  const s = {};
-  for(const p of players){
-    s[p.id] = { goalsTotal:0, goalsByP:Array.from({length:12}, ()=>0) };
-  }
-  return s;
-}
-
-function newEmptyGame(idx, players, format){
-  const baseP = basePeriods(format);
-  const baseMins = (format==="halves") ? 8 : 10;
-
-  return {
-    id: uid(),
-    idx,
-    type: "normal", // "normal" | "semi" | "grandfinal"
-    gameName: "",
-    gameDate: "",
-    opponent: "",
-    notes: "",
-
-    liveP: 0,
-
-    otCount: 0,
-    otMinutes: 3,
-    gameEnded: false,
-
-    baseMinutes: baseMins,
-    timerRunning: false,
-    timerRemaining: baseMins*60,
-    timerLastTick: 0,
-    timerMode: "countdown",
-    timerExtraElapsed: 0,
-
-    periods: Array.from({length:baseP}, ()=>emptyPeriod()),
-    playerStats: initPlayerStats(players),
-    playCredits: {}
-  };
-}
-
-function defaultTeamState(compId, teamId, format){
-  const players = newPlayers10();
-  return {
-    teamId, compId,
-    teamName: "",
-    format,
-    players,
-    games: [newEmptyGame(1, players, format)],
-    currentGameIndex: 0,
-    finalsActive: false
-  };
-}
-
-/* =========================
-   APP STATE
-========================= */
-let indexState = loadJSON(BB2_INDEX_KEY) || defaultIndex();
-let teamState = null;
-
-function hasComps(){ return Array.isArray(indexState.comps) && indexState.comps.length > 0; }
-function currentComp(){
-  if(!hasComps()) return null;
-  return indexState.comps.find(c=>c.id===indexState.currentCompId) || indexState.comps[0];
-}
-function currentTeamId(){
-  const c = currentComp();
-  return c?.currentTeamId || c?.teamIds?.[0] || null;
-}
-function currentGame(){ return teamState.games[teamState.currentGameIndex]; }
-
-function totalPeriods(game){
-  return basePeriods(teamState.format) + (game.otCount || 0);
-}
-
-/* =========================
-   INTEGRITY + SAVE
-========================= */
-function ensureGameIntegrity(g){
-  if(g.type == null) g.type = "normal";
-  if(g.idx == null) g.idx = 1;
-  if(g.gameName == null) g.gameName = "";
-  if(g.gameDate == null) g.gameDate = "";
-  if(g.opponent == null) g.opponent = "";
-  if(g.notes == null) g.notes = "";
-
-  if(g.otMinutes == null) g.otMinutes = 3;
-  if(g.otCount == null) g.otCount = 0;
-  if(g.gameEnded == null) g.gameEnded = false;
-
-  if(g.timerMode == null) g.timerMode = "countdown";
-  if(g.timerExtraElapsed == null) g.timerExtraElapsed = 0;
-  if(g.timerRunning == null) g.timerRunning = false;
-  if(g.timerLastTick == null) g.timerLastTick = 0;
-
-  if(g.baseMinutes == null){
-    g.baseMinutes = (teamState.format==="halves") ? 8 : 10;
-  }
-  if(g.timerRemaining == null) g.timerRemaining = g.baseMinutes*60;
-  if(g.liveP == null) g.liveP = 0;
-
-  if(!Array.isArray(g.periods)) g.periods = [];
-  const need = totalPeriods(g);
-  while(g.periods.length < need) g.periods.push(emptyPeriod());
-
-  if(!g.playerStats) g.playerStats = {};
-  for(const p of teamState.players){
-    if(!g.playerStats[p.id]){
-      g.playerStats[p.id] = { goalsTotal:0, goalsByP:Array.from({length:12}, ()=>0) };
-    } else {
-      if(!Array.isArray(g.playerStats[p.id].goalsByP)) g.playerStats[p.id].goalsByP = Array.from({length:12}, ()=>0);
-      while(g.playerStats[p.id].goalsByP.length < 12) g.playerStats[p.id].goalsByP.push(0);
-    }
-  }
-
-  if(!g.playCredits) g.playCredits = {};
-}
-
-function ensureTeamIntegrity(){
-  if(!teamState) return;
-
-  if(!Array.isArray(teamState.players)) teamState.players = newPlayers10();
-  if(teamState.players.length < MIN_PLAYERS) teamState.players = newPlayers10();
-  if(teamState.players.length > MAX_PLAYERS) teamState.players = teamState.players.slice(0, MAX_PLAYERS);
-
-  if(!Array.isArray(teamState.games) || teamState.games.length === 0){
-    teamState.games = [newEmptyGame(1, teamState.players, teamState.format)];
-    teamState.currentGameIndex = 0;
-  }
-  if(teamState.currentGameIndex == null) teamState.currentGameIndex = 0;
-  teamState.currentGameIndex = Math.max(0, Math.min(teamState.currentGameIndex, teamState.games.length-1));
-
-  for(const g of teamState.games) ensureGameIntegrity(g);
-}
-
-function saveAll(){
-  saveJSON(BB2_INDEX_KEY, indexState);
-  const c = currentComp();
-  if(c && teamState){
-    saveJSON(teamKey(c.id, teamState.teamId), teamState);
-  }
-  const el = document.getElementById("saveState");
-  if(el){
+  function markSaved(){
+    const el = document.getElementById("saveState");
     el.textContent = "Saved ✓";
-    setTimeout(()=> el.textContent="", 700);
-  }
-}
-
-/* =========================
-   LOAD TEAM
-========================= */
-function loadCurrentTeam(){
-  const c = currentComp();
-  if(!c) { teamState = null; return; }
-  const tid = currentTeamId();
-  if(!tid){ teamState = null; return; }
-  const raw = loadJSON(teamKey(c.id, tid));
-  teamState = raw || defaultTeamState(c.id, tid, "quarters");
-  ensureTeamIntegrity();
-}
-
-/* =========================
-   COURT TIME (REGULATION ONLY) + HYBRID 0.5
-========================= */
-function getPlayCredit(g, pIdx, pid){
-  if(!g.playCredits) g.playCredits = {};
-  if(!g.playCredits[pIdx]) g.playCredits[pIdx] = {};
-  return Number(g.playCredits[pIdx][pid] || 0);
-}
-function setPlayCreditMax(g, pIdx, pid, val){
-  if(!g.playCredits) g.playCredits = {};
-  if(!g.playCredits[pIdx]) g.playCredits[pIdx] = {};
-  g.playCredits[pIdx][pid] = Math.max(Number(g.playCredits[pIdx][pid]||0), val);
-}
-function inferredPlayedForPeriod(g, pIdx, pid){
-  const a = g.periods[pIdx]?.assignments || {};
-  return Object.values(a).includes(pid) ? 1 : 0;
-}
-function regulationPeriodsPlayedHybrid(g, pid){
-  const regMax = basePeriods(teamState.format);
-  let sum = 0;
-  for(let i=0;i<regMax;i++){
-    const credit = getPlayCredit(g, i, pid);
-    sum += credit > 0 ? credit : inferredPlayedForPeriod(g, i, pid);
-  }
-  return sum;
-}
-function fmtPlayed(n){
-  return (Math.abs(n - Math.round(n)) < 1e-9) ? String(Math.round(n)) : n.toFixed(1);
-}
-
-/* =========================
-   BENCH (per period)
-========================= */
-function assignedIdsForPeriod(g, pIdx){
-  const a = g.periods[pIdx]?.assignments || {};
-  return new Set(Object.values(a).filter(Boolean));
-}
-function benchPlayersForPeriod(g, pIdx){
-  const assigned = assignedIdsForPeriod(g, pIdx);
-  return teamState.players.filter(p=>!assigned.has(p.id));
-}
-
-/* =========================
-   SCORING / EVENTS
-========================= */
-function totalHome(g){ return g.periods.reduce((s,p)=>s+(p.homeScore||0),0); }
-function totalAway(g){ return g.periods.reduce((s,p)=>s+(p.awayScore||0),0); }
-function isDraw(g){ return totalHome(g) === totalAway(g); }
-function isOTIndex(pIdx){ return pIdx >= basePeriods(teamState.format); }
-function canStartOT(g){ return g.gameEnded && isDraw(g) && (g.otCount||0) === 0; }
-
-function pushEvent(g, pIdx, type, payload){
-  g.periods[pIdx].events.push({ type, pIdx, payload, t: Date.now() });
-}
-
-function playerById(pid){ return teamState.players.find(p=>p.id===pid); }
-
-function scoreTeam(which, delta){
-  const g = currentGame();
-  if(g.gameEnded) return;
-  const pIdx = g.liveP;
-
-  if(which==="home") g.periods[pIdx].homeScore = clamp0((g.periods[pIdx].homeScore||0) + delta);
-  else g.periods[pIdx].awayScore = clamp0((g.periods[pIdx].awayScore||0) + delta);
-
-  pushEvent(g, pIdx, "score", { which, delta });
-  saveAll();
-  renderAll();
-}
-
-function scoreFromPosition(pos){
-  const g = currentGame();
-  if(g.gameEnded) return;
-  if(pos!=="GS" && pos!=="GA") return;
-
-  const pIdx = g.liveP;
-  const pid = g.periods[pIdx].assignments[pos];
-  if(!pid) return alert(`Assign a player to ${pos} in LIVE (${periodLabel(teamState, pIdx)}) first.`);
-
-  g.periods[pIdx].homeScore += 1;
-
-  const st = g.playerStats[pid] || (g.playerStats[pid] = { goalsTotal:0, goalsByP:Array.from({length:12}, ()=>0) });
-  st.goalsTotal += 1;
-  st.goalsByP[pIdx] = (st.goalsByP[pIdx] || 0) + 1;
-
-  pushEvent(g, pIdx, "playerGoal", { pid, pos });
-  saveAll();
-  renderAll();
-}
-
-function undo(){
-  const g = currentGame();
-  if(g.gameEnded) return;
-  const pIdx = g.liveP;
-
-  const events = g.periods[pIdx].events;
-  const last = events.pop();
-  if(!last) return;
-
-  if(last.type==="score"){
-    const {which, delta} = last.payload;
-    if(which==="home") g.periods[pIdx].homeScore = clamp0(g.periods[pIdx].homeScore - delta);
-    else g.periods[pIdx].awayScore = clamp0(g.periods[pIdx].awayScore - delta);
+    setTimeout(()=> el.textContent = "", 700);
   }
 
-  if(last.type==="playerGoal"){
-    const {pid} = last.payload;
-    g.periods[pIdx].homeScore = clamp0(g.periods[pIdx].homeScore - 1);
-    const st = g.playerStats[pid];
-    if(st){
-      st.goalsTotal = clamp0(st.goalsTotal - 1);
-      st.goalsByP[pIdx] = clamp0((st.goalsByP[pIdx]||0) - 1);
+  /* ===============================
+     DATA MODEL (Competition → Team → Games)
+  =============================== */
+  function newPlayers10(){
+    return Array.from({length:10}, (_,i)=>({ id: crypto.randomUUID(), name: `Player ${i+1}` }));
+  }
+
+  function initPlayerStats(players){
+    const stats = {};
+    for(const p of players){
+      stats[p.id] = { goalsTotal: 0, goalsByP: Array.from({length:6}, ()=>0) };
+    }
+    return stats;
+  }
+
+  function emptyPeriod(){ return { assignments:{}, homeScore:0, awayScore:0, events:[] }; }
+  function basePeriods(format){ return (format==="halves") ? 2 : 4; }
+
+  function newEmptyGame(roundNumber, players, format){
+    const baseP = basePeriods(format);
+    const baseMins = (format==="halves") ? TOURN_DEFAULT : LEAGUE_DEFAULT;
+
+    return {
+      round: roundNumber,
+      roundName: "",
+      gameDate: "",
+      opponent: "",
+      notes: "",
+
+      selectedP: 0,
+      liveP: 0,
+
+      otCount: 0,
+      otMinutes: OT_DEFAULT,
+
+      gameEnded: false,
+
+      baseMinutes: baseMins,
+      timerRunning: false,
+      timerRemaining: baseMins * 60,
+      timerLastTick: 0,
+      timerMode: "countdown",
+      timerExtraElapsed: 0,
+
+      // halftime alert (quarters only) — per period, one-time
+      halfWarned: {},
+
+      periods: Array.from({length:baseP}, ()=>emptyPeriod()),
+      playerStats: initPlayerStats(players),
+
+      plannedPositions: {},
+      playCredits: {} // playCredits[pIdx][playerId] = 0.5 when Sub In
+    };
+  }
+
+  function newTeam(teamName){
+    const players = newPlayers10();
+    return {
+      id: crypto.randomUUID(),
+      name: teamName || "Team",
+      players,
+      games: [newEmptyGame(1, players, "quarters")],
+      currentGameIndex: 0
+    };
+  }
+
+  function newCompetition(name, format){
+    const compFormat = format || "quarters";
+    const comp = {
+      id: crypto.randomUUID(),
+      name: name || "Competition",
+      format: compFormat,
+      teams: [],
+      currentTeamId: null
+    };
+    return comp;
+  }
+
+  function defaultApp(){
+    return { competitions: [], currentCompId: null };
+  }
+
+  let app = loadApp() || defaultApp();
+
+  /* ===============================
+     LEGACY MIGRATION (best-effort)
+     - If you still have old data from the earlier "teams" version, we move it into competitions
+     - Grouped by format into "Imported (quarters)" / "Imported (halves)"
+  =============================== */
+  function tryLegacyMigration(){
+    if(app.competitions?.length) return;
+
+    const legacyIdx = safeJSONParse(localStorage.getItem(LEGACY_TEAMS_INDEX_KEY));
+    if(!legacyIdx?.teams?.length) return;
+
+    const grouped = { quarters: [], halves: [] };
+    for(const meta of legacyIdx.teams){
+      const raw = safeJSONParse(localStorage.getItem(LEGACY_TEAM_KEY_PREFIX + meta.id));
+      if(!raw) continue;
+
+      const fmt = (raw.format === "halves") ? "halves" : "quarters";
+      const team = {
+        id: crypto.randomUUID(),
+        name: meta.name || raw.teamName || "Imported Team",
+        players: raw.players || newPlayers10(),
+        games: raw.games || [newEmptyGame(1, raw.players || newPlayers10(), fmt)],
+        currentGameIndex: raw.currentGameIndex || 0
+      };
+      grouped[fmt].push(team);
+    }
+
+    const comps = [];
+    if(grouped.quarters.length){
+      const c = newCompetition("Imported (quarters)", "quarters");
+      c.teams = grouped.quarters;
+      c.currentTeamId = c.teams[0].id;
+      comps.push(c);
+    }
+    if(grouped.halves.length){
+      const c = newCompetition("Imported (halves)", "halves");
+      c.teams = grouped.halves;
+      c.currentTeamId = c.teams[0].id;
+      comps.push(c);
+    }
+
+    if(comps.length){
+      app.competitions = comps;
+      app.currentCompId = comps[0].id;
+      saveApp(app);
     }
   }
 
-  saveAll();
-  renderAll();
-}
+  // tryLegacyMigration(); // disabled: start completely blank
 
-/* =========================
-   TIMER
-========================= */
-let timerInterval = null;
-function stopTimerLoop(){ if(timerInterval){ clearInterval(timerInterval); timerInterval=null; } }
-function startTimerLoop(){ if(timerInterval) return; timerInterval = setInterval(tickTimer, 250); }
+  /* ===============================
+     HELPERS / CURRENT POINTERS
+  =============================== */
+  function hasCompetitions(){ return Array.isArray(app.competitions) && app.competitions.length > 0; }
+  function currentCompetition(){
+    if(!hasCompetitions()) return null;
+    let c = app.competitions.find(x => x.id === app.currentCompId) || app.competitions[0];
+    if(!app.currentCompId) app.currentCompId = c.id;
+    return c;
+  }
+  function hasTeamsInComp(){
+    const c = currentCompetition();
+    return !!(c?.teams?.length);
+  }
+  function currentTeam(){
+    const c = currentCompetition();
+    if(!c?.teams?.length) return null;
+    let t = c.teams.find(x => x.id === c.currentTeamId) || c.teams[0];
+    if(!c.currentTeamId) c.currentTeamId = t.id;
+    return t;
+  }
+  function currentGame(){
+    const t = currentTeam();
+    if(!t) return null;
+    t.currentGameIndex = Math.max(0, Math.min(t.currentGameIndex || 0, (t.games?.length || 1) - 1));
+    return t.games[t.currentGameIndex];
+  }
 
-function fmtTime(sec){
-  sec = Math.max(0, Math.floor(sec));
-  const m = String(Math.floor(sec / 60)).padStart(2,"0");
-  const s = String(sec % 60).padStart(2,"0");
-  return `${m}:${s}`;
-}
+  function escapeHtml(str){ return (str||"").replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+  function clamp0(n){ return Math.max(0, n); }
 
-function tickTimer(){
-  if(!teamState) return;
-  const g = currentGame();
-  if(!g.timerRunning) return;
+  function ensureIntegrity(){
+    if(!app.competitions) app.competitions = [];
+    if(app.currentCompId && !app.competitions.some(c=>c.id===app.currentCompId)){
+      app.currentCompId = app.competitions[0]?.id || null;
+    }
 
-  const now = Date.now();
-  if(!g.timerLastTick) g.timerLastTick = now;
+    for(const c of app.competitions){
+      if(!c.teams) c.teams = [];
+      if(!c.format) c.format = "quarters";
+      if(c.currentTeamId && !c.teams.some(t=>t.id===c.currentTeamId)){
+        c.currentTeamId = c.teams[0]?.id || null;
+      }
 
-  const delta = Math.floor((now - g.timerLastTick)/1000);
-  if(delta <= 0) return;
+      for(const t of c.teams){
+        if(!t.players || t.players.length < MIN_PLAYERS) t.players = newPlayers10();
+        if(t.players.length > MAX_PLAYERS) t.players = t.players.slice(0, MAX_PLAYERS);
+        if(!t.games || !t.games.length) t.games = [newEmptyGame(1, t.players, c.format)];
+        if(t.currentGameIndex == null) t.currentGameIndex = 0;
+        t.currentGameIndex = Math.max(0, Math.min(t.currentGameIndex, t.games.length-1));
 
-  g.timerLastTick = now;
+        for(const g of t.games){
+          // ensure periods length matches format + OT
+          const baseP = basePeriods(c.format);
+          if(!Array.isArray(g.periods)) g.periods = [];
+          while(g.periods.length < baseP) g.periods.push(emptyPeriod());
+          const needLen = baseP + (g.otCount || 0);
+          while(g.periods.length < needLen) g.periods.push(emptyPeriod());
 
-  if(g.timerMode === "countdown"){
-    g.timerRemaining = Math.max(0, g.timerRemaining - delta);
+          if(g.selectedP == null) g.selectedP = 0;
+          if(g.liveP == null) g.liveP = 0;
 
-    if(g.timerRemaining === 0){
-      g.timerRunning = false;
-      stopTimerLoop();
+          if(g.baseMinutes == null) g.baseMinutes = (c.format==="halves") ? TOURN_DEFAULT : LEAGUE_DEFAULT;
+          if(g.timerRunning == null) g.timerRunning = false;
+          if(g.timerRemaining == null) g.timerRemaining = g.baseMinutes * 60;
+          if(g.timerLastTick == null) g.timerLastTick = 0;
+          if(g.timerMode == null) g.timerMode = "countdown";
+          if(g.timerExtraElapsed == null) g.timerExtraElapsed = 0;
+          if(!g.halfWarned) g.halfWarned = {};
 
-      const base = basePeriods(teamState.format);
-      const ot2Index = base + 1;
+          if(g.otMinutes == null) g.otMinutes = OT_DEFAULT;
+          if(g.gameEnded == null) g.gameEnded = false;
 
-      // OT2 play-on if still tied at 0
-      if(g.otCount === 2 && g.liveP === ot2Index && isDraw(g)){
-        g.timerMode = "countup";
-        g.timerExtraElapsed = 0;
+          if(!g.playerStats) g.playerStats = {};
+          for(const p of t.players){
+            if(!g.playerStats[p.id]){
+              g.playerStats[p.id] = { goalsTotal:0, goalsByP:Array.from({length:6}, ()=>0) };
+            } else {
+              if(!Array.isArray(g.playerStats[p.id].goalsByP)) g.playerStats[p.id].goalsByP = Array.from({length:6}, ()=>0);
+              while(g.playerStats[p.id].goalsByP.length < 6) g.playerStats[p.id].goalsByP.push(0);
+            }
+          }
+          if(!g.plannedPositions) g.plannedPositions = {};
+          if(!g.playCredits) g.playCredits = {};
+        }
+      }
+    }
+  }
+
+  function saveAll(){
+    ensureIntegrity();
+    saveApp(app);
+    markSaved();
+  }
+
+  /* ===============================
+     PERIOD LABELS / TOTALS
+  =============================== */
+  function periodLabel(idx){
+    const c = currentCompetition();
+    const base = basePeriods(c.format);
+    if(idx < base) return (c.format==="halves") ? `H${idx+1}` : `Q${idx+1}`;
+    return `OT${idx-base+1}`;
+  }
+  function totalPeriods(game){
+    const c = currentCompetition();
+    return basePeriods(c.format) + (game.otCount || 0);
+  }
+  function isOTIndex(idx){
+    const c = currentCompetition();
+    return idx >= basePeriods(c.format);
+  }
+  function totalHome(game){ return game.periods.reduce((s,p)=>s+(p.homeScore||0),0); }
+  function totalAway(game){ return game.periods.reduce((s,p)=>s+(p.awayScore||0),0); }
+  function isDraw(game){ return totalHome(game) === totalAway(game); }
+
+  /* ===============================
+     COURT TIME (HYBRID)
+     - inferred from assignments (1) for regulation periods
+     - if Sub In used, credits can become 0.5 for incoming/outgoing (reg periods only)
+  =============================== */
+  function getPlayCredit(game, pIdx, playerId){
+    if(!game.playCredits) game.playCredits = {};
+    if(!game.playCredits[pIdx]) game.playCredits[pIdx] = {};
+    return Number(game.playCredits[pIdx][playerId] || 0);
+  }
+  function bumpPlayCredit(game, pIdx, playerId, val){
+    if(!game.playCredits) game.playCredits = {};
+    if(!game.playCredits[pIdx]) game.playCredits[pIdx] = {};
+    const cur = Number(game.playCredits[pIdx][playerId] || 0);
+    game.playCredits[pIdx][playerId] = Math.max(cur, val);
+  }
+  function inferredPlayedForPeriod(game, pIdx, playerId){
+    const assigned = Object.values(game.periods[pIdx]?.assignments || {}).filter(Boolean);
+    return assigned.includes(playerId) ? 1 : 0;
+  }
+  function regulationPeriodsPlayedHybrid(game, playerId){
+    const c = currentCompetition();
+    const regMax = basePeriods(c.format);
+    let sum = 0;
+    for(let i=0;i<regMax;i++){
+      const credit = getPlayCredit(game, i, playerId);
+      sum += credit > 0 ? credit : inferredPlayedForPeriod(game, i, playerId);
+    }
+    return sum;
+  }
+  function fmtPlayed(n){
+    return (Math.abs(n - Math.round(n)) < 1e-9) ? String(Math.round(n)) : n.toFixed(1);
+  }
+
+  function assignedIdsForP(game, pIdx){
+    const a = game.periods[pIdx]?.assignments || {};
+    return new Set(Object.values(a).filter(Boolean));
+  }
+  function benchPlayersForP(game, pIdx){
+    const assigned = assignedIdsForP(game, pIdx);
+    const t = currentTeam();
+    return t.players.filter(p=>!assigned.has(p.id));
+  }
+
+  function playerById(id){
+    const t = currentTeam();
+    return t?.players?.find(p=>p.id===id);
+  }
+
+  /* ===============================
+     BENCH PLANNING + SUB IN
+  =============================== */
+  function getPlannedPos(game, pIdx, playerId){
+    if(!game.plannedPositions) game.plannedPositions = {};
+    if(!game.plannedPositions[pIdx]) game.plannedPositions[pIdx] = {};
+    return game.plannedPositions[pIdx][playerId] || "";
+  }
+  function setPlannedPos(game, pIdx, playerId, pos){
+    if(!game.plannedPositions) game.plannedPositions = {};
+    if(!game.plannedPositions[pIdx]) game.plannedPositions[pIdx] = {};
+    game.plannedPositions[pIdx][playerId] = pos || "";
+    saveAll();
+  }
+
+  function subInFromBench(playerId){
+    const c = currentCompetition();
+    const g = currentGame();
+    if(g.gameEnded) return;
+
+    const pIdx = g.selectedP;
+    const pos = getPlannedPos(g, pIdx, playerId);
+    if(!pos) return alert("Set a Next position first.");
+
+    const per = g.periods[pIdx];
+    const outgoing = per.assignments[pos] || null;
+
+    // credit 0.5 in REGULATION ONLY
+    const regMax = basePeriods(c.format);
+    if(pIdx < regMax){
+      bumpPlayCredit(g, pIdx, playerId, 0.5);
+      if(outgoing && outgoing !== playerId) bumpPlayCredit(g, pIdx, outgoing, 0.5);
+    }
+
+    per.assignments[pos] = playerId;
+
+    // ensure not in two positions
+    for(const p of POSITIONS){
+      if(p !== pos && per.assignments[p] === playerId) per.assignments[p] = null;
+    }
+
+    setPlannedPos(g, pIdx, playerId, "");
+    saveAll();
+    renderAll();
+  }
+
+  /* ===============================
+     ADD / REMOVE PLAYERS
+  =============================== */
+  function clearPlayerFromTeam(pid){
+    const t = currentTeam();
+    for(const g of t.games){
+      for(let pi=0; pi<g.periods.length; pi++){
+        const per = g.periods[pi];
+        for(const pos of POSITIONS){
+          if(per.assignments?.[pos] === pid) per.assignments[pos] = null;
+        }
+        if(g.playCredits?.[pi]?.[pid] != null) delete g.playCredits[pi][pid];
+      }
+      if(g.plannedPositions){
+        for(const k of Object.keys(g.plannedPositions)){
+          if(g.plannedPositions[k] && g.plannedPositions[k][pid] != null){
+            delete g.plannedPositions[k][pid];
+          }
+        }
+      }
+      if(g.playerStats) delete g.playerStats[pid];
+    }
+  }
+
+  function addPlayer(){
+    const t = currentTeam();
+    if(!t) return;
+    if(t.players.length >= MAX_PLAYERS) return alert(`Max players is ${MAX_PLAYERS}.`);
+
+    const nextNum = t.players.length + 1;
+    const p = { id: crypto.randomUUID(), name: `Player ${nextNum}` };
+    t.players.push(p);
+
+    for(const g of t.games){
+      if(!g.playerStats) g.playerStats = {};
+      g.playerStats[p.id] = { goalsTotal:0, goalsByP:Array.from({length:6}, ()=>0) };
+    }
+
+    saveAll();
+    renderAll();
+  }
+
+  function removePlayer(pid){
+    const t = currentTeam();
+    if(!t) return;
+
+    if(t.players.length <= MIN_PLAYERS){
+      return alert(`You must keep at least ${MIN_PLAYERS} players (to cover 7 on court).`);
+    }
+
+    const p = playerById(pid);
+    const name = p?.name || "this player";
+    if(!confirm(`Remove ${name} from this team?\n\nThis will also remove them from all on-court selections + stats for this team.`)) return;
+
+    clearPlayerFromTeam(pid);
+    t.players = t.players.filter(x => x.id !== pid);
+
+    saveAll();
+    renderAll();
+  }
+
+  /* ===============================
+     TIMER (with half-time alert for QUARTERS ONLY)
+  =============================== */
+  let timerInterval = null;
+
+  function fmtTime(sec){
+    sec = Math.max(0, Math.floor(sec));
+    const m = String(Math.floor(sec / 60)).padStart(2,"0");
+    const s = String(sec % 60).padStart(2,"0");
+    return `${m}:${s}`;
+  }
+
+  function stopTimerLoop(){
+    if(timerInterval){ clearInterval(timerInterval); timerInterval = null; }
+  }
+  function startTimerLoop(){
+    if(timerInterval) return;
+    timerInterval = setInterval(tickTimer, 250);
+  }
+
+  function renderTimer(){
+    const g = currentGame();
+    if(!g) return;
+
+    document.getElementById("timerDisplay").textContent =
+      (g.timerMode==="countdown") ? fmtTime(g.timerRemaining) : fmtTime(g.timerExtraElapsed);
+
+    const tag = document.getElementById("timerModeTag");
+    tag.style.display = (g.timerMode==="countup") ? "inline-block" : "none";
+
+    document.getElementById("timerStartBtn").textContent = g.timerRunning ? "Pause" : "Start";
+  }
+
+  function tickTimer(){
+    const c = currentCompetition();
+    const g = currentGame();
+    if(!g || !g.timerRunning) return;
+
+    const now = Date.now();
+    if(!g.timerLastTick) g.timerLastTick = now;
+
+    const delta = Math.floor((now - g.timerLastTick) / 1000);
+    if(delta <= 0) return;
+
+    g.timerLastTick = now;
+
+    if(g.timerMode === "countdown"){
+      g.timerRemaining = Math.max(0, g.timerRemaining - delta);
+
+      // Halfway alert (ONLY for quarters format, NOT halves, and only in regulation)
+      if(c.format === "quarters" && !isOTIndex(g.liveP)){
+        const halfSec = Math.floor((g.baseMinutes * 60) / 2);
+        if(g.timerRemaining <= halfSec && !g.halfWarned[g.liveP]){
+          g.halfWarned[g.liveP] = true;
+          saveAll();
+          alert("Halfway — make a change");
+        }
+      }
+
+      if(g.timerRemaining === 0){
+        g.timerRunning = false;
+        stopTimerLoop();
+
+        const base = basePeriods(c.format);
+        const ot2Index = base + 1;
+
+        // OT2 play-on if still tied at 0
+        if(g.otCount === 2 && g.liveP === ot2Index && isDraw(g)){
+          g.timerMode = "countup";
+          g.timerExtraElapsed = 0;
+          saveAll();
+          renderAll();
+          return;
+        }
+
         saveAll();
         renderTimer();
+        alert("Time!");
         return;
       }
 
-      saveAll();
-      renderTimer();
-      alert("Time!");
-      return;
+    } else {
+      // countup play-on (OT2)
+      g.timerExtraElapsed += delta;
+      const lead = Math.abs(totalHome(g) - totalAway(g));
+      if(lead >= 2){
+        g.timerRunning = false;
+        stopTimerLoop();
+        g.gameEnded = true;
+        saveAll();
+        renderAll();
+        return;
+      }
     }
-  } else {
-    // play-on count-up
-    g.timerExtraElapsed += delta;
-    const lead = Math.abs(totalHome(g) - totalAway(g));
-    if(lead >= 2){
+
+    saveAll();
+    renderTimer();
+  }
+
+  function toggleTimer(){
+    const g = currentGame();
+    if(!g) return;
+    if(g.gameEnded) return;
+
+    if(g.timerRunning){
       g.timerRunning = false;
       stopTimerLoop();
-      g.gameEnded = true;
+    } else {
+      g.timerRunning = true;
+      g.timerLastTick = Date.now();
+      startTimerLoop();
+    }
+    saveAll();
+    renderTimer();
+  }
+
+  function resetTimer(){
+    const g = currentGame();
+    if(!g) return;
+
+    g.timerRunning = false;
+    g.timerLastTick = 0;
+    g.timerMode = "countdown";
+    g.timerExtraElapsed = 0;
+
+    if(isOTIndex(g.selectedP)) g.timerRemaining = g.otMinutes * 60;
+    else g.timerRemaining = g.baseMinutes * 60;
+
+    stopTimerLoop();
+    saveAll();
+    renderTimer();
+  }
+
+  /* ===============================
+     SCORING / EVENTS
+  =============================== */
+  function pushEvent(game, pIdx, type, payload){
+    game.periods[pIdx].events.push({ type, pIdx, payload, t: Date.now() });
+  }
+
+  function scoreTeam(which, delta){
+    const g = currentGame();
+    if(!g || g.gameEnded) return;
+
+    const pIdx = g.liveP;
+    if(which==="home") g.periods[pIdx].homeScore = clamp0((g.periods[pIdx].homeScore||0) + delta);
+    else g.periods[pIdx].awayScore = clamp0((g.periods[pIdx].awayScore||0) + delta);
+
+    pushEvent(g, pIdx, "score", { which, delta });
+    saveAll();
+    renderAll();
+  }
+
+  function scoreFromPosition(pos){
+    const g = currentGame();
+    if(!g || g.gameEnded) return;
+    if(pos!=="GS" && pos!=="GA") return;
+
+    const pIdx = g.liveP;
+    const pid = g.periods[pIdx].assignments[pos];
+    if(!pid) return alert(`Assign a player to ${pos} in LIVE (${periodLabel(pIdx)}) first.`);
+
+    g.periods[pIdx].homeScore += 1;
+
+    const st = g.playerStats[pid] || (g.playerStats[pid] = { goalsTotal:0, goalsByP:Array.from({length:6}, ()=>0) });
+    st.goalsTotal += 1;
+    st.goalsByP[pIdx] = (st.goalsByP[pIdx] || 0) + 1;
+
+    pushEvent(g, pIdx, "playerGoal", { pid, pos });
+    saveAll();
+    renderAll();
+  }
+
+  function undo(){
+    const g = currentGame();
+    if(!g || g.gameEnded) return;
+
+    const pIdx = g.liveP;
+    const events = g.periods[pIdx].events;
+    const last = events.pop();
+    if(!last) return;
+
+    if(last.type==="score"){
+      const {which, delta} = last.payload;
+      if(which==="home") g.periods[pIdx].homeScore = clamp0(g.periods[pIdx].homeScore - delta);
+      else g.periods[pIdx].awayScore = clamp0(g.periods[pIdx].awayScore - delta);
+    }
+
+    if(last.type==="playerGoal"){
+      const {pid} = last.payload;
+      g.periods[pIdx].homeScore = clamp0(g.periods[pIdx].homeScore - 1);
+      const st = g.playerStats[pid];
+      if(st){
+        st.goalsTotal = clamp0(st.goalsTotal - 1);
+        st.goalsByP[pIdx] = clamp0((st.goalsByP[pIdx]||0) - 1);
+      }
+    }
+
+    saveAll();
+    renderAll();
+  }
+
+  /* ===============================
+     POSITIONS (editing)
+  =============================== */
+  function setAssignment(pos, pid){
+    const g = currentGame();
+    if(!g) return;
+
+    const pIdx = g.selectedP;
+    const per = g.periods[pIdx];
+
+    const next = pid || null;
+    if(next){
+      for(const p of POSITIONS){
+        if(p !== pos && per.assignments[p] === next){
+          per.assignments[p] = null;
+        }
+      }
+    }
+    per.assignments[pos] = next;
+    saveAll();
+    renderAll();
+  }
+
+  function copyAssignments(fromP, toP){
+    const g = currentGame();
+    if(!g) return;
+    g.periods[toP].assignments = JSON.parse(JSON.stringify(g.periods[fromP].assignments || {}));
+    saveAll();
+  }
+
+  /* ===============================
+     OVERTIME (ALWAYS OT1 + OT2)
+  =============================== */
+  function canStartOT(game){
+    const c = currentCompetition();
+    return game.gameEnded && isDraw(game) && (game.otCount || 0) === 0 && basePeriods(c.format) >= 2;
+  }
+
+  function startOT(){
+    const c = currentCompetition();
+    const g = currentGame();
+    if(!g || !canStartOT(g)) return;
+
+    g.otCount = 2;
+    g.periods.push(emptyPeriod());
+    g.periods.push(emptyPeriod());
+
+    g.gameEnded = false;
+    const ot1Index = basePeriods(c.format);
+    g.liveP = ot1Index;
+    g.selectedP = ot1Index;
+
+    g.timerMode = "countdown";
+    g.timerExtraElapsed = 0;
+    g.timerRunning = false;
+    g.timerLastTick = 0;
+    g.timerRemaining = g.otMinutes * 60;
+    stopTimerLoop();
+
+    saveAll();
+    renderAll();
+  }
+
+  function endOrNextPeriod(){
+    const c = currentCompetition();
+    const g = currentGame();
+    if(!g || g.gameEnded) return;
+
+    const base = basePeriods(c.format);
+    const ot1Index = base;
+    const ot2Index = base + 1;
+    const lastIndex = totalPeriods(g) - 1;
+
+    // always go to OT2 after OT1
+    if(g.otCount === 2 && g.liveP === ot1Index){
+      g.liveP = ot2Index;
+      g.selectedP = ot2Index;
+      resetTimer();
       saveAll();
       renderAll();
       return;
     }
-  }
 
-  saveAll();
-  renderTimer();
-}
+    // last period -> end
+    if(g.liveP >= lastIndex){
+      g.gameEnded = true;
+      g.timerRunning = false;
+      stopTimerLoop();
+      saveAll();
+      renderAll();
+      return;
+    }
 
-function toggleTimer(){
-  const g = currentGame();
-  if(g.gameEnded) return;
-
-  if(g.timerRunning){
-    g.timerRunning = false;
-    stopTimerLoop();
-  } else {
-    g.timerRunning = true;
-    g.timerLastTick = Date.now();
-    startTimerLoop();
-  }
-  saveAll();
-  renderTimer();
-}
-
-function resetTimer(){
-  const g = currentGame();
-  g.timerRunning = false;
-  g.timerLastTick = 0;
-  g.timerMode = "countdown";
-  g.timerExtraElapsed = 0;
-
-  if(isOTIndex(g.liveP)) g.timerRemaining = g.otMinutes * 60;
-  else g.timerRemaining = g.baseMinutes * 60;
-
-  stopTimerLoop();
-  saveAll();
-  renderTimer();
-}
-
-function renderTimer(){
-  const g = currentGame();
-  document.getElementById("timerDisplay").textContent =
-    (g.timerMode==="countdown") ? fmtTime(g.timerRemaining) : fmtTime(g.timerExtraElapsed);
-
-  document.getElementById("timerModeTag").style.display = (g.timerMode==="countup") ? "inline-block" : "none";
-  document.getElementById("timerStartBtn").textContent = g.timerRunning ? "Pause" : "Start";
-}
-
-/* =========================
-   PERIOD FLOW + OT
-========================= */
-function startOT(){
-  const g = currentGame();
-  if(!canStartOT(g)) return;
-
-  g.otCount = 2;
-  g.periods.push(emptyPeriod());
-  g.periods.push(emptyPeriod());
-
-  g.gameEnded = false;
-  const ot1Index = basePeriods(teamState.format);
-  g.liveP = ot1Index;
-
-  g.timerMode = "countdown";
-  g.timerExtraElapsed = 0;
-  g.timerRunning = false;
-  g.timerLastTick = 0;
-  g.timerRemaining = g.otMinutes * 60;
-  stopTimerLoop();
-
-  saveAll();
-  renderAll();
-}
-
-function endOrNextPeriod(){
-  const g = currentGame();
-  if(g.gameEnded) return;
-
-  const base = basePeriods(teamState.format);
-  const ot1Index = base;
-  const ot2Index = base + 1;
-  const lastIndex = totalPeriods(g) - 1;
-
-  // always go to OT2 after OT1 (if OT active)
-  if(g.otCount === 2 && g.liveP === ot1Index){
-    g.liveP = ot2Index;
+    g.liveP += 1;
+    g.selectedP = g.liveP;
     resetTimer();
     saveAll();
     renderAll();
-    return;
   }
 
-  // if last period -> end
-  if(g.liveP >= lastIndex){
-    g.gameEnded = true;
-    g.timerRunning = false;
+  function reopenGame(){
+    const g = currentGame();
+    if(!g) return;
+    g.gameEnded = false;
+    saveAll();
+    renderAll();
+  }
+
+  /* ===============================
+     COMPETITION / TEAM / GAME MGMT
+  =============================== */
+  function openCompModal(){
+  document.getElementById("newCompName").value = "";
+  document.getElementById("compBack").style.display = "flex";
+  setTimeout(()=>{ 
+    const el = document.getElementById("newCompName");
+    if(el){ el.focus(); el.select(); }
+  }, 50);
+}
+  function closeCompModal(){ document.getElementById("compBack").style.display = "none"; }
+
+  function createCompetitionFromModal(){
+    const name = (document.getElementById("newCompName").value || "").trim() || `Competition ${app.competitions.length+1}`;
+    const format = document.querySelector('input[name="newCompFormat"]:checked')?.value || "quarters";
+
+    const comp = newCompetition(name, format);
+    app.competitions.push(comp);
+    app.currentCompId = comp.id;
+
+    saveAll();
+    closeCompModal();
+    renderAll();
+  }
+
+  function deleteCurrentCompetition(){
+    const c = currentCompetition();
+    if(!c) return;
+    if(!confirm(`Delete competition "${c.name}"?\nThis removes all teams + games inside it.`)) return;
+
+    app.competitions = app.competitions.filter(x => x.id !== c.id);
+    app.currentCompId = app.competitions[0]?.id || null;
+
     stopTimerLoop();
     saveAll();
     renderAll();
-    return;
   }
 
-  g.liveP += 1;
-  resetTimer();
-  saveAll();
-  renderAll();
-}
+  function switchCompetition(compId){
+    stopTimerLoop();
+    app.currentCompId = compId;
+    saveAll();
+    renderAll();
+  }
 
-function reopenGame(){
-  const g = currentGame();
-  g.gameEnded = false;
-  saveAll();
-  renderAll();
-}
+  function openTeamModal(){
+    pendingImportedPlayers = null;
+    document.getElementById("newTeamName").value = "";
+    document.getElementById("importPlayersStatus").textContent = "";
+    populateImportPlayersDropdown();
+    document.getElementById("teamBack").style.display = "flex";
+  }
+  function closeTeamModal(){ document.getElementById("teamBack").style.display = "none"; }
 
-/* =========================
-   POSITIONS GRID (ALL PERIODS)
-========================= */
-function hasAnyAssignments(period){
-  const a = period.assignments || {};
-  return Object.values(a).some(Boolean);
-}
+  function createTeamFromModal(){
+    const c = currentCompetition();
+    if(!c) return;
 
-function buildPlayerOptionLabel(g, pid){
-  const p = playerById(pid);
-  const max = basePeriods(teamState.format);
-  const played = regulationPeriodsPlayedHybrid(g, pid);
-  return `${p?.name || "—"} • ${fmtPlayed(played)}/${max}`;
-}
+    const name = (document.getElementById("newTeamName").value || "").trim() || `Team ${c.teams.length+1}`;
 
-function setAssignment(pIdx, pos, pid){
-  const g = currentGame();
-  const per = g.periods[pIdx];
-  const next = pid || null;
+    let players;
+    if(pendingImportedPlayers && pendingImportedPlayers.length){
+      players = pendingImportedPlayers.slice(0, MAX_PLAYERS).map((p,i)=>({
+        id: crypto.randomUUID(),
+        name: p.name || `Player ${i+1}`
+      }));
+    } else {
+      players = newPlayers10();
+    }
 
-  // prevent same player twice in same period
-  if(next){
-    for(const p of POSITIONS){
-      if(p !== pos && per.assignments[p] === next){
-        per.assignments[p] = null;
+    while(players.length < MIN_PLAYERS){
+      players.push({ id: crypto.randomUUID(), name: `Player ${players.length+1}` });
+    }
+
+    const team = {
+      id: crypto.randomUUID(),
+      name,
+      players,
+      games: [newEmptyGame(1, players, c.format)],
+      currentGameIndex: 0
+    };
+
+    c.teams.push(team);
+    c.currentTeamId = team.id;
+
+    pendingImportedPlayers = null;
+
+    closeTeamModal();
+    saveAll();
+    renderAll();
+  }
+
+  function deleteCurrentTeam(){
+    const c = currentCompetition();
+    const t = currentTeam();
+    if(!c || !t) return;
+
+    if(!confirm(`Delete team "${t.name}" from "${c.name}"?\nThis removes all games + players for this team.`)) return;
+
+    c.teams = c.teams.filter(x => x.id !== t.id);
+    c.currentTeamId = c.teams[0]?.id || null;
+
+    stopTimerLoop();
+    saveAll();
+    renderAll();
+  }
+
+  function switchTeam(teamId){
+    const c = currentCompetition();
+    if(!c) return;
+    stopTimerLoop();
+    c.currentTeamId = teamId;
+    saveAll();
+    renderAll();
+  }
+
+  function addGame(){
+    const c = currentCompetition();
+    const t = currentTeam();
+    if(!c || !t) return;
+
+    const nextRound = t.games.length + 1;
+    const g = newEmptyGame(nextRound, t.players, c.format);
+    t.games.push(g);
+    t.currentGameIndex = t.games.length - 1;
+
+    stopTimerLoop();
+    saveAll();
+    renderAll();
+  }
+
+  function goPrevGame(){
+    const t = currentTeam();
+    if(!t) return;
+    if(t.currentGameIndex <= 0) return;
+    stopTimerLoop();
+    t.currentGameIndex -= 1;
+    saveAll();
+    renderAll();
+  }
+  function goNextGame(){
+    const t = currentTeam();
+    if(!t) return;
+    if(t.currentGameIndex >= t.games.length - 1) return;
+    stopTimerLoop();
+    t.currentGameIndex += 1;
+    saveAll();
+    renderAll();
+  }
+
+  function resetThisGame(){
+    const c = currentCompetition();
+    const t = currentTeam();
+    const g = currentGame();
+    if(!c || !t || !g) return;
+
+    const idx = t.currentGameIndex;
+    const round = t.games[idx].round;
+    t.games[idx] = newEmptyGame(round, t.players, c.format);
+
+    stopTimerLoop();
+    saveAll();
+    renderAll();
+  }
+
+  function resetTeam(){
+    const c = currentCompetition();
+    const t = currentTeam();
+    if(!c || !t) return;
+
+    if(!confirm(`Reset team "${t.name}"?\nThis wipes players + all games for this team.`)) return;
+
+    const name = t.name;
+    const fresh = {
+      id: t.id,
+      name,
+      players: newPlayers10(),
+      games: [],
+      currentGameIndex: 0
+    };
+    fresh.games = [newEmptyGame(1, fresh.players, c.format)];
+
+    // replace team object in comp
+    const i = c.teams.findIndex(x => x.id === t.id);
+    c.teams[i] = fresh;
+    c.currentTeamId = fresh.id;
+
+    stopTimerLoop();
+    saveAll();
+    renderAll();
+  }
+
+  /* ===============================
+     IMPORT PLAYERS (ADD TEAM MODAL)
+     - imports from ANY team in ANY competition
+  =============================== */
+  function populateImportPlayersDropdown(){
+    const sel = document.getElementById("importPlayersSource");
+    sel.innerHTML = "";
+
+    const items = [];
+    for(const comp of app.competitions){
+      for(const team of comp.teams){
+        items.push({ compName: comp.name, teamId: team.id, label: `${comp.name} • ${team.name}` });
       }
+    }
+
+    const optBlank = document.createElement("option");
+    optBlank.value = "";
+    optBlank.textContent = "— Select a team —";
+    sel.appendChild(optBlank);
+
+    for(const it of items){
+      const opt = document.createElement("option");
+      opt.value = it.teamId;
+      opt.textContent = it.label.slice(0, 60);
+      sel.appendChild(opt);
+    }
+
+    sel.disabled = items.length === 0;
+  }
+
+  function findTeamByIdAnywhere(teamId){
+    for(const comp of app.competitions){
+      const team = comp.teams.find(t => t.id === teamId);
+      if(team) return { comp, team };
+    }
+    return null;
+  }
+
+  function importPlayersIntoNewTeam(){
+    const sel = document.getElementById("importPlayersSource");
+    const status = document.getElementById("importPlayersStatus");
+    const teamId = sel?.value;
+
+    if(!teamId) return alert("Pick a team to import players from.");
+
+    const found = findTeamByIdAnywhere(teamId);
+    if(!found?.team?.players?.length) return alert("That team has no players saved.");
+
+    let names = found.team.players
+      .map(p => ({ name: (p.name || "").trim() }))
+      .filter(p => p.name.length > 0);
+
+    if(names.length > MAX_PLAYERS){
+      alert(`That team has ${names.length} players. Max is ${MAX_PLAYERS}, so only the first ${MAX_PLAYERS} will be imported.`);
+      names = names.slice(0, MAX_PLAYERS);
+    }
+
+    pendingImportedPlayers = names;
+    while(pendingImportedPlayers.length < MIN_PLAYERS){
+      pendingImportedPlayers.push({ name: `Player ${pendingImportedPlayers.length + 1}` });
+    }
+
+    status.textContent = `Imported ${pendingImportedPlayers.length} players (will be used for the new team).`;
+  }
+
+  /* ===============================
+     SYNC (Export/Import TEAM only)
+  =============================== */
+  async function copyText(text){
+    try { await navigator.clipboard.writeText(text); alert("Copied."); }
+    catch { alert("Copy failed (iPad Safari can block clipboard sometimes)."); }
+  }
+
+  function exportTeam(){
+    const c = currentCompetition();
+    const t = currentTeam();
+    if(!c || !t) return;
+
+    const payload = {
+      comp: { name: c.name, format: c.format },
+      team: t
+    };
+    const text = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+    document.getElementById("syncText").value = text;
+    copyText(text);
+  }
+
+  function importTeamReplace(){
+    const c = currentCompetition();
+    const t = currentTeam();
+    if(!c || !t) return;
+
+    const raw = (document.getElementById("syncText").value || "").trim();
+    if(!raw) return alert("Paste export text first.");
+
+    let payload;
+    try{
+      payload = JSON.parse(decodeURIComponent(escape(atob(raw))));
+    } catch {
+      return alert("That doesn’t look like valid export text.");
+    }
+
+    if(!payload?.team) return alert("Invalid payload.");
+    const imported = payload.team;
+
+    // force this team to use THIS competition format
+    // (games will be kept, but ensure periods match format)
+    imported.id = t.id; // replace-in-place
+    imported.name = imported.name || t.name;
+
+    // if players missing, keep existing
+    if(!Array.isArray(imported.players) || imported.players.length < MIN_PLAYERS){
+      imported.players = t.players;
+    }
+    if(imported.players.length > MAX_PLAYERS) imported.players = imported.players.slice(0, MAX_PLAYERS);
+
+    // ensure games exist
+    if(!Array.isArray(imported.games) || !imported.games.length){
+      imported.games = [newEmptyGame(1, imported.players, c.format)];
+      imported.currentGameIndex = 0;
+    }
+
+    // replace current team object
+    const idx = c.teams.findIndex(x => x.id === t.id);
+    c.teams[idx] = imported;
+    c.currentTeamId = imported.id;
+
+    stopTimerLoop();
+    saveAll();
+    closeSyncModal();
+    renderAll();
+    alert("Imported (team replaced).");
+  }
+
+  function openSyncModal(){ document.getElementById("syncBack").style.display = "flex"; }
+  function closeSyncModal(){ document.getElementById("syncBack").style.display = "none"; }
+
+  /* ===============================
+     HOW-TO
+  =============================== */
+  function openHowto(){ document.getElementById("howtoBack").style.display="flex"; }
+  function closeHowto(){ document.getElementById("howtoBack").style.display="none"; }
+  function markHowtoSeen(){ localStorage.setItem(HOWTO_FLAG_KEY, "1"); }
+  function hasSeenHowto(){ return localStorage.getItem(HOWTO_FLAG_KEY) === "1"; }
+  function closeHowtoAndContinue(){
+    markHowtoSeen();
+    closeHowto();
+    if(!hasCompetitions()) openCompModal();
+  }
+
+  /* ===============================
+     ROLL-UPS (adds arrow left of first row)
+  =============================== */
+  function initRollups(){
+    const cards = document.querySelectorAll(".card");
+    cards.forEach(card=>{
+      if(card.classList.contains("rollInit")) return;
+      card.classList.add("rollInit");
+
+      const firstRow = card.querySelector(".row");
+      if(!firstRow) return;
+
+      const btn = document.createElement("button");
+      btn.className = "rollBtn";
+      btn.type = "button";
+      btn.textContent = "▾";
+      btn.setAttribute("aria-label", "Collapse/expand");
+      firstRow.insertBefore(btn, firstRow.firstChild);
+
+      const body = document.createElement("div");
+      body.className = "rollBody";
+
+      let sibling = firstRow.nextSibling;
+      while(sibling){
+        const next = sibling.nextSibling;
+        body.appendChild(sibling);
+        sibling = next;
+      }
+      card.appendChild(body);
+
+      const key = `roll_${card.id || ("card_" + Math.random().toString(16).slice(2))}`;
+      const saved = localStorage.getItem(key);
+      if(saved === "1"){
+        card.classList.add("collapsed");
+        btn.textContent = "▸";
+      }
+
+      btn.addEventListener("click", ()=>{
+        const collapsed = card.classList.toggle("collapsed");
+        btn.textContent = collapsed ? "▸" : "▾";
+        localStorage.setItem(key, collapsed ? "1" : "0");
+      });
+    });
+  }
+
+  /* ===============================
+     RENDER
+  =============================== */
+  function formatLabel(format){ return (format==="halves") ? "2 halves" : "4 quarters"; }
+
+  function renderCompTabs(){
+    const seg = document.getElementById("compSeg");
+    seg.innerHTML = "";
+    if(!hasCompetitions()) return;
+
+    for(const comp of app.competitions){
+      const b = document.createElement("button");
+      b.textContent = (comp.name || "Competition").slice(0,18);
+      b.className = (comp.id===app.currentCompId) ? "active" : "";
+      b.addEventListener("click", ()=>switchCompetition(comp.id));
+      seg.appendChild(b);
     }
   }
 
-  // If swapping into/out of a role inside REGULATION, credit 0.5 to both (so your “inferred 1” can turn into 0.5 after subs)
-  const regMax = basePeriods(teamState.format);
-  const outgoing = per.assignments[pos] || null;
-  if(pIdx < regMax && outgoing && outgoing !== next && next){
-    setPlayCreditMax(g, pIdx, outgoing, 0.5);
-    setPlayCreditMax(g, pIdx, next, 0.5);
+  function renderTeamTabs(){
+    const seg = document.getElementById("teamSeg");
+    seg.innerHTML = "";
+    const c = currentCompetition();
+    if(!c || !c.teams?.length) return;
+
+    for(const team of c.teams){
+      const b = document.createElement("button");
+      b.textContent = (team.name || "Team").slice(0,18);
+      b.className = (team.id===c.currentTeamId) ? "active" : "";
+      b.addEventListener("click", ()=>switchTeam(team.id));
+      seg.appendChild(b);
+    }
   }
 
-  per.assignments[pos] = next;
-
-  saveAll();
-  renderAll();
-}
-
-function renderPositionsGrid(){
-  const g = currentGame();
-  const tbl = document.getElementById("posGrid");
-  const cols = totalPeriods(g);
-  const regMax = basePeriods(teamState.format);
-
-  // copy dropdowns
-  const copyFrom = document.getElementById("copyFromSel");
-  const copyTo = document.getElementById("copyToSel");
-  copyFrom.innerHTML = "";
-  copyTo.innerHTML = "";
-  for(let i=0;i<cols;i++){
-    const o1 = document.createElement("option");
-    o1.value = String(i);
-    o1.textContent = periodLabel(teamState, i);
-    copyFrom.appendChild(o1);
-
-    const o2 = document.createElement("option");
-    o2.value = String(i);
-    o2.textContent = periodLabel(teamState, i);
-    copyTo.appendChild(o2);
+  function renderTopFields(){
+    const c = currentCompetition();
+    document.getElementById("compName").value = c?.name || "";
+    document.getElementById("formatLabel").textContent = formatLabel(c?.format || "quarters");
   }
-  copyFrom.value = "0";
-  copyTo.value = (cols>1) ? "1" : "0";
 
-  const thead = document.createElement("thead");
-  const hr = document.createElement("tr");
+  function renderGameHeader(){
+    const c = currentCompetition();
+    const t = currentTeam();
+    const g = currentGame();
 
-  const th0 = document.createElement("th");
-  th0.textContent = "Pos";
-  hr.appendChild(th0);
+    document.getElementById("teamName").value = t?.name || "";
 
-  for(let c=0;c<cols;c++){
-    const th = document.createElement("th");
-    const label = periodLabel(teamState, c);
-    const benchCount = benchPlayersForPeriod(g, c).length;
-    const isLive = (c === g.liveP);
+    document.getElementById("roundLabel").textContent = `Game ${g.round}`;
+    document.getElementById("roundCountLabel").textContent = `(${t.games.length} game${t.games.length===1?'':'s'})`;
 
-    if(isLive) th.classList.add("liveCol");
-    th.innerHTML = `
-      <div class="colHead">
-        <span class="colTag">${label} ${isLive ? '<span class="kbd">LIVE</span>' : ''}</span>
-        <span class="muted">${benchCount} bench</span>
-      </div>
-    `;
-    hr.appendChild(th);
+    document.getElementById("roundName").value = g.roundName || "";
+    document.getElementById("gameDate").value = g.gameDate || "";
+    document.getElementById("opponent").value = g.opponent || "";
+    document.getElementById("notes").value = g.notes || "";
+
+    document.getElementById("prevGameBtn").disabled = (t.currentGameIndex <= 0);
+    document.getElementById("nextGameBtn").disabled = (t.currentGameIndex >= t.games.length - 1);
   }
-  thead.appendChild(hr);
 
-  const tbody = document.createElement("tbody");
+  function renderRoundSeg(){
+    const t = currentTeam();
+    const seg = document.getElementById("roundSeg");
+    seg.innerHTML = "";
+    for(let i=0;i<t.games.length;i++){
+      const g = t.games[i];
+      const b = document.createElement("button");
+      b.textContent = `G${g.round}`;
+      b.className = (i===t.currentGameIndex) ? "active" : "";
+      b.addEventListener("click", ()=>{
+        stopTimerLoop();
+        t.currentGameIndex = i;
+        saveAll();
+        renderAll();
+      });
+      seg.appendChild(b);
+    }
+  }
 
-  // rows: positions
-  for(const pos of POSITIONS){
-    const tr = document.createElement("tr");
-    const tdPos = document.createElement("td");
-    tdPos.textContent = pos;
-    tr.appendChild(tdPos);
+  function renderPlayersInputs(){
+    const t = currentTeam();
+    const wrap = document.getElementById("playersInputs");
+    wrap.innerHTML = "";
+    wrap.style.gridTemplateColumns = (window.innerWidth >= 780) ? "1fr 1fr" : "1fr";
 
-    for(let c=0;c<cols;c++){
-      const td = document.createElement("td");
-      if(c===g.liveP) td.classList.add("liveCol");
+    t.players.forEach((p, idx)=>{
+      const div = document.createElement("div");
+      div.className = "row";
+
+      div.innerHTML = `
+        <div class="grow">
+          <div class="muted">Player ${idx+1}</div>
+          <input type="text" value="${escapeHtml(p.name)}" data-pid="${p.id}" />
+        </div>
+        <button class="miniDanger" type="button" title="Remove player">−</button>
+      `;
+
+      const input = div.querySelector("input");
+
+      // ✅ Auto-select full name on tap/focus
+      input.addEventListener("focus", () => setTimeout(() => input.select(), 0));
+      input.addEventListener("click", () => setTimeout(() => input.select(), 0));
+
+      input.addEventListener("input", (e)=>{
+        p.name = e.target.value;
+        saveAll();
+        // IMPORTANT: do NOT rebuild player inputs on every keystroke
+        renderPositions();
+        renderBench();
+        renderScores();
+        renderStats();
+        renderAllPeriodsPositions();
+      });
+
+      const delBtn = div.querySelector("button.miniDanger");
+      delBtn.addEventListener("click", ()=> removePlayer(p.id));
+
+      wrap.appendChild(div);
+    });
+  }
+
+  function renderPeriodSeg(){
+    const g = currentGame();
+    function buildSeg(id){
+      const seg = document.getElementById(id);
+      seg.innerHTML = "";
+      for(let i=0;i<totalPeriods(g);i++){
+        const b = document.createElement("button");
+        b.textContent = periodLabel(i);
+        b.className = (g.selectedP===i) ? "active" : "";
+        b.addEventListener("click", ()=>{
+          g.selectedP = i;
+          resetTimer();
+          saveAll();
+          renderAll();
+        });
+        seg.appendChild(b);
+      }
+    }
+    buildSeg("periodSeg");
+    buildSeg("periodSegPos");
+    document.getElementById("editingPeriod").textContent = periodLabel(g.selectedP);
+    document.getElementById("livePeriodLabel").textContent = periodLabel(g.liveP);
+  }
+
+  function renderMinutesSelect(){
+    const c = currentCompetition();
+    const g = currentGame();
+    const sel = document.getElementById("minutesSelect");
+    sel.innerHTML = "";
+
+    const list = (c.format==="halves") ? TOURN_MINUTES : LEAGUE_MINUTES;
+    for(const m of list){
+      const opt = document.createElement("option");
+      opt.value = String(m);
+      opt.textContent = `${m} min`;
+      sel.appendChild(opt);
+    }
+    sel.value = String(g.baseMinutes);
+    sel.disabled = g.gameEnded || (g.timerMode==="countup");
+  }
+
+  function renderLiveWarn(){
+    const g = currentGame();
+    const warnBox = document.getElementById("liveWarnBox");
+    if(g.selectedP !== g.liveP){
+      warnBox.style.display = "block";
+      warnBox.textContent = `Heads up: you're editing ${periodLabel(g.selectedP)}, but LIVE scoring is ${periodLabel(g.liveP)}. Scoring/undo applies to LIVE.`;
+    } else {
+      warnBox.style.display = "none";
+      warnBox.textContent = "";
+    }
+  }
+
+  function renderScores(){
+    const t = currentTeam();
+    const g = currentGame();
+
+    const team = (t.name || "Home").trim() || "Home";
+    const opp  = (g.opponent || "Away").trim() || "Away";
+
+    document.getElementById("homeLabel").textContent = team;
+    document.getElementById("awayLabel").textContent = opp;
+
+    document.getElementById("homeScore").textContent = totalHome(g);
+    document.getElementById("awayScore").textContent = totalAway(g);
+
+    const liveA = g.periods[g.liveP]?.assignments || {};
+    document.getElementById("gsName").textContent = liveA.GS ? (playerById(liveA.GS)?.name || "—") : "—";
+    document.getElementById("gaName").textContent = liveA.GA ? (playerById(liveA.GA)?.name || "—") : "—";
+
+    const banner = document.getElementById("finalBanner");
+    const text = document.getElementById("finalBannerText");
+    banner.classList.remove("win","loss","draw");
+
+    if(g.gameEnded){
+      banner.style.display = "block";
+      const diff = totalHome(g) - totalAway(g);
+      if(diff > 0){ banner.classList.add("win"); text.textContent = `${team} won by ${diff}`; }
+      else if(diff < 0){ banner.classList.add("loss"); text.textContent = `${team} lost by ${Math.abs(diff)}`; }
+      else { banner.classList.add("draw"); text.textContent = `Draw`; }
+    } else {
+      banner.style.display = "none";
+    }
+  }
+
+  function renderPositions(){
+    const c = currentCompetition();
+    const t = currentTeam();
+    const g = currentGame();
+    const grid = document.getElementById("positionsGrid");
+    grid.innerHTML = "";
+    const pIdx = g.selectedP;
+    const max = basePeriods(c.format);
+
+    POSITIONS.forEach(pos=>{
+      const row = document.createElement("div");
+      row.className = "posRow";
+
+      const tag = document.createElement("div");
+      tag.className = "posTag";
+      tag.textContent = pos;
 
       const sel = document.createElement("select");
-      sel.style.width = "100%";
+      sel.style.flex = "1";
 
       const opt0 = document.createElement("option");
       opt0.value = "";
       opt0.textContent = "— select player —";
       sel.appendChild(opt0);
 
-      for(const p of teamState.players){
+      t.players.forEach(p=>{
         const opt = document.createElement("option");
         opt.value = p.id;
-        opt.textContent = `${p.name} • ${fmtPlayed(regulationPeriodsPlayedHybrid(g, p.id))}/${regMax}`;
+        const played = regulationPeriodsPlayedHybrid(g, p.id);
+        opt.textContent = `${p.name} • ${fmtPlayed(played)}/${max}`;
         sel.appendChild(opt);
-      }
-
-      sel.value = g.periods[c].assignments[pos] || "";
-      sel.addEventListener("change", ()=> setAssignment(c, pos, sel.value || null));
-
-      td.appendChild(sel);
-      tr.appendChild(td);
-    }
-    tbody.appendChild(tr);
-  }
-
-  // bench row
-  const trBench = document.createElement("tr");
-  const tdBenchLabel = document.createElement("td");
-  tdBenchLabel.innerHTML = `<span style="font-weight:950">Bench</span>`;
-  trBench.appendChild(tdBenchLabel);
-
-  for(let c=0;c<cols;c++){
-    const td = document.createElement("td");
-    if(c===g.liveP) td.classList.add("liveCol");
-    const wrap = document.createElement("div");
-    wrap.className = "benchChips";
-
-    const bench = benchPlayersForPeriod(g, c);
-    if(bench.length === 0){
-      const chip = document.createElement("span");
-      chip.className = "chip";
-      chip.textContent = "—";
-      wrap.appendChild(chip);
-    } else {
-      for(const p of bench){
-        const chip = document.createElement("span");
-        chip.className = "chip";
-        chip.textContent = `${p.name} • ${fmtPlayed(regulationPeriodsPlayedHybrid(g, p.id))}/${regMax}`;
-        wrap.appendChild(chip);
-      }
-    }
-    td.appendChild(wrap);
-    trBench.appendChild(td);
-  }
-
-  tbody.appendChild(trBench);
-
-  tbl.innerHTML = "";
-  tbl.appendChild(thead);
-  tbl.appendChild(tbody);
-
-  renderTotals();
-}
-
-function renderTotals(){
-  const g = currentGame();
-  const wrap = document.getElementById("totalsList");
-  wrap.innerHTML = "";
-  const regMax = basePeriods(teamState.format);
-
-  const sorted = [...teamState.players].sort((a,b)=>{
-    const pa = regulationPeriodsPlayedHybrid(g, a.id);
-    const pb = regulationPeriodsPlayedHybrid(g, b.id);
-    if(pb !== pa) return pb - pa;
-    return a.name.localeCompare(b.name);
-  });
-
-  for(const p of sorted){
-    const played = regulationPeriodsPlayedHybrid(g, p.id);
-    const item = document.createElement("div");
-    item.className = "pill";
-    item.innerHTML = `
-      <div style="font-weight:950">${escapeHtml(p.name)}</div>
-      <div class="muted">${fmtPlayed(played)}/${regMax} periods</div>
-    `;
-    wrap.appendChild(item);
-  }
-}
-
-function copyPositions(fromIdx, toIdx){
-  const g = currentGame();
-  const ok = confirm(`Copy positions from ${periodLabel(teamState, fromIdx)} → ${periodLabel(teamState, toIdx)}?\nThis overwrites that period's positions.`);
-  if(!ok) return;
-
-  g.periods[toIdx].assignments = JSON.parse(JSON.stringify(g.periods[fromIdx].assignments || {}));
-  saveAll();
-  renderAll();
-}
-
-/* =========================
-   GENERATE DAY (TOURNAMENT / HALVES)
-   - Asks pool games count
-   - Starts from "current point": current game + live half
-   - Keeps earlier halves/games as history
-   - If a target half already has selections -> ask overwrite vs fill blanks only
-   - Uses simple balancing + preferred positions bias
-========================= */
-function isFinalGame(game){ return game.type === "semi" || game.type === "grandfinal"; }
-
-function renumberNormalGames(){
-  let count = 0;
-  for(const g of teamState.games){
-    if(g.type === "normal"){
-      count++;
-      g.idx = count;
-    }
-  }
-}
-
-function ensurePoolGamesCount(n){
-  // Ensure there are at least n normal games, keeping finals at the end.
-  const normals = teamState.games.filter(g=>g.type==="normal");
-  let insertAt = teamState.games.findIndex(g=>isFinalGame(g));
-  if(insertAt < 0) insertAt = teamState.games.length;
-
-  const need = n - normals.length;
-  if(need <= 0) return;
-
-  for(let i=0;i<need;i++){
-    const idx = normals.length + i + 1;
-    const gg = newEmptyGame(idx, teamState.players, teamState.format);
-    gg.type = "normal";
-    teamState.games.splice(insertAt + i, 0, gg);
-  }
-  renumberNormalGames();
-}
-
-function getNormalGames(){
-  return teamState.games.filter(g=>g.type==="normal");
-}
-
-function getCurrentNormalIndex0(){
-  // currentGameIndex among normal games (0-based)
-  const cur = currentGame();
-  if(cur.type !== "normal") return -1;
-  const normals = getNormalGames();
-  return normals.findIndex(g=>g.id === cur.id);
-}
-
-function computeHistoryCounts(normals, startAbsHalf){
-  // For halves timeline: absHalf 0 = Game1 H1, 1 = Game1 H2, 2 = Game2 H1...
-  // We compute totals up to startAbsHalf-1 (history)
-  const totalByPlayer = new Map();
-  const posByPlayer = new Map(); // pid -> {pos:count}
-
-  for(const p of teamState.players){
-    totalByPlayer.set(p.id, 0);
-    posByPlayer.set(p.id, {});
-  }
-
-  function add(pid, pos){
-    if(!pid) return;
-    totalByPlayer.set(pid, (totalByPlayer.get(pid)||0) + 1);
-    const obj = posByPlayer.get(pid) || {};
-    obj[pos] = (obj[pos]||0) + 1;
-    posByPlayer.set(pid, obj);
-  }
-
-  for(let abs=0; abs<startAbsHalf; abs++){
-    const gameIdx = Math.floor(abs / 2);
-    const halfIdx = abs % 2;
-    const g = normals[gameIdx];
-    if(!g) continue;
-    const per = g.periods[halfIdx];
-    const a = per?.assignments || {};
-    for(const pos of POSITIONS){
-      add(a[pos], pos);
-    }
-  }
-
-  return { totalByPlayer, posByPlayer };
-}
-
-function prefBonus(player, pos){
-  // Lower is better in score function, so return negative bonus for match
-  const p1 = (player.pref1||"").toUpperCase().trim();
-  const p2 = (player.pref2||"").toUpperCase().trim();
-  if(p1 === pos) return -2;
-  if(p2 === pos) return -1;
-  return 0;
-}
-
-function pickBestForPos(pos, candidates, counts){
-  // score = total*10 + posCount*3 + randomSmall - prefBonus
-  // Lower wins.
-  let best = null;
-  let bestScore = Infinity;
-
-  for(const pl of candidates){
-    const total = counts.totalByPlayer.get(pl.id) || 0;
-    const posObj = counts.posByPlayer.get(pl.id) || {};
-    const pc = posObj[pos] || 0;
-    const score = total*10 + pc*3 + (Math.random()*0.01) + prefBonus(pl, pos); // prefBonus is negative
-    if(score < bestScore){
-      bestScore = score;
-      best = pl;
-    }
-  }
-  return best;
-}
-
-function generateHalfAssignments(normals, absHalf, mode, counts){
-  // mode: "overwrite" | "fillBlanks"
-  const gameIdx = Math.floor(absHalf / 2);
-  const halfIdx = absHalf % 2;
-  const g = normals[gameIdx];
-  if(!g) return;
-
-  const per = g.periods[halfIdx];
-  if(!per.assignments) per.assignments = {};
-
-  const alreadyAny = hasAnyAssignments(per);
-  if(alreadyAny && mode === "fillBlanks"){
-    // keep existing; only fill missing
-  } else if(alreadyAny && mode === "overwrite"){
-    // wipe
-    per.assignments = {};
-  }
-
-  // Build chosen set per position
-  const used = new Set(Object.values(per.assignments).filter(Boolean));
-  for(const pos of POSITIONS){
-    if(per.assignments[pos]) continue; // keep (fillBlanks)
-    const pool = teamState.players.filter(p=>!used.has(p.id));
-    const pick = pickBestForPos(pos, pool.length ? pool : teamState.players, counts);
-    if(pick){
-      per.assignments[pos] = pick.id;
-      used.add(pick.id);
-    }
-  }
-
-  // Update counts with what we just assigned (so later halves balance properly)
-  for(const pos of POSITIONS){
-    const pid = per.assignments[pos];
-    if(!pid) continue;
-    counts.totalByPlayer.set(pid, (counts.totalByPlayer.get(pid)||0) + 1);
-    const obj = counts.posByPlayer.get(pid) || {};
-    obj[pos] = (obj[pos]||0) + 1;
-    counts.posByPlayer.set(pid, obj);
-  }
-}
-
-function generateDay(){
-  if(teamState.format !== "halves"){
-    alert("Generate Day is for tournament (halves) only.");
-    return;
-  }
-
-  const normals = getNormalGames();
-  const curNormalIndex0 = getCurrentNormalIndex0();
-  if(curNormalIndex0 < 0){
-    alert("Switch to a normal (pool) game to generate from there.");
-    return;
-  }
-
-  let n = prompt("How many pool games today? (e.g. 5 or 6)", "5");
-  if(n == null) return;
-  n = Number(n);
-  if(!Number.isFinite(n) || n < 1 || n > 20){
-    alert("Enter a sensible number (1–20).");
-    return;
-  }
-
-  // Ensure we have at least n normal games
-  ensurePoolGamesCount(n);
-
-  const normals2 = getNormalGames();
-
-  // Start “after current point”:
-  // If liveP is H1 -> start at H2 of same game
-  // If liveP is H2 -> start at next game H1
-  const gcur = currentGame();
-  const startAbsHalf = (curNormalIndex0 * 2) + (gcur.liveP === 0 ? 1 : 2);
-
-  if(startAbsHalf >= n * 2){
-    alert("You are already at/after the last pool half for the day.");
-    return;
-  }
-
-  // Determine if any target halves already have assignments
-  let anyExisting = false;
-  for(let abs = startAbsHalf; abs < n*2; abs++){
-    const gi = Math.floor(abs/2);
-    const hi = abs%2;
-    const gg = normals2[gi];
-    if(gg && hasAnyAssignments(gg.periods[hi])) { anyExisting = true; break; }
-  }
-
-  let mode = "overwrite";
-  if(anyExisting){
-    const m = prompt(
-      "Some target halves already have players selected.\nType:\n  overwrite  (replace those halves)\n  fill       (only fill blanks)\n\nEnter overwrite or fill:",
-      "fill"
-    );
-    if(m == null) return;
-    mode = (String(m).toLowerCase().includes("fill")) ? "fillBlanks" : "overwrite";
-  }
-
-  // Build counts from history up to startAbsHalf
-  const counts = computeHistoryCounts(normals2, startAbsHalf);
-
-  // Generate
-  for(let abs = startAbsHalf; abs < n*2; abs++){
-    generateHalfAssignments(normals2, abs, mode, counts);
-  }
-
-  saveAll();
-  renderAll();
-  alert("Generated!");
-}
-
-/* =========================
-   FINALS TOGGLE (HALVES ONLY)
-========================= */
-function addFinal(type){
-  // type: "semi" | "grandfinal"
-  const exists = teamState.games.some(g=>g.type===type);
-  if(exists){
-    alert("That final already exists.");
-    return;
-  }
-  const gg = newEmptyGame(999, teamState.players, teamState.format);
-  gg.type = type;
-  gg.gameName = (type==="semi") ? "Semi Final" : "Grand Final";
-  teamState.games.push(gg);
-  saveAll();
-  renderAll();
-}
-
-/* =========================
-   TEAM / COMP / GAME CRUD
-========================= */
-function createCompetition(name){
-  const id = uid();
-  const comp = { id, name: name || `Competition ${indexState.comps.length+1}`, teamIds: [], currentTeamId: null };
-  indexState.comps.push(comp);
-  indexState.currentCompId = id;
-  saveAll();
-}
-
-function deleteCurrentCompetition(){
-  const c = currentComp();
-  if(!c) return;
-  const ok = confirm(`Delete competition "${c.name}"?\nThis deletes all teams inside it on this device.`);
-  if(!ok) return;
-
-  // delete team states for this comp
-  for(const tid of c.teamIds || []){
-    localStorage.removeItem(teamKey(c.id, tid));
-  }
-
-  indexState.comps = indexState.comps.filter(x=>x.id!==c.id);
-  if(indexState.comps.length){
-    indexState.currentCompId = indexState.comps[0].id;
-  } else {
-    indexState.currentCompId = null;
-  }
-  saveAll();
-  loadCurrentTeam();
-  renderAll();
-}
-
-function createTeamUnderCurrentComp(name, format){
-  const c = currentComp();
-  if(!c) return;
-
-  const id = uid();
-  c.teamIds = c.teamIds || [];
-  c.teamIds.push(id);
-  c.currentTeamId = id;
-
-  saveAll();
-
-  teamState = defaultTeamState(c.id, id, format || "quarters");
-  teamState.teamName = name || `Team ${c.teamIds.length}`;
-  saveAll();
-}
-
-function deleteCurrentTeam(){
-  const c = currentComp();
-  if(!c) return;
-  const tid = currentTeamId();
-  if(!tid) return;
-
-  const metaName = teamState?.teamName || "this team";
-  const ok = confirm(`Delete team "${metaName}" from "${c.name}"?\nThis deletes all its games + players on this device.`);
-  if(!ok) return;
-
-  c.teamIds = (c.teamIds||[]).filter(x=>x!==tid);
-  localStorage.removeItem(teamKey(c.id, tid));
-
-  c.currentTeamId = c.teamIds[0] || null;
-  saveAll();
-
-  loadCurrentTeam();
-  renderAll();
-}
-
-function switchCompetition(compId){
-  indexState.currentCompId = compId;
-  saveAll();
-  loadCurrentTeam();
-  renderAll();
-}
-
-function switchTeam(teamId){
-  const c = currentComp();
-  if(!c) return;
-  c.currentTeamId = teamId;
-  saveAll();
-  loadCurrentTeam();
-  renderAll();
-}
-
-function addGame(){
-  const g = currentGame();
-  // Insert after current game, before finals if needed (but simplest: append before first final)
-  let insertAt = teamState.games.findIndex(x=>isFinalGame(x));
-  if(insertAt < 0) insertAt = teamState.games.length;
-
-  // Determine next normal idx
-  const normals = getNormalGames();
-  const nextIdx = normals.length + 1;
-
-  const gg = newEmptyGame(nextIdx, teamState.players, teamState.format);
-  gg.type = "normal";
-
-  teamState.games.splice(insertAt, 0, gg);
-  renumberNormalGames();
-
-  // move to the new game if we were on a normal game; otherwise stay
-  teamState.currentGameIndex = teamState.games.findIndex(x=>x.id===gg.id);
-
-  stopTimerLoop();
-  saveAll();
-  renderAll();
-}
-
-function resetThisGame(){
-  const cur = currentGame();
-  const keep = { idx: cur.idx, type: cur.type, gameName: cur.gameName, gameDate: cur.gameDate, opponent: cur.opponent };
-  const replaced = newEmptyGame(keep.idx || 1, teamState.players, teamState.format);
-  replaced.type = keep.type || "normal";
-  replaced.idx = keep.idx || 1;
-  replaced.gameName = keep.gameName || "";
-  replaced.gameDate = keep.gameDate || "";
-  replaced.opponent = keep.opponent || "";
-  teamState.games[teamState.currentGameIndex] = replaced;
-
-  stopTimerLoop();
-  saveAll();
-  renderAll();
-}
-
-function resetTeam(){
-  const ok = confirm("Reset this team (players + all games)?");
-  if(!ok) return;
-
-  const compId = teamState.compId;
-  const teamId = teamState.teamId;
-  const format = teamState.format;
-  const name = teamState.teamName;
-
-  teamState = defaultTeamState(compId, teamId, format);
-  teamState.teamName = name || "";
-  stopTimerLoop();
-  saveAll();
-  renderAll();
-}
-
-function goPrevGame(){
-  if(teamState.currentGameIndex <= 0) return;
-  stopTimerLoop();
-  teamState.currentGameIndex -= 1;
-  saveAll();
-  renderAll();
-}
-function goNextGame(){
-  if(teamState.currentGameIndex >= teamState.games.length-1) return;
-  stopTimerLoop();
-  teamState.currentGameIndex += 1;
-  saveAll();
-  renderAll();
-}
-function gotoGameByIndex(i){
-  stopTimerLoop();
-  teamState.currentGameIndex = i;
-  saveAll();
-  renderAll();
-}
-
-/* =========================
-   PLAYERS MODAL
-========================= */
-function openPlayers(){ document.getElementById("playersBack").style.display="flex"; renderPlayersModal(); }
-function closePlayers(){ document.getElementById("playersBack").style.display="none"; }
-
-function addPlayer(){
-  if(teamState.players.length >= MAX_PLAYERS) return alert(`Max players is ${MAX_PLAYERS}.`);
-  const p = { id: uid(), name:`Player ${teamState.players.length+1}`, pref1:"", pref2:"" };
-  teamState.players.push(p);
-
-  // add stats entries across games
-  for(const g of teamState.games){
-    if(!g.playerStats) g.playerStats = {};
-    g.playerStats[p.id] = { goalsTotal:0, goalsByP:Array.from({length:12}, ()=>0) };
-  }
-
-  saveAll();
-  renderAll();
-  renderPlayersModal();
-}
-
-function clearPlayerFromAll(pid){
-  for(const g of teamState.games){
-    for(const per of g.periods){
-      for(const pos of POSITIONS){
-        if(per.assignments?.[pos] === pid) per.assignments[pos] = null;
-      }
-    }
-    if(g.playerStats) delete g.playerStats[pid];
-    if(g.playCredits){
-      for(const k of Object.keys(g.playCredits)){
-        if(g.playCredits[k] && g.playCredits[k][pid] != null) delete g.playCredits[k][pid];
-      }
-    }
-  }
-}
-
-function removePlayer(pid){
-  if(teamState.players.length <= MIN_PLAYERS){
-    return alert(`You must keep at least ${MIN_PLAYERS} players.`);
-  }
-  const p = playerById(pid);
-  const ok = confirm(`Remove ${p?.name || "this player"}?\nThis also removes them from all assigned positions.`);
-  if(!ok) return;
-
-  clearPlayerFromAll(pid);
-  teamState.players = teamState.players.filter(x=>x.id!==pid);
-
-  saveAll();
-  renderAll();
-  renderPlayersModal();
-}
-
-function filterPosOptions(val){
-  // Return options starting with typed characters, e.g. "w" => ["WA","WD"]
-  const v = (val||"").toUpperCase().trim();
-  if(!v) return POSITIONS.slice();
-  return POSITIONS.filter(p=>p.startsWith(v));
-}
-
-function renderPlayersModal(){
-  const wrap = document.getElementById("playersList");
-  wrap.innerHTML = "";
-
-  teamState.players.forEach((p, idx)=>{
-    const row = document.createElement("div");
-    row.className = "pill";
-    row.style.alignItems = "flex-start";
-
-    const left = document.createElement("div");
-    left.style.flex = "1";
-
-    left.innerHTML = `
-      <div class="muted">Player ${idx+1}</div>
-      <input type="text" value="${escapeHtml(p.name)}" data-pid="${p.id}" style="width:100%; margin-top:6px;" />
-      <div class="muted" style="margin-top:8px;">Preferred positions (optional)</div>
-      <div class="prefRow" style="margin-top:6px;">
-        <input type="text" value="${escapeHtml(p.pref1||"")}" placeholder="Pref 1 (type W → WA/WD)" data-pref="1" list="posList" />
-        <input type="text" value="${escapeHtml(p.pref2||"")}" placeholder="Pref 2 (type G → GA/GD/GK)" data-pref="2" list="posList" />
-      </div>
-      <div class="muted" style="margin-top:6px;">Tip: type a letter then tap the suggestion (or finish with GS/GA/WA/C/WD/GD/GK).</div>
-    `;
-
-    const del = document.createElement("button");
-    del.className = "miniDanger";
-    del.type = "button";
-    del.textContent = "−";
-    del.title = "Remove player";
-
-    del.addEventListener("click", ()=>removePlayer(p.id));
-
-    // Name auto-select
-    const nameInput = left.querySelector('input[type="text"][data-pid]');
-    nameInput.addEventListener("focus", ()=>setTimeout(()=>nameInput.select(),0));
-    nameInput.addEventListener("click", ()=>setTimeout(()=>nameInput.select(),0));
-    nameInput.addEventListener("input", (e)=>{
-      p.name = e.target.value;
-      saveAll();
-      // light refresh
-      renderAll();
-    });
-
-    // Pref fields (with quick filtering to datalist by rewriting list on input)
-    const prefInputs = left.querySelectorAll('input[data-pref]');
-    prefInputs.forEach(inp=>{
-      inp.addEventListener("input", ()=>{
-        // validate / normalize later
-        const which = inp.getAttribute("data-pref");
-        const raw = inp.value.toUpperCase();
-        // update datalist to filtered options
-        const dl = document.getElementById("posList");
-        const opts = filterPosOptions(raw);
-        dl.innerHTML = opts.map(x=>`<option value="${x}"></option>`).join("");
-
-        if(which==="1") p.pref1 = raw;
-        if(which==="2") p.pref2 = raw;
-        saveAll();
       });
 
-      inp.addEventListener("blur", ()=>{
-        // normalize to valid or blank
-        const raw = (inp.value||"").toUpperCase().trim();
-        const ok = POSITIONS.includes(raw) ? raw : "";
-        inp.value = ok;
-        const which = inp.getAttribute("data-pref");
-        if(which==="1") p.pref1 = ok;
-        if(which==="2") p.pref2 = ok;
-        saveAll();
-      });
+      sel.value = g.periods[pIdx].assignments[pos] || "";
+      sel.addEventListener("change", ()=> setAssignment(pos, sel.value || null));
+
+      row.appendChild(tag);
+      row.appendChild(sel);
+      grid.appendChild(row);
+    });
+  }
+
+  function renderBench(){
+    const c = currentCompetition();
+    const t = currentTeam();
+    const g = currentGame();
+    const list = document.getElementById("benchList");
+    list.innerHTML = "";
+
+    const pIdx = g.selectedP;
+    const bench = benchPlayersForP(g, pIdx);
+    document.getElementById("benchCount").textContent = `${bench.length} on bench`;
+
+    const max = basePeriods(c.format);
+
+    bench.forEach(p=>{
+      const item = document.createElement("div");
+      item.className = "pill";
+
+      const played = regulationPeriodsPlayedHybrid(g, p.id);
+
+      const left = document.createElement("div");
+      left.innerHTML = `
+        <div style="font-weight:950">${escapeHtml(p.name)}</div>
+        <div class="muted">On court: ${fmtPlayed(played)}/${max}</div>
+      `;
+
+      const right = document.createElement("div");
+      right.style.display = "flex";
+      right.style.gap = "8px";
+      right.style.alignItems = "center";
+
+      const planned = getPlannedPos(g, pIdx, p.id);
+
+      const sel = document.createElement("select");
+      sel.innerHTML = `
+        <option value="">Next: —</option>
+        ${POSITIONS.map(pos=>`<option value="${pos}">Next: ${pos}</option>`).join("")}
+      `;
+      sel.value = planned;
+      sel.addEventListener("change", ()=> setPlannedPos(g, pIdx, p.id, sel.value));
+
+      const btn = document.createElement("button");
+      btn.className = "primary small";
+      btn.textContent = "Sub In";
+      btn.disabled = g.gameEnded;
+      btn.addEventListener("click", ()=> subInFromBench(p.id));
+
+      right.appendChild(sel);
+      right.appendChild(btn);
+
+      item.appendChild(left);
+      item.appendChild(right);
+
+      list.appendChild(item);
+    });
+  }
+
+  function renderStats(){
+    const c = currentCompetition();
+    const t = currentTeam();
+    const g = currentGame();
+    const list = document.getElementById("statsList");
+    list.innerHTML = "";
+
+    const sorted = [...t.players].sort((a,b)=>{
+      const ga = g.playerStats[a.id]?.goalsTotal || 0;
+      const gb = g.playerStats[b.id]?.goalsTotal || 0;
+      if(gb !== ga) return gb - ga;
+      return a.name.localeCompare(b.name);
     });
 
-    row.appendChild(left);
-    row.appendChild(del);
-    wrap.appendChild(row);
-  });
-}
+    const max = basePeriods(c.format);
 
-/* =========================
-   SYNC (TEAM EXPORT/IMPORT under comp)
-========================= */
-function openSync(){ document.getElementById("syncBack").style.display="flex"; }
-function closeSync(){ document.getElementById("syncBack").style.display="none"; }
+    sorted.forEach(p=>{
+      const gameGoals = g.playerStats[p.id]?.goalsTotal || 0;
+      const played = regulationPeriodsPlayedHybrid(g, p.id);
 
-async function copyText(text){
-  try { await navigator.clipboard.writeText(text); alert("Copied."); }
-  catch { alert("Copy failed (Safari can block clipboard sometimes)."); }
-}
-
-function exportTeam(){
-  const c = currentComp();
-  if(!c || !teamState) return;
-
-  const payload = {
-    version: 2,
-    compId: c.id,
-    compName: c.name,
-    teamId: teamState.teamId,
-    teamState
-  };
-  const text = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-  document.getElementById("syncText").value = text;
-  copyText(text);
-}
-
-function importTeam(){
-  const raw = (document.getElementById("syncText").value || "").trim();
-  if(!raw) return alert("Paste export text first.");
-
-  let payload;
-  try{
-    payload = JSON.parse(decodeURIComponent(escape(atob(raw))));
-  } catch {
-    return alert("That doesn’t look like valid export text.");
+      const item = document.createElement("div");
+      item.className = "pill";
+      item.innerHTML = `
+        <div>
+          <div style="font-weight:950">${escapeHtml(p.name)}</div>
+          <div class="muted">Reg periods on court: ${fmtPlayed(played)}/${max}</div>
+        </div>
+        <div class="right"><div><b>${gameGoals}</b> goals</div></div>
+      `;
+      list.appendChild(item);
+    });
   }
-  if(!payload?.teamState?.teamId || !payload?.teamState?.compId) return alert("Invalid payload.");
 
-  // Import into current competition (not creating a new comp automatically)
-  const c = currentComp();
-  if(!c) return alert("Create/select a competition first.");
+  function renderGoalLog(){
+    const g = currentGame();
+    const log = document.getElementById("goalLog");
+    log.innerHTML = "";
+    const pIdx = g.liveP;
+    const events = (g.periods[pIdx].events || []).filter(e=>e.type==="playerGoal");
+    if(events.length===0){
+      log.innerHTML = `<div class="muted">No credited goals in LIVE (${periodLabel(pIdx)}) yet.</div>`;
+      return;
+    }
+    [...events].reverse().forEach(e=>{
+      const dt = new Date(e.t);
+      const time = dt.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+      const p = playerById(e.payload.pid);
+      const item = document.createElement("div");
+      item.className = "pill";
+      item.innerHTML = `<div>${escapeHtml(p ? p.name : "Unknown")} <span class="muted">(${e.payload.pos})</span></div><div class="muted">${time}</div>`;
+      log.appendChild(item);
+    });
+  }
 
-  // Replace current team if exists, otherwise add new
-  const incoming = payload.teamState;
-  incoming.compId = c.id; // force into current comp
-  const tid = incoming.teamId;
+  function renderPeriodTable(){
+    const t = currentTeam();
+    const g = currentGame();
+    const wrap = document.getElementById("periodTableWrap");
 
-  c.teamIds = c.teamIds || [];
-  if(!c.teamIds.includes(tid)) c.teamIds.push(tid);
-  c.currentTeamId = tid;
+    const team = (t.name || "Home").trim() || "Home";
+    const opp  = (g.opponent || "Away").trim() || "Away";
 
-  saveJSON(teamKey(c.id, tid), incoming);
-  saveAll();
+    const rows = g.periods.map((p,i)=>`
+      <tr>
+        <td><b>${periodLabel(i)}</b>${(i===g.liveP) ? ' <span class="kbd">LIVE</span>' : ''}</td>
+        <td>${p.homeScore}</td>
+        <td>${p.awayScore}</td>
+      </tr>
+    `).join("");
 
-  loadCurrentTeam();
-  closeSync();
-  renderAll();
-  alert("Imported into this competition.");
-}
+    wrap.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>Period</th>
+            <th>${escapeHtml(team)}</th>
+            <th>${escapeHtml(opp)}</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows}
+          <tr>
+            <td><b>Total</b></td>
+            <td><b>${totalHome(g)}</b></td>
+            <td><b>${totalAway(g)}</b></td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+  }
 
-/* =========================
-   RENDER
-========================= */
-function stopTimerLoop(){ if(timerInterval){ clearInterval(timerInterval); timerInterval=null; } }
+  function renderAllPeriodsPositions(){
+    const g = currentGame();
+    const wrap = document.getElementById("allPeriodsPositions");
+    wrap.innerHTML = "";
 
-function renderWelcome(){
-  const showWelcome = !hasComps();
-  document.getElementById("welcomeCard").style.display = showWelcome ? "block" : "none";
-  const ids = ["topCard","liveCard","positionsCard","notesCard"];
-  ids.forEach(id => document.getElementById(id).style.display = showWelcome ? "none" : "block");
-}
+    for(let p=0;p<totalPeriods(g);p++){
+      const a = g.periods[p].assignments || {};
+      const line = POSITIONS.map(pos=>{
+        const pid = a[pos];
+        return `<span class="kbd">${pos}</span> ${escapeHtml(pid ? (playerById(pid)?.name || "—") : "—")}`;
+      }).join(" &nbsp; ");
 
-function renderCompTabs(){
-  const seg = document.getElementById("compSeg");
-  seg.innerHTML = "";
-  if(!hasComps()) return;
+      const section = document.createElement("div");
+      section.className = "pill";
+      section.style.display = "block";
+      section.innerHTML = `<div style="font-weight:950;margin-bottom:6px;">${periodLabel(p)}${p===g.liveP ? ' <span class="kbd">LIVE</span>' : ''}</div><div>${line}</div>`;
+      wrap.appendChild(section);
+    }
+  }
 
-  indexState.comps.forEach(c=>{
-    const b = document.createElement("button");
-    b.textContent = (c.name || "Competition").slice(0,18);
-    b.className = (c.id === indexState.currentCompId) ? "active" : "";
-    b.addEventListener("click", ()=>switchCompetition(c.id));
-    seg.appendChild(b);
-  });
-}
+  function populateCopyTargets(){
+    const g = currentGame();
+    const sel = document.getElementById("copyTargetPeriod");
+    sel.innerHTML = "";
+    for(let i=0;i<totalPeriods(g);i++){
+      if(i===g.selectedP) continue;
+      const opt = document.createElement("option");
+      opt.value = String(i);
+      opt.textContent = periodLabel(i);
+      sel.appendChild(opt);
+    }
+  }
 
-function renderTeamTabs(){
-  const seg = document.getElementById("teamSeg");
-  seg.innerHTML = "";
-  const c = currentComp();
-  if(!c || !c.teamIds?.length) return;
-
-  c.teamIds.forEach(tid=>{
-    const st = loadJSON(teamKey(c.id, tid));
-    const name = st?.teamName || "Team";
-    const b = document.createElement("button");
-    b.textContent = name.slice(0,18);
-    b.className = (tid === c.currentTeamId) ? "active" : "";
-    b.addEventListener("click", ()=>switchTeam(tid));
-    seg.appendChild(b);
-  });
-}
-
-function formatLabel(){ return (teamState.format==="halves") ? "2 halves" : "4 quarters"; }
-
-function renderGameSeg(){
-  const seg = document.getElementById("gameSeg");
-  seg.innerHTML = "";
-  teamState.games.forEach((g,i)=>{
-    const b = document.createElement("button");
-    const label = g.gameName?.trim() ? g.gameName.trim() : (g.type==="normal" ? `Game ${g.idx}` : (g.type==="semi" ? "SF" : "GF"));
-    b.textContent = label.slice(0,10);
-    b.className = (i===teamState.currentGameIndex) ? "active" : "";
-    b.addEventListener("click", ()=>gotoGameByIndex(i));
-    seg.appendChild(b);
-  });
-}
-
-function renderGameHeader(){
-  const g = currentGame();
-  const total = teamState.games.length;
-
-  document.getElementById("teamName").value = teamState.teamName || "";
-  document.getElementById("formatLabel").textContent = formatLabel();
-
-  const label = g.gameName?.trim()
-    ? g.gameName.trim()
-    : (g.type==="normal" ? `Game ${g.idx}` : (g.type==="semi" ? "Semi Final" : "Grand Final"));
-
-  document.getElementById("gameLabel").textContent = label;
-  document.getElementById("gameCountLabel").textContent = `(${total} game${total===1?'':'s'})`;
-
-  document.getElementById("gameName").value = g.gameName || "";
-  document.getElementById("gameDate").value = g.gameDate || "";
-  document.getElementById("opponent").value = g.opponent || "";
-  document.getElementById("notes").value = g.notes || "";
-
-  document.getElementById("prevGameBtn").disabled = (teamState.currentGameIndex <= 0);
-  document.getElementById("nextGameBtn").disabled = (teamState.currentGameIndex >= teamState.games.length - 1);
-
-  // tournament tools visibility
-  const tt = document.getElementById("tournTools");
-  tt.style.display = (teamState.format==="halves") ? "flex" : "none";
-
-  const finalsToggle = document.getElementById("finalsToggle");
-  finalsToggle.checked = !!teamState.finalsActive;
-  const showFinalBtns = (teamState.format==="halves") && !!teamState.finalsActive;
-  document.getElementById("addSemiBtn").style.display = showFinalBtns ? "inline-block" : "none";
-  document.getElementById("addGFBtn").style.display = showFinalBtns ? "inline-block" : "none";
-}
-
-function renderLivePeriodSeg(){
-  const g = currentGame();
-  const seg = document.getElementById("livePeriodSeg");
-  seg.innerHTML = "";
-  for(let i=0;i<totalPeriods(g);i++){
-    const b = document.createElement("button");
-    b.textContent = periodLabel(teamState, i);
-    b.className = (g.liveP===i) ? "active" : "";
-    b.addEventListener("click", ()=>{
-      g.liveP = i;
-      resetTimer();
-      saveAll();
+  function wireCopyButtons(){
+    const g = currentGame();
+    document.getElementById("copyPositionsBtn").onclick = ()=>{
+      const target = Number(document.getElementById("copyTargetPeriod").value);
+      const ok = confirm(`Copy positions from ${periodLabel(g.selectedP)} to ${periodLabel(target)}?\nThis will overwrite ${periodLabel(target)} positions.`);
+      if(!ok) return;
+      copyAssignments(g.selectedP, target);
       renderAll();
-    });
-    seg.appendChild(b);
+      alert(`Copied ${periodLabel(g.selectedP)} positions to ${periodLabel(target)}.`);
+    };
+
+    document.getElementById("copyToNextBtn").onclick = ()=>{
+      const target = Math.min(totalPeriods(g)-1, g.selectedP + 1);
+      if(target === g.selectedP) return alert("Already at last period.");
+      const ok = confirm(`Copy positions from ${periodLabel(g.selectedP)} to ${periodLabel(target)}?\nThis will overwrite ${periodLabel(target)} positions.`);
+      if(!ok) return;
+      copyAssignments(g.selectedP, target);
+      renderAll();
+      alert(`Copied ${periodLabel(g.selectedP)} positions to ${periodLabel(target)}.`);
+    };
   }
-}
 
-function renderMinutesSelect(){
-  const g = currentGame();
-  const sel = document.getElementById("minutesSelect");
-  sel.innerHTML = "";
-  const list = (teamState.format==="halves") ? TOURN_MINUTES : LEAGUE_MINUTES;
+  function updateEndButtons(){
+    const c = currentCompetition();
+    const g = currentGame();
 
-  for(const m of list){
-    const opt = document.createElement("option");
-    opt.value = String(m);
-    opt.textContent = `${m} min`;
-    sel.appendChild(opt);
+    const endBtn = document.getElementById("periodFinishedBtn");
+    const reopenBtn = document.getElementById("reopenBtn");
+    const startOTBtn = document.getElementById("startOTBtn");
+
+    startOTBtn.style.display = canStartOT(g) ? "inline-block" : "none";
+
+    const base = basePeriods(c.format);
+    const ot1Index = base;
+    const ot2Index = base + 1;
+
+    if(g.gameEnded){
+      endBtn.textContent = "Game ended";
+      endBtn.disabled = true;
+      reopenBtn.style.display = "inline-block";
+    } else {
+      reopenBtn.style.display = "none";
+      endBtn.disabled = false;
+
+      if(g.otCount === 2 && g.liveP === ot1Index){
+        endBtn.textContent = "OT1 finished → OT2";
+      } else if(g.otCount === 2 && g.liveP === ot2Index){
+        endBtn.textContent = "End game";
+      } else {
+        const isLast = (g.liveP >= totalPeriods(g)-1);
+        if(isLast){
+          endBtn.textContent = "End game";
+        } else {
+          endBtn.textContent = (c.format==="halves") ? "Half finished → Next" : "Qtr finished → Next";
+        }
+      }
+    }
+
+    const lockIds = ["homePlus","homeMinus","awayPlus","awayMinus","undoBtn","gsPlus","gaPlus","setLiveToEditingBtn","timerResetBtn","timerStartBtn","minutesSelect"];
+    for(const id of lockIds){
+      const el = document.getElementById(id);
+      if(el) el.disabled = !!g.gameEnded || (id==="minutesSelect" && (g.timerMode==="countup"));
+    }
   }
-  sel.value = String(g.baseMinutes);
-  sel.disabled = g.gameEnded || (g.timerMode==="countup") || isOTIndex(g.liveP);
 
-  const otSel = document.getElementById("otMinutesSelect");
-  otSel.innerHTML = "";
-  for(const m of OT_MINUTES_OPTS){
-    const opt = document.createElement("option");
-    opt.value = String(m);
-    opt.textContent = `OT ${m} min`;
-    otSel.appendChild(opt);
+  function renderWelcome(){
+    const showWelcome = !hasCompetitions();
+    document.getElementById("welcomeCard").style.display = showWelcome ? "block" : "none";
+
+    const sections = ["topCard","setupCard","periodCard","positionsCard","statsCard","summaryCard","notesCard"];
+    for(const id of sections){
+      document.getElementById(id).style.display = showWelcome ? "none" : "block";
+    }
   }
-  otSel.value = String(g.otMinutes);
-  otSel.disabled = g.gameEnded || (g.timerMode==="countup") || !isOTIndex(g.liveP);
-}
 
-function renderScores(){
-  const g = currentGame();
-  const team = (teamState.teamName || "Home").trim() || "Home";
-  const opp  = (g.opponent || "Away").trim() || "Away";
+  function renderAll(){
+    ensureIntegrity();
+    renderWelcome();
+    renderCompTabs();
+    if(!hasCompetitions()) return;
 
-  document.getElementById("homeLabel").textContent = team;
-  document.getElementById("awayLabel").textContent = opp;
+    renderTopFields();
+    renderTeamTabs();
 
-  document.getElementById("homeScore").textContent = totalHome(g);
-  document.getElementById("awayScore").textContent = totalAway(g);
+    // if comp exists but no team yet, prompt add team
+    if(!hasTeamsInComp()){
+      // hide game sections but keep top card visible
+      const hideIds = ["setupCard","periodCard","positionsCard","statsCard","summaryCard","notesCard"];
+      hideIds.forEach(id => document.getElementById(id).style.display = "none");
+      return;
+    }
 
-  const liveA = g.periods[g.liveP]?.assignments || {};
-  document.getElementById("gsName").textContent = liveA.GS ? (playerById(liveA.GS)?.name || "—") : "—";
-  document.getElementById("gaName").textContent = liveA.GA ? (playerById(liveA.GA)?.name || "—") : "—";
-
-  const banner = document.getElementById("finalBanner");
-  const text = document.getElementById("finalBannerText");
-  banner.classList.remove("win","loss","draw");
-  if(g.gameEnded){
-    banner.style.display = "block";
-    const diff = totalHome(g) - totalAway(g);
-    if(diff > 0){ banner.classList.add("win"); text.textContent = `${team} won by ${diff}`; }
-    else if(diff < 0){ banner.classList.add("loss"); text.textContent = `${team} lost by ${Math.abs(diff)}`; }
-    else { banner.classList.add("draw"); text.textContent = `Draw`; }
-  } else {
-    banner.style.display = "none";
+    renderGameHeader();
+    renderRoundSeg();
+    renderPlayersInputs();
+    renderPeriodSeg();
+    renderMinutesSelect();
+    renderTimer();
+    renderLiveWarn();
+    renderScores();
+    renderPositions();
+    renderBench();
+    renderStats();
+    renderGoalLog();
+    renderPeriodTable();
+    renderAllPeriodsPositions();
+    populateCopyTargets();
+    wireCopyButtons();
+    updateEndButtons();
   }
-}
 
-function renderLiveWarn(){
-  const g = currentGame();
-  const box = document.getElementById("liveWarnBox");
-  const liveLabel = periodLabel(teamState, g.liveP);
-  if(isOTIndex(g.liveP)){
-    box.style.display = "block";
-    box.textContent = `LIVE is ${liveLabel}. OT timer uses OT minutes.`;
-  } else {
-    box.style.display = "none";
-    box.textContent = "";
-  }
-}
+  /* ===============================
+     WIRING
+  =============================== */
+  document.getElementById("howtoBtn").addEventListener("click", openHowto);
+  document.getElementById("howtoClose").addEventListener("click", closeHowtoAndContinue);
+  document.getElementById("howtoOk").addEventListener("click", closeHowtoAndContinue);
+  document.getElementById("howtoDontShow").addEventListener("click", closeHowtoAndContinue);
+  document.getElementById("howtoBack").addEventListener("click", (e)=>{ if(e.target.id==="howtoBack") closeHowtoAndContinue(); });
 
-function renderGoalLog(){
-  const g = currentGame();
-  const log = document.getElementById("goalLog");
-  log.innerHTML = "";
-  const pIdx = g.liveP;
-  const events = (g.periods[pIdx].events || []).filter(e=>e.type==="playerGoal");
-  if(events.length===0){
-    log.innerHTML = `<div class="muted">No credited goals in LIVE (${periodLabel(teamState, pIdx)}) yet.</div>`;
-    return;
-  }
-  [...events].reverse().forEach(e=>{
-    const dt = new Date(e.t);
-    const time = dt.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-    const p = playerById(e.payload.pid);
-    const item = document.createElement("div");
-    item.className = "pill";
-    item.innerHTML = `<div>${escapeHtml(p ? p.name : "Unknown")} <span class="muted">(${e.payload.pos})</span></div><div class="muted">${time}</div>`;
-    log.appendChild(item);
+  document.getElementById("welcomeAddCompBtn").addEventListener("click", openCompModal);
+
+  document.getElementById("addCompBtn").addEventListener("click", openCompModal);
+  document.getElementById("compClose").addEventListener("click", closeCompModal);
+  document.getElementById("compCreateBtn").addEventListener("click", createCompetitionFromModal);
+  document.getElementById("compBack").addEventListener("click", (e)=>{ if(e.target.id==="compBack") closeCompModal(); });
+
+  document.getElementById("deleteCompBtn").addEventListener("click", deleteCurrentCompetition);
+
+  document.getElementById("addTeamBtn").addEventListener("click", openTeamModal);
+  document.getElementById("teamClose").addEventListener("click", closeTeamModal);
+  document.getElementById("teamCreateBtn").addEventListener("click", createTeamFromModal);
+  document.getElementById("teamBack").addEventListener("click", (e)=>{ if(e.target.id==="teamBack") closeTeamModal(); });
+
+  document.getElementById("importPlayersBtn").addEventListener("click", importPlayersIntoNewTeam);
+
+  document.getElementById("deleteTeamBtn").addEventListener("click", deleteCurrentTeam);
+
+  document.getElementById("compName").addEventListener("input", e=>{
+    const c = currentCompetition();
+    c.name = e.target.value;
+    saveAll();
+    renderCompTabs();
   });
-}
 
-function updateEndButtons(){
-  const g = currentGame();
-  const endBtn = document.getElementById("periodFinishedBtn");
-  const reopenBtn = document.getElementById("reopenBtn");
-  const startOTBtn = document.getElementById("startOTBtn");
+  document.getElementById("teamName").addEventListener("input", e=>{
+    const t = currentTeam();
+    t.name = e.target.value;
+    saveAll();
+    renderTeamTabs();
+    renderScores();
+    renderPeriodTable();
+  });
 
-  startOTBtn.style.display = canStartOT(g) ? "inline-block" : "none";
+  document.getElementById("opponent").addEventListener("input", e=>{
+    const g = currentGame();
+    g.opponent = e.target.value;
+    saveAll(); renderScores(); renderPeriodTable();
+  });
+  document.getElementById("roundName").addEventListener("input", e=>{
+    currentGame().roundName = e.target.value;
+    saveAll();
+  });
+  document.getElementById("gameDate").addEventListener("input", e=>{
+    currentGame().gameDate = e.target.value;
+    saveAll();
+  });
+  document.getElementById("notes").addEventListener("input", e=>{
+    currentGame().notes = e.target.value;
+    saveAll();
+  });
 
-  const base = basePeriods(teamState.format);
-  const ot1Index = base;
-  const ot2Index = base + 1;
-  const lastIndex = totalPeriods(g) - 1;
+  document.getElementById("addGameBtn").addEventListener("click", addGame);
+  document.getElementById("prevGameBtn").addEventListener("click", goPrevGame);
+  document.getElementById("nextGameBtn").addEventListener("click", goNextGame);
+  document.getElementById("newGameBtn").addEventListener("click", ()=>{
+    const g = currentGame();
+    if(confirm(`Reset only Game ${g.round}?`)) resetThisGame();
+  });
 
-  if(g.gameEnded){
-    endBtn.textContent = "Game ended";
-    endBtn.disabled = true;
-    reopenBtn.style.display = "inline-block";
-  } else {
-    reopenBtn.style.display = "none";
-    endBtn.disabled = false;
+  document.getElementById("resetTeamBtn").addEventListener("click", resetTeam);
 
-    if(g.otCount === 2 && g.liveP === ot1Index){
-      endBtn.textContent = "OT1 finished → OT2";
-    } else if(g.otCount === 2 && g.liveP === ot2Index){
-      endBtn.textContent = "End game";
-    } else if(g.liveP >= lastIndex){
-      endBtn.textContent = "End game";
-    } else {
-      endBtn.textContent = (teamState.format==="halves") ? "Half finished → Next" : "Qtr finished → Next";
+  document.getElementById("setLiveToEditingBtn").addEventListener("click", ()=>{
+    const g = currentGame();
+    g.liveP = g.selectedP;
+    saveAll(); renderAll();
+  });
+
+  document.getElementById("periodFinishedBtn").addEventListener("click", endOrNextPeriod);
+  document.getElementById("startOTBtn").addEventListener("click", startOT);
+  document.getElementById("reopenBtn").addEventListener("click", reopenGame);
+
+  document.getElementById("minutesSelect").addEventListener("change", e=>{
+    const g = currentGame();
+    g.baseMinutes = Number(e.target.value);
+    if(!g.timerRunning && !isOTIndex(g.selectedP)){
+      g.timerRemaining = g.baseMinutes * 60;
+      g.timerLastTick = 0;
+      // reset halfway warning for that period when minutes changed
+      g.halfWarned[g.liveP] = false;
     }
-  }
+    saveAll();
+    renderAll();
+  });
 
-  const lockIds = ["homePlus","homeMinus","awayPlus","awayMinus","undoBtn","gsPlus","gaPlus","timerResetBtn","timerStartBtn","minutesSelect","otMinutesSelect"];
-  for(const id of lockIds){
-    const el = document.getElementById(id);
-    if(!el) continue;
-    // minutesSelect locked during OT or play-on
-    if(id==="minutesSelect"){
-      el.disabled = !!g.gameEnded || (g.timerMode==="countup") || isOTIndex(g.liveP);
-    } else if(id==="otMinutesSelect"){
-      el.disabled = !!g.gameEnded || (g.timerMode==="countup") || !isOTIndex(g.liveP);
-    } else {
-      el.disabled = !!g.gameEnded;
+  document.getElementById("timerStartBtn").addEventListener("click", toggleTimer);
+  document.getElementById("timerResetBtn").addEventListener("click", resetTimer);
+
+  document.getElementById("homePlus").addEventListener("click", ()=>scoreTeam("home", +1));
+  document.getElementById("homeMinus").addEventListener("click", ()=>scoreTeam("home", -1));
+  document.getElementById("awayPlus").addEventListener("click", ()=>scoreTeam("away", +1));
+  document.getElementById("awayMinus").addEventListener("click", ()=>scoreTeam("away", -1));
+  document.getElementById("gsPlus").addEventListener("click", ()=>scoreFromPosition("GS"));
+  document.getElementById("gaPlus").addEventListener("click", ()=>scoreFromPosition("GA"));
+  document.getElementById("undoBtn").addEventListener("click", undo);
+
+  document.getElementById("copySummaryBtn").addEventListener("click", ()=>{
+    const t = currentTeam();
+    const g = currentGame();
+    const team = (t.name || "Home").trim() || "Home";
+    const opp  = (g.opponent || "Away").trim() || "Away";
+    const lines = [];
+    lines.push(`${currentCompetition().name} • ${team} • Game ${g.round}`);
+    if(g.gameDate) lines.push(`Date: ${g.gameDate}`);
+    if((g.roundName||"").trim()) lines.push(`Name: ${g.roundName.trim()}`);
+    lines.push(`${team} ${totalHome(g)} - ${totalAway(g)} ${opp}`);
+    lines.push("");
+    lines.push("Rotations:");
+    for(let p=0;p<totalPeriods(g);p++){
+      const a = g.periods[p].assignments || {};
+      const posText = POSITIONS.map(pos=>`${pos}: ${a[pos] ? (playerById(a[pos])?.name || "—") : "—"}`).join(" | ");
+      lines.push(`${periodLabel(p)}: ${posText}`);
     }
-  }
-}
+    if((g.notes||"").trim()){
+      lines.push("");
+      lines.push(`Notes: ${g.notes.trim()}`);
+    }
+    copyText(lines.join("\n"));
+  });
 
-function renderAll(){
-  // integrity
-  if(!indexState || !Array.isArray(indexState.comps)) indexState = defaultIndex();
-  if(hasComps() && !indexState.currentCompId) indexState.currentCompId = indexState.comps[0].id;
+  document.getElementById("syncBtn").addEventListener("click", ()=>{
+    document.getElementById("syncText").value = "";
+    openSyncModal();
+  });
+  document.getElementById("syncClose").addEventListener("click", closeSyncModal);
+  document.getElementById("syncBack").addEventListener("click", (e)=>{ if(e.target.id==="syncBack") closeSyncModal(); });
+  document.getElementById("syncExport").addEventListener("click", exportTeam);
+  document.getElementById("syncImport").addEventListener("click", importTeamReplace);
+  document.getElementById("syncClear").addEventListener("click", ()=>{ document.getElementById("syncText").value=""; });
 
-  renderWelcome();
-  if(!hasComps()) return;
+  document.getElementById("addPlayerBtn").addEventListener("click", addPlayer);
 
-  // Ensure current comp/team pointers are valid
-  const c = currentComp();
-  if(!c.teamIds) c.teamIds = [];
-  if(!c.currentTeamId && c.teamIds.length) c.currentTeamId = c.teamIds[0];
-
-  saveAll(); // persist pointer fixes
-
-  loadCurrentTeam();
-
-  renderCompTabs();
-  renderTeamTabs();
-
-  if(!teamState){
-    // No teams under this comp yet
-    // Hide main sections until team exists
-    ["liveCard","positionsCard","notesCard"].forEach(id => document.getElementById(id).style.display = "none");
-    document.getElementById("teamName").value = "";
-    return;
-  }
-
-  ensureTeamIntegrity();
-
-  renderGameSeg();
-  renderGameHeader();
-
-  renderLivePeriodSeg();
-  renderMinutesSelect();
-  renderTimer();
-  renderScores();
-  renderLiveWarn();
-  renderGoalLog();
-
-  renderPositionsGrid();
-  updateEndButtons();
-}
-
-/* =========================
-   MODALS
-========================= */
-function openHowto(){ document.getElementById("howtoBack").style.display="flex"; }
-function closeHowto(){ document.getElementById("howtoBack").style.display="none"; markHowtoSeen(); }
-
-function openCompModal(){
-  document.getElementById("newCompName").value = "";
-  document.getElementById("compBack").style.display = "flex";
-}
-function closeCompModal(){ document.getElementById("compBack").style.display = "none"; }
-
-function openTeamModal(){
-  document.getElementById("newTeamName").value = "";
-  // default radio
-  const r = document.querySelector('input[name="newFormat"][value="quarters"]');
-  if(r) r.checked = true;
-  document.getElementById("teamBack").style.display = "flex";
-}
-function closeTeamModal(){ document.getElementById("teamBack").style.display = "none"; }
-
-/* =========================
-   INIT
-========================= */
-function init(){
-  // If comps exist but currentCompId invalid
-  if(hasComps() && !indexState.comps.some(c=>c.id===indexState.currentCompId)){
-    indexState.currentCompId = indexState.comps[0].id;
-  }
-
+  /* ===============================
+     INIT
+  =============================== */
+  ensureIntegrity();
+  initRollups();
   renderAll();
 
   if(!hasSeenHowto()){
     openHowto();
+  } else if(!hasCompetitions()){
+    openCompModal();
   }
-}
 
-/* =========================
-   WIRING
-========================= */
-// How-to
-document.getElementById("howtoBtn").addEventListener("click", openHowto);
-document.getElementById("howtoClose").addEventListener("click", closeHowto);
-document.getElementById("howtoOk").addEventListener("click", closeHowto);
-document.getElementById("howtoDontShow").addEventListener("click", closeHowto);
-document.getElementById("howtoBack").addEventListener("click", (e)=>{ if(e.target.id==="howtoBack") closeHowto(); });
-
-// Welcome
-document.getElementById("welcomeAddCompBtn").addEventListener("click", openCompModal);
-
-// Competition modal
-document.getElementById("addCompBtn").addEventListener("click", openCompModal);
-document.getElementById("compClose").addEventListener("click", closeCompModal);
-document.getElementById("compBack").addEventListener("click", (e)=>{ if(e.target.id==="compBack") closeCompModal(); });
-document.getElementById("compCreateBtn").addEventListener("click", ()=>{
-  const name = (document.getElementById("newCompName").value||"").trim();
-  createCompetition(name || `Competition ${indexState.comps.length+1}`);
-  closeCompModal();
-  renderAll();
-});
-document.getElementById("deleteCompBtn").addEventListener("click", deleteCurrentCompetition);
-
-// Team modal
-document.getElementById("addTeamBtn").addEventListener("click", openTeamModal);
-document.getElementById("teamClose").addEventListener("click", closeTeamModal);
-document.getElementById("teamBack").addEventListener("click", (e)=>{ if(e.target.id==="teamBack") closeTeamModal(); });
-document.getElementById("teamCreateBtn").addEventListener("click", ()=>{
-  const name = (document.getElementById("newTeamName").value||"").trim();
-  const format = document.querySelector('input[name="newFormat"]:checked')?.value || "quarters";
-  createTeamUnderCurrentComp(name || `Team ${(currentComp()?.teamIds?.length||0)+1}`, format);
-  closeTeamModal();
-  renderAll();
-});
-document.getElementById("deleteTeamBtn").addEventListener("click", deleteCurrentTeam);
-
-// Team name
-document.getElementById("teamName").addEventListener("input", (e)=>{
-  if(!teamState) return;
-  teamState.teamName = e.target.value;
-  saveAll();
-  renderAll();
-});
-
-// Games
-document.getElementById("addGameBtn").addEventListener("click", addGame);
-document.getElementById("addGameHereBtn").addEventListener("click", addGame);
-document.getElementById("prevGameBtn").addEventListener("click", goPrevGame);
-document.getElementById("nextGameBtn").addEventListener("click", goNextGame);
-document.getElementById("resetGameBtn").addEventListener("click", ()=>{
-  const g = currentGame();
-  if(confirm(`Reset only "${g.gameName?.trim() ? g.gameName.trim() : (g.type==="normal" ? `Game ${g.idx}` : g.type)}"?`)){
-    resetThisGame();
-  }
-});
-document.getElementById("resetTeamBtn").addEventListener("click", resetTeam);
-
-// Game fields
-document.getElementById("gameName").addEventListener("input", (e)=>{
-  if(!teamState) return;
-  currentGame().gameName = e.target.value;
-  saveAll(); renderAll();
-});
-document.getElementById("gameDate").addEventListener("input", (e)=>{
-  if(!teamState) return;
-  currentGame().gameDate = e.target.value;
-  saveAll();
-});
-document.getElementById("opponent").addEventListener("input", (e)=>{
-  if(!teamState) return;
-  currentGame().opponent = e.target.value;
-  saveAll(); renderAll();
-});
-document.getElementById("notes").addEventListener("input", (e)=>{
-  if(!teamState) return;
-  currentGame().notes = e.target.value;
-  saveAll();
-});
-
-// Players modal
-document.getElementById("playersBtn").addEventListener("click", openPlayers);
-document.getElementById("playersClose").addEventListener("click", closePlayers);
-document.getElementById("playersBack").addEventListener("click", (e)=>{ if(e.target.id==="playersBack") closePlayers(); });
-document.getElementById("addPlayerBtn").addEventListener("click", addPlayer);
-
-// Timer selects
-document.getElementById("minutesSelect").addEventListener("change", (e)=>{
-  const g = currentGame();
-  g.baseMinutes = Number(e.target.value);
-  if(!g.timerRunning && !isOTIndex(g.liveP)){
-    g.timerRemaining = g.baseMinutes * 60;
-    g.timerLastTick = 0;
-  }
-  saveAll();
-  renderAll();
-});
-document.getElementById("otMinutesSelect").addEventListener("change", (e)=>{
-  const g = currentGame();
-  g.otMinutes = Number(e.target.value);
-  if(!g.timerRunning && isOTIndex(g.liveP)){
-    g.timerRemaining = g.otMinutes * 60;
-    g.timerLastTick = 0;
-  }
-  saveAll();
-  renderAll();
-});
-document.getElementById("timerStartBtn").addEventListener("click", toggleTimer);
-document.getElementById("timerResetBtn").addEventListener("click", resetTimer);
-
-// Scoring
-document.getElementById("homePlus").addEventListener("click", ()=>scoreTeam("home", +1));
-document.getElementById("homeMinus").addEventListener("click", ()=>scoreTeam("home", -1));
-document.getElementById("awayPlus").addEventListener("click", ()=>scoreTeam("away", +1));
-document.getElementById("awayMinus").addEventListener("click", ()=>scoreTeam("away", -1));
-document.getElementById("gsPlus").addEventListener("click", ()=>scoreFromPosition("GS"));
-document.getElementById("gaPlus").addEventListener("click", ()=>scoreFromPosition("GA"));
-document.getElementById("undoBtn").addEventListener("click", undo);
-
-// Period flow
-document.getElementById("periodFinishedBtn").addEventListener("click", endOrNextPeriod);
-document.getElementById("startOTBtn").addEventListener("click", startOT);
-document.getElementById("reopenBtn").addEventListener("click", reopenGame);
-
-// Copy positions
-document.getElementById("copyBtn").addEventListener("click", ()=>{
-  const fromIdx = Number(document.getElementById("copyFromSel").value);
-  const toIdx = Number(document.getElementById("copyToSel").value);
-  if(Number.isNaN(fromIdx) || Number.isNaN(toIdx)) return;
-  if(fromIdx === toIdx) return alert("Pick two different periods.");
-  copyPositions(fromIdx, toIdx);
-});
-
-// Tournament tools
-document.getElementById("generateDayBtn").addEventListener("click", generateDay);
-document.getElementById("finalsToggle").addEventListener("change", (e)=>{
-  if(!teamState) return;
-  teamState.finalsActive = !!e.target.checked;
-  saveAll();
-  renderAll();
-});
-document.getElementById("addSemiBtn").addEventListener("click", ()=>addFinal("semi"));
-document.getElementById("addGFBtn").addEventListener("click", ()=>addFinal("grandfinal"));
-
-// Sync
-document.getElementById("syncBtn").addEventListener("click", ()=>{
-  document.getElementById("syncText").value = "";
-  openSync();
-});
-document.getElementById("syncClose").addEventListener("click", closeSync);
-document.getElementById("syncBack").addEventListener("click", (e)=>{ if(e.target.id==="syncBack") closeSync(); });
-document.getElementById("syncExport").addEventListener("click", exportTeam);
-document.getElementById("syncImport").addEventListener("click", importTeam);
-document.getElementById("syncClear").addEventListener("click", ()=>{ document.getElementById("syncText").value=""; });
-
-// Kick off
-init();
 </script>
 </body>
 </html>
