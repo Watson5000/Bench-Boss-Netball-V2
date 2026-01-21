@@ -1,758 +1,2063 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#111111">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#111111" />
+  <link rel="manifest" href="manifest.json">
+  <title>Bench Boss: Netball V2</title>
 
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="icon" type="image/png" href="favicon.png">
+  <!-- iOS icons -->
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="icon" type="image/png" href="favicon.png" />
 
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Bench Boss">
+  <style>
+    :root{--pad:12px;--r:14px;--b:1px solid #ddd;}
+    body{margin:0;font-family:-apple-system,system-ui,Segoe UI,Roboto,Arial;background:#f6f6f6;}
+    main{padding:var(--pad);display:grid;gap:var(--pad);}
 
-<title>Bench Boss: Netball (V2)</title>
+    /* Brand header */
+    header{
+      padding: calc(var(--pad) + 2px);
+      color:#fff;
+      background:
+        radial-gradient(900px 220px at 10% 20%, rgba(255,255,255,.12), transparent 60%),
+        linear-gradient(135deg, #0b0b0b 0%, #121212 45%, #1a1a1a 100%);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 10px 24px rgba(0,0,0,.18);
+    }
+    header h1{margin:0;font-size:18px;letter-spacing:.2px;}
+    .brandRow{display:flex;align-items:center;gap:12px;min-width:0;}
+    .brandLogo{
+      width:40px;height:40px;border-radius:12px;object-fit:cover;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow: 0 6px 14px rgba(0,0,0,.25);
+    }
+    .brandTitle{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+    .badge{
+      font-size:11px;padding:4px 8px;border-radius:999px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.16);
+      font-weight:950;letter-spacing:.2px;
+    }
+    header .sub{
+      opacity:.92;font-size:12px;margin-top:6px;
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+    }
+    header .sub .dot{opacity:.6;}
+    header .sub .byline{opacity:.85;font-weight:800;}
+    #saveState{opacity:.85}
 
-<style>
-:root { --pad:12px; --r:14px; --b:1px solid #ddd; }
-body{ margin:0; font-family:-apple-system,system-ui,Segoe UI,Roboto,Arial; background:#f6f6f6; }
+    /* UI */
+    .card{background:#fff;border:var(--b);border-radius:var(--r);padding:var(--pad);}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+    .grow{flex:1;}
+    .muted{color:#666;font-size:13px;}
+    .seg{display:flex;gap:8px;flex-wrap:wrap;}
+    .seg button{border:var(--b);background:#fff;padding:10px 12px;border-radius:999px;font-weight:900;}
+    .seg button.active{
+      background:#111;color:#fff;border-color:#111;
+      box-shadow:0 0 0 4px rgba(0,0,0,.12);
+      transform:scale(1.03);
+    }
+    button.primary{background:#111;color:#fff;border:1px solid #111;border-radius:12px;padding:12px 14px;font-weight:950;}
+    button.ghost{background:#fff;border:var(--b);border-radius:12px;padding:12px 14px;font-weight:950;}
+    button.small{padding:8px 10px;border-radius:10px;font-weight:950;}
+    button.danger{border-color:#c62828;color:#c62828;}
+    button:disabled{opacity:.5}
+    select,input[type="text"],input[type="date"]{border:var(--b);border-radius:12px;padding:10px 12px;font-size:16px;background:#fff;}
+    textarea{width:100%;min-height:70px;border:var(--b);border-radius:12px;padding:10px 12px;font-size:16px;background:#fff;}
+    .grid7{display:grid;grid-template-columns:1fr;gap:10px;}
+    @media (min-width: 780px){.grid7{grid-template-columns:1fr 1fr;}}
+    .posRow{display:flex;gap:10px;align-items:center;}
+    .posTag{width:54px;min-width:54px;text-align:center;padding:8px 0;border-radius:10px;background:#f0f0f0;border:var(--b);font-weight:950;}
+    .pill{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:var(--b);border-radius:12px;background:#fff;gap:10px;}
+    .right{text-align:right;}
+    .kbd{font-family:ui-monospace,Menlo,monospace;font-size:12px;padding:2px 6px;border-radius:8px;background:#eee;border:1px solid #ddd;}
+    .warn{padding:10px 12px;border-radius:12px;border:1px solid #ffe082;background:#fff8e1;}
+    table{width:100%;border-collapse:collapse;}
+    th,td{border:var(--b);padding:8px 10px;text-align:left;}
+    th{background:#fafafa;}
 
-header{
-  padding: calc(var(--pad) + 2px);
-  color:#fff;
-  background:
-    radial-gradient(900px 220px at 10% 20%, rgba(255,255,255,.12), transparent 60%),
-    linear-gradient(135deg, #0b0b0b 0%, #121212 45%, #1a1a1a 100%);
-  border-bottom:1px solid rgba(255,255,255,.10);
-}
-header h1{ margin:0; font-size:18px; }
+    .scoreBig{font-size:40px;font-weight:950;line-height:1;}
+    .finalBanner{
+      display:none;
+      padding:12px 14px;border-radius:14px;border:1px solid #ddd;background:#f3f3f3;
+      font-weight:950;margin-top:10px;
+    }
+    .finalBanner.win{ background:#e8f5e9; border-color:#c8e6c9; }
+    .finalBanner.loss{ background:#ffebee; border-color:#ffcdd2; }
+    .finalBanner.draw{ background:#e3f2fd; border-color:#bbdefb; }
 
-.brandRow{ display:flex; gap:12px; align-items:center; }
-.brandLogo{
-  width:40px;height:40px;border-radius:12px;
-  background:#222;
-}
-.badge{
-  font-size:11px;padding:4px 8px;border-radius:999px;
-  background:rgba(255,255,255,.12);
-  font-weight:900;
-}
+    /* Modal */
+    .modalBack{
+      position:fixed;inset:0;background:rgba(0,0,0,.45);
+      display:none;align-items:center;justify-content:center;
+      padding:16px;z-index:9999;
+    }
+    .modal{
+      width:min(900px,100%);
+      background:#fff;border:1px solid #ddd;border-radius:16px;padding:14px;
+    }
+    .modal h3{margin:0 0 6px 0}
+    .modal .help{font-size:13px;color:#666;line-height:1.35}
+    .modal textarea{min-height:140px;font-family:ui-monospace,Menlo,monospace;font-size:12px;}
 
-main{ padding:var(--pad); display:grid; gap:var(--pad); }
-.card{ background:#fff; border:var(--b); border-radius:var(--r); padding:var(--pad); }
-.row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-.grow{ flex:1; }
-.muted{ color:#666; font-size:13px; }
+    /* Roll-up */
+    .rollBtn{
+      border:1px solid #ddd;background:#fff;border-radius:12px;
+      padding:6px 8px;font-weight:950;line-height:1;margin-right:8px;
+    }
+    .card.collapsed .rollBody{display:none;}
 
-.seg{ display:flex; gap:8px; flex-wrap:wrap; }
-.seg button{
-  border:var(--b); background:#fff; padding:10px 12px;
-  border-radius:999px; font-weight:900;
-}
-.seg button.active{
-  background:#111; color:#fff;
-}
-
-button.primary{
-  background:#111; color:#fff; border-radius:12px;
-  padding:12px 14px; font-weight:900;
-}
-button.ghost{
-  background:#fff; border:var(--b); border-radius:12px;
-  padding:12px 14px; font-weight:900;
-}
-button.small{ padding:8px 10px; }
-
-input,select,textarea{
-  border:var(--b); border-radius:12px;
-  padding:10px 12px; font-size:16px;
-}
-
-.scoreBig{ font-size:40px; font-weight:900; }
-.warn{ padding:10px; border-radius:12px; background:#fff8e1; border:1px solid #ffe082; }
-
-.modalBack{
-  position:fixed; inset:0;
-  background:rgba(0,0,0,.45);
-  display:none; align-items:center; justify-content:center;
-  z-index:9999;
-}
-.modal{
-  background:#fff; border-radius:16px;
-  padding:14px; width:min(900px,100%);
-}
-
-</style>
+    /* Players table */
+    .tblWrap{overflow:auto;}
+    .playersTbl{width:100%;border-collapse:collapse;}
+    .playersTbl th,.playersTbl td{border:1px solid #ddd;padding:8px 10px;}
+    .playersTbl th{background:#fafafa;}
+    .playersTbl input,.playersTbl select{width:100%;box-sizing:border-box;}
+    .miniDanger{
+      border:1px solid #c62828;color:#c62828;background:#fff;border-radius:12px;
+      padding:10px 12px;font-weight:950;line-height:1;
+    }
+  </style>
 </head>
 
 <body>
-
 <header>
-  <div class="row" style="justify-content:space-between">
+  <div class="row" style="justify-content:space-between; align-items:center;">
     <div class="brandRow">
-      <div class="brandLogo"></div>
+      <img src="bb-netball.png" class="brandLogo" alt="Bench Boss logo">
       <div>
-        <h1>Bench Boss: Netball <span class="badge">V2</span></h1>
-        <div class="muted">Designed by Matt Watson</div>
+        <div class="brandTitle">
+          <h1>Bench Boss: Netball</h1>
+          <span class="badge">V2</span>
+        </div>
+        <div class="sub">
+          <span>Competitions • teams • rotations • scoring</span>
+          <span class="dot">•</span>
+          <span class="byline">Designed by Matt Watson</span>
+          <span id="saveState"></span>
+        </div>
       </div>
     </div>
-    <button id="howtoBtn" class="ghost small">How-to</button>
+
+    <div class="row">
+      <button class="ghost small" id="howtoBtn">How-to</button>
+    </div>
   </div>
 </header>
 
 <main>
-
-<section class="card" id="welcomeCard">
-  <div style="font-weight:900;font-size:18px">Welcome 👋</div>
-  <div class="muted" style="margin-top:6px">
-    Start by creating a competition. Format is locked per competition.
-  </div>
-  <button class="primary" id="welcomeAddCompBtn" style="margin-top:10px">+ Add Competition</button>
-</section>
-
-<section class="card" id="navCard">
-  <div class="row">
-    <div class="grow">
-      <div class="muted">Competitions</div>
-      <div class="seg" id="compSeg"></div>
+  <!-- WELCOME / GATED FLOW -->
+  <section class="card" id="welcomeCard">
+    <div style="font-weight:950;font-size:18px;">Welcome 👋</div>
+    <div class="muted" style="margin-top:6px;">
+      Bench Boss V2 is organised by <b>Competition → Team → Players → Games</b>.<br>
+      Start by adding a <b>Competition</b>.
     </div>
-    <button class="primary small" id="addCompBtn">+ Competition</button>
-  </div>
+    <div style="height:10px"></div>
+    <button class="primary" id="welcomeAddCompBtn">+ Add Competition</button>
+  </section>
 
-  <div class="row" style="margin-top:10px">
-    <div class="grow">
-      <div class="muted">Teams</div>
-      <div class="seg" id="teamSeg"></div>
+  <!-- COMPETITION SETUP -->
+  <section class="card" id="compCard">
+    <div class="row">
+      <div class="grow">
+        <div class="muted">Competitions</div>
+        <div class="seg" id="compSeg"></div>
+      </div>
+      <button class="primary small" id="addCompBtn">+ Add Competition</button>
+      <button class="ghost small danger" id="deleteCompBtn">Delete</button>
     </div>
-    <button class="primary small" id="addTeamBtn">+ Team</button>
-  </div>
-</section>
 
-<section class="card" id="gameCard">
-  <div class="row">
-    <div class="grow">
-      <div class="muted">Team</div>
-      <input id="teamName">
+    <div style="height:12px"></div>
+
+    <div class="row">
+      <div class="grow">
+        <div class="muted">Competition name</div>
+        <input id="compName" type="text" placeholder="e.g. Parkville Winter 2026 / Tournament Day" />
+      </div>
+
+      <div class="grow">
+        <div class="muted">Format (locked)</div>
+        <div style="font-weight:950;font-size:16px;">
+          <span id="compFormatLabel">—</span>
+        </div>
+        <div class="muted" id="compFormatHint"></div>
+      </div>
+
+      <div class="grow">
+        <div class="muted">Finals</div>
+        <label style="display:flex;gap:10px;align-items:center;margin-top:6px;">
+          <input type="checkbox" id="finalsToggle" />
+          <span style="font-weight:950;">Activate Finals (adds Semi + Grand Final)</span>
+        </label>
+        <div class="muted">Finals games are manual (no auto-generation).</div>
+      </div>
     </div>
-    <div class="grow">
-      <div class="muted">Game</div>
-      <div id="gameLabel" style="font-weight:900">Game 1</div>
+  </section>
+
+  <!-- TEAM SETUP -->
+  <section class="card" id="teamCard">
+    <div class="row">
+      <div class="grow">
+        <div class="muted">Teams (inside this competition)</div>
+        <div class="seg" id="teamSeg"></div>
+      </div>
+      <button class="primary small" id="addTeamBtn">+ Add Team</button>
+      <button class="ghost small danger" id="deleteTeamBtn">Delete</button>
     </div>
-    <button class="ghost small" id="addGameBtn">+ Game</button>
-  </div>
-</section>
 
-<section class="card" id="playersCard">
-  <div class="row">
-    <div class="grow" style="font-weight:900">Players</div>
-    <button class="primary small" id="managePlayersBtn">Manage Players</button>
-  </div>
-</section>
+    <div style="height:12px"></div>
 
-<section class="card" id="periodCard">
-  <div class="row">
-    <div class="grow" style="font-weight:900">Period</div>
-    <div class="seg" id="periodSeg"></div>
+    <div class="row">
+      <div class="grow">
+        <div class="muted">Team name</div>
+        <input id="teamName" type="text" placeholder="e.g. Tigers U15 / Tournament Squad" />
+      </div>
+
+      <div class="grow">
+        <div class="muted">Players</div>
+        <div style="font-weight:950;">
+          <span id="playersCountLabel">0</span>
+          <span class="muted"> (min 7, max 15)</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <button class="primary small" id="managePlayersBtn">Manage Players</button>
+      </div>
+    </div>
+
+    <div class="warn muted" id="playersGateWarn" style="display:none;margin-top:10px;"></div>
+  </section>
+
+  <!-- GAME HEADER -->
+  <section class="card" id="gameCard">
+    <div class="row">
+      <div class="grow">
+        <div class="muted">Current Game</div>
+        <div style="font-weight:950;font-size:18px;">
+          <span id="gameLabel">Game 1</span> <span class="muted" id="gameCountLabel"></span>
+        </div>
+      </div>
+
+      <button class="ghost small" id="prevGameBtn">◀ Prev</button>
+      <button class="ghost small" id="nextGameBtn">Next ▶</button>
+      <button class="primary small" id="addGameBtn">+ Add Game</button>
+      <button class="ghost small danger" id="resetGameBtn">Reset Game</button>
+    </div>
+
+    <div class="row" style="margin-top:10px;">
+      <div class="muted">Games:</div>
+      <div class="seg" id="gameSeg"></div>
+    </div>
+
+    <div style="height:10px"></div>
+    <div class="row">
+      <div class="grow">
+        <div class="muted">Opponent</div>
+        <input id="opponent" type="text" placeholder="e.g. Raptors" />
+      </div>
+      <div class="grow">
+        <div class="muted">Date</div>
+        <input id="gameDate" type="date" />
+      </div>
+      <div class="grow">
+        <div class="muted">Notes</div>
+        <input id="gameNotes" type="text" placeholder="Short notes (optional)" />
+      </div>
+    </div>
+  </section>
+
+  <!-- PERIOD / SCORE / TIMER -->
+  <section class="card" id="periodCard">
+    <div class="row">
+      <div class="grow" style="font-weight:950;">Period (editing)</div>
+      <div class="seg" id="periodSeg"></div>
+    </div>
+
+    <div class="muted" style="margin-top:8px;">
+      Editing: <b id="editingPeriod">—</b> • Live scoring: <b id="livePeriod">—</b>
+    </div>
+
+    <div class="row" style="margin-top:10px;">
+      <button class="ghost small" id="setLiveToEditingBtn">Set live = editing</button>
+      <button class="primary small" id="periodFinishedBtn">Period finished → Next</button>
+      <button class="primary small" id="startOTBtn" style="display:none;">Start OT (OT1 + OT2)</button>
+      <button class="ghost small danger" id="reopenBtn" style="display:none;">Re-open game</button>
+    </div>
+
+    <!-- TIMER -->
+    <div class="row" style="margin-top:10px;">
+      <div class="muted">Timer:</div>
+      <div style="font-weight:950;font-size:18px;">
+        <span id="timerDisplay">00:00</span>
+        <span id="timerModeTag" class="kbd" style="display:none;">PLAY ON</span>
+      </div>
+
+      <select id="minutesSelect" style="max-width:170px;"></select>
+      <button class="primary small" id="timerStartBtn">Start</button>
+      <button class="ghost small" id="timerResetBtn">Reset</button>
+    </div>
+
+    <div style="height:12px"></div>
+
+    <div class="row" style="align-items:flex-end;justify-content:space-between;">
+      <div>
+        <div class="scoreBig" id="homeScore">0</div>
+        <div class="muted" id="homeLabel">Home</div>
+      </div>
+      <div class="right">
+        <div class="scoreBig" id="awayScore">0</div>
+        <div class="muted" id="awayLabel">Away</div>
+      </div>
+    </div>
+
+    <div class="finalBanner" id="finalBanner">
+      <div class="muted" style="font-weight:950;">FINAL</div>
+      <div id="finalBannerText" style="margin-top:4px;font-size:18px;font-weight:950;">Result</div>
+    </div>
+
+    <div style="height:10px"></div>
+
+    <div class="row">
+      <button class="primary" id="homePlus">Home +1</button>
+      <button class="primary" id="gsPlus">+GS (<span id="gsName">—</span>)</button>
+      <button class="primary" id="gaPlus">+GA (<span id="gaName">—</span>)</button>
+      <button class="ghost" id="homeMinus">Home −1</button>
+
+      <div class="grow"></div>
+
+      <button class="primary" id="awayPlus">Away +1</button>
+      <button class="ghost" id="awayMinus">Away −1</button>
+      <button class="ghost" id="undoBtn">Undo</button>
+    </div>
+
+    <div style="height:10px"></div>
+    <div class="warn muted" id="liveWarnBox" style="display:none;"></div>
+  </section>
+
+  <!-- POSITIONS -->
+  <section class="card" id="positionsCard">
+    <div class="row">
+      <div class="grow" style="font-weight:950;">Positions (On Court)</div>
+      <div class="muted">Editing period (bench auto-updates)</div>
+    </div>
+
+    <div class="row" style="margin-top:10px;">
+      <div class="muted" style="min-width:140px;">Copy positions</div>
+      <button class="ghost small" id="copyToNextBtn">Copy → Next period</button>
+      <div class="muted">or</div>
+      <select id="copyTargetPeriod" style="max-width:170px;"></select>
+      <button class="ghost small" id="copyToSelectedBtn">Copy → Selected</button>
+    </div>
+
+    <div style="height:10px"></div>
+    <div class="grid7" id="positionsGrid"></div>
+
+    <div style="height:12px"></div>
+    <div class="row">
+      <div class="grow" style="font-weight:950;">Bench (this period)</div>
+      <div class="muted" id="benchCount"></div>
+    </div>
+    <div class="row muted" id="benchNamesLine" style="margin-top:6px;"></div>
+  </section>
+
+  <!-- STATS -->
+  <section class="card" id="statsCard">
+    <div class="row">
+      <div class="grow" style="font-weight:950;">Stats</div>
+      <div class="muted">Goals + positions this game • Tournament totals in halves mode</div>
+    </div>
+
+    <div style="height:12px"></div>
+    <div id="statsWrap"></div>
+
+    <div style="height:12px"></div>
+    <details>
+      <summary>Positions by period (this game)</summary>
+      <div style="height:10px"></div>
+      <div id="positionsByPeriodWrap"></div>
+    </details>
+
+    <div style="height:12px"></div>
+    <details id="tournTotalsDetails" style="display:none;">
+      <summary>Tournament totals (across all games in this competition)</summary>
+      <div style="height:10px"></div>
+      <div id="tournTotalsWrap"></div>
+    </details>
+  </section>
+
+  <!-- HOW-TO MODAL -->
+  <div class="modalBack" id="howtoBack">
+    <div class="modal">
+      <div class="row">
+        <h3 class="grow">Quick How-to (V2)</h3>
+        <button class="ghost small" id="howtoClose">Close</button>
+      </div>
+
+      <div class="help">
+        <div style="font-weight:950;color:#111;margin:10px 0 6px;">Structure</div>
+        <div>• V2 is <b>Competition → Team → Players → Games</b>.</div>
+        <div>• The <b>format is locked</b> when you create the competition.</div>
+
+        <div style="font-weight:950;color:#111;margin:12px 0 6px;">Editing vs Live</div>
+        <div>• <b>Editing</b> period sets on-court positions & bench.</div>
+        <div>• <b>Live</b> period is where scoring + undo apply.</div>
+
+        <div style="font-weight:950;color:#111;margin:12px 0 6px;">Copy positions</div>
+        <div>• Use <b>Copy → Next period</b> to duplicate quickly.</div>
+        <div>• Or pick a period and use <b>Copy → Selected</b>.</div>
+
+        <div style="font-weight:950;color:#111;margin:12px 0 6px;">Finals</div>
+        <div>• Activate Finals in competition setup to add <b>Semi</b> + <b>Grand Final</b>.</div>
+
+        <div style="font-weight:950;color:#111;margin:12px 0 6px;">Tournament totals</div>
+        <div>• In <b>halves mode</b>, Stats shows <b>total halves played across all games</b>.</div>
+      </div>
+
+      <div class="row" style="margin-top:12px;">
+        <button class="primary small" id="howtoOk">OK</button>
+      </div>
+    </div>
   </div>
 
-  <div class="row" style="margin-top:10px">
-    <div class="scoreBig" id="homeScore">0</div>
-    <div class="scoreBig" id="awayScore">0</div>
+  <!-- ADD COMP MODAL -->
+  <div class="modalBack" id="compBack">
+    <div class="modal">
+      <div class="row">
+        <h3 class="grow">Add Competition</h3>
+        <button class="ghost small" id="compClose">Close</button>
+      </div>
+
+      <div class="row">
+        <div class="grow">
+          <div class="muted">Competition name</div>
+          <input id="newCompName" type="text" placeholder="e.g. Parkville Winter 2026 / Tournament Day" />
+        </div>
+      </div>
+
+      <div style="height:10px"></div>
+      <div class="row">
+        <div class="grow">
+          <div class="muted">Format (locked for this competition)</div>
+          <label style="display:flex;align-items:center;gap:8px;margin:8px 0;">
+            <input type="radio" name="newCompFormat" value="quarters" checked />
+            <span><b>4 quarters</b> (league)</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;margin:8px 0;">
+            <input type="radio" name="newCompFormat" value="halves" />
+            <span><b>2 halves</b> (tournament)</span>
+          </label>
+          <div class="muted">Defaults: League <b>10</b> min, Tournament <b>8</b> min. OT default <b>3</b> min.</div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:10px;">
+        <button class="primary" id="compCreateBtn">Create Competition</button>
+      </div>
+    </div>
   </div>
 
-  <div class="row" style="margin-top:10px">
-    <button class="primary" id="homePlus">Home +1</button>
-    <button class="primary" id="awayPlus">Away +1</button>
-    <button class="ghost" id="undoBtn">Undo</button>
-  </div>
-</section>
+  <!-- ADD TEAM MODAL -->
+  <div class="modalBack" id="teamBack">
+    <div class="modal">
+      <div class="row">
+        <h3 class="grow">Add Team</h3>
+        <button class="ghost small" id="teamClose">Close</button>
+      </div>
 
-<section class="card" id="positionsCard">
-  <div class="row">
-    <div class="grow" style="font-weight:900">Positions</div>
-  </div>
-  <div id="positionsGrid"></div>
-</section>
+      <div class="row">
+        <div class="grow">
+          <div class="muted">Team name</div>
+          <input id="newTeamName" type="text" placeholder="e.g. Tigers U15 / Tournament Squad" />
+        </div>
+      </div>
 
-<section class="card" id="statsCard">
-  <div style="font-weight:900">Stats</div>
-  <div id="statsList"></div>
-</section>
+      <div class="row" style="margin-top:10px;">
+        <button class="primary" id="teamCreateBtn">Create Team</button>
+      </div>
+
+      <div class="muted" style="margin-top:8px;">
+        After creating, you’ll be taken to <b>Players</b> next.
+      </div>
+    </div>
+  </div>
+
+  <!-- PLAYERS MODAL (TABLE) -->
+  <div class="modalBack" id="playersBack">
+    <div class="modal">
+      <div class="row">
+        <h3 class="grow">Players</h3>
+        <button class="ghost small" id="playersClose">Close</button>
+      </div>
+      <div class="help">
+        Enter players for this team. Minimum <b>7</b>, maximum <b>15</b>.
+      </div>
+
+      <div style="height:10px"></div>
+
+      <div class="row">
+        <button class="primary small" id="playersAddRowBtn">+ Add Player</button>
+        <button class="miniDanger" id="playersRemoveRowBtn" type="button">Remove Last</button>
+        <div class="grow"></div>
+        <div class="muted">Format: <b id="playersFormatHint">—</b></div>
+      </div>
+
+      <div style="height:10px"></div>
+
+      <div class="tblWrap">
+        <table class="playersTbl">
+          <thead>
+            <tr>
+              <th style="min-width:220px;">Name</th>
+              <th style="min-width:140px;">Position 1</th>
+              <th style="min-width:140px;">Position 2</th>
+            </tr>
+          </thead>
+          <tbody id="playersTbody"></tbody>
+        </table>
+      </div>
+
+      <div class="row" style="margin-top:12px;">
+        <button class="primary" id="playersDoneBtn">Done</button>
+      </div>
+
+      <div class="warn muted" id="playersModalWarn" style="display:none;margin-top:10px;"></div>
+    </div>
+  </div>
 
 </main>
 
 <script>
-/* ===== Bench Boss V2 Core ===== */
+/* =========================
+   Bench Boss V2 — Single-file app
+   Structure: Competition -> Team -> Players -> Games
+========================= */
+
+const STORAGE_KEY = "bb_v2_state_v1";
 
 const POSITIONS = ["GS","GA","WA","C","WD","GD","GK"];
-const STORAGE_KEY = "benchboss_v2";
+const MIN_PLAYERS = 7;
+const MAX_PLAYERS = 15;
 
-function uid(){ return Math.random().toString(16).slice(2)+Date.now(); }
-function save(s){ localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }
-function load(){ try{return JSON.parse(localStorage.getItem(STORAGE_KEY));}catch{return null;} }
+const LEAGUE_MINUTES = [10,12,15];
+const TOURN_MINUTES  = [5,6,7,8,9,10];
+const LEAGUE_DEFAULT = 10;
+const TOURN_DEFAULT  = 8;
+const OT_DEFAULT     = 3;
 
-let state = load() || { competitions: [], currentCompId:null };
+function nowId(){ return crypto.randomUUID(); }
+function clamp0(n){ return Math.max(0, n); }
+function escapeHtml(str){ return (str||"").replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
-function renderAll(){
-  document.getElementById("welcomeCard").style.display =
-    state.competitions.length ? "none" : "block";
+function saveState(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  const el = document.getElementById("saveState");
+  el.textContent = "Saved ✓";
+  setTimeout(()=> el.textContent = "", 700);
 }
-renderAll();
-</script>
 
-</body>
-</html><script>
-/* ===== PART 2 — UI wiring, modals, and full behavior ===== */
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+}
 
-/* ---------- Helpers ---------- */
-function compById(id){ return state.competitions.find(c=>c.id===id); }
-function teamById(comp, id){ return comp.teams.find(t=>t.id===id); }
-function currentComp(){ return compById(state.currentCompId); }
-function currentTeam(){ const comp = currentComp(); return comp ? teamById(comp, comp.currentTeamId) : null; }
-function currentGame(){ const team = currentTeam(); return team ? team.games[team.currentGameIndex] : null; }
-
-/* ---------- Basic Models ---------- */
-function newCompetition(name, format){ return {
-  id: uid(), name: name||`Comp ${state.competitions.length+1}`, format: format||"quarters",
-  // format locked per competition
-  teams: [],
-  currentTeamId: null,
-  finalsActive: false
-}; }
-
-function newTeam(name, compFormat){
-  const players = Array.from({length:10},(_,i)=>({ id: uid(), name:`Player ${i+1}`, pos1:"", pos2:"" }));
+function defaultState(){
   return {
-    id: uid(),
-    name: name||`Team ${Math.random().toString(16).slice(2,6)}`,
-    players,
-    games: [ newGame(1, players, compFormat) ],
-    currentGameIndex: 0
+    currentCompId: null,
+    competitions: []
   };
 }
 
-function basePeriodsForFormat(format){ return format==="halves" ? 2 : 4; }
-function newGame(round, players, format){
-  const base = basePeriodsForFormat(format);
+let state = loadState() || defaultState();
+
+/* =========================
+   Data Model
+========================= */
+/*
+competition = {
+  id, name, format: "quarters"|"halves", finalsActive: bool,
+  currentTeamId,
+  teams: [team]
+}
+
+team = {
+  id, name,
+  players: [ {id, name, pos1, pos2} ],
+  currentGameIndex,
+  games: [game]
+}
+
+game = {
+  id, name: "Game 1"/"Semi Final"/..., opponent, date, notes,
+  selectedP, liveP,
+  otCount, otMinutes,
+  gameEnded,
+  baseMinutes,
+  timerRunning, timerRemaining, timerLastTick,
+  timerMode: "countdown"|"countup", timerExtraElapsed,
+  periods: [ {assignments:{pos:pid}, homeScore, awayScore, events:[]} ],
+  playerStats: { pid: {goalsTotal, goalsByP[6]} }
+}
+*/
+
+function basePeriods(format){ return (format==="halves") ? 2 : 4; }
+function emptyPeriod(){ return { assignments:{}, homeScore:0, awayScore:0, events:[] }; }
+
+function initPlayerStats(players){
+  const stats = {};
+  for(const p of players){
+    stats[p.id] = { goalsTotal:0, goalsByP: Array.from({length:6}, ()=>0) };
+  }
+  return stats;
+}
+
+function newEmptyGame(compFormat, players, numberOrLabel){
+  const baseP = basePeriods(compFormat);
+  const baseMins = (compFormat==="halves") ? TOURN_DEFAULT : LEAGUE_DEFAULT;
+
+  const label = (typeof numberOrLabel === "string")
+    ? numberOrLabel
+    : `Game ${numberOrLabel}`;
+
   return {
-    round: round||1,
-    roundName: "",
+    id: nowId(),
+    name: label,
     opponent: "",
     date: "",
+    notes: "",
     selectedP: 0,
     liveP: 0,
-    periods: Array.from({length:base}, ()=>({ assignments: {}, homeScore:0, awayScore:0, events:[] })),
-    playerStats: (players||[]).reduce((acc,p)=>{ acc[p.id]={goals:0,played:0}; return acc; }, {}),
-    playCredits: {} , // playCredits[periodIdx][pid]=0.5 when sub-in
     otCount: 0,
-    otMinutes: 3,
-    baseMinutes: (format==="halves")?8:10,
-    timerRemaining: ((format==="halves")?8:10)*60,
+    otMinutes: OT_DEFAULT,
+    gameEnded: false,
+    baseMinutes: baseMins,
     timerRunning: false,
+    timerRemaining: baseMins * 60,
+    timerLastTick: 0,
     timerMode: "countdown",
-    gameEnded: false
+    timerExtraElapsed: 0,
+    periods: Array.from({length:baseP}, ()=>emptyPeriod()),
+    playerStats: initPlayerStats(players)
   };
 }
 
-/* ---------- Render: Competitions & Teams ---------- */
-function renderCompTabs(){
-  const seg = document.getElementById("compSeg");
-  seg.innerHTML = "";
-  state.competitions.forEach(c=>{
-    const b = document.createElement("button");
-    b.textContent = c.name.slice(0,18);
-    b.className = (c.id===state.currentCompId) ? "active" : "";
-    b.addEventListener("click", ()=> {
-      state.currentCompId = c.id;
-      // default open first team if present
-      if(c.teams.length) c.currentTeamId = c.currentTeamId || c.teams[0].id;
-      save(state); renderAll();
-    });
-    seg.appendChild(b);
-  });
-}
-
-function renderTeamTabs(){
-  const seg = document.getElementById("teamSeg");
-  seg.innerHTML = "";
-  const comp = currentComp();
-  if(!comp) return;
-  comp.teams.forEach(t=>{
-    const b = document.createElement("button");
-    b.textContent = (t.name || "Team").slice(0,18);
-    b.className = (t.id===comp.currentTeamId) ? "active" : "";
-    b.addEventListener("click", ()=> {
-      comp.currentTeamId = t.id;
-      save(state); renderAll();
-    });
-    seg.appendChild(b);
-  });
-}
-
-/* ---------- Add / Delete ---------- */
-function openAddCompModal(){
-  // simple prompt flow for speed
-  const name = prompt("Competition name (e.g. Parkville Comp):");
-  if(!name) return;
-  const format = confirm("Use halves (OK) or quarters (Cancel)?\nOK = halves, Cancel = quarters") ? "halves" : "quarters";
-  const comp = newCompetition(name, format);
-  state.competitions.push(comp);
-  state.currentCompId = comp.id;
-  save(state);
-  // open team modal next
-  openAddTeamModal();
-  renderAll();
-}
-
-function openAddTeamModal(){
-  const comp = currentComp();
-  if(!comp) return alert("Create a competition first.");
-  const name = prompt("Team name:");
-  if(!name) return;
-  const team = newTeam(name, comp.format);
-  comp.teams.push(team);
-  comp.currentTeamId = team.id;
-  save(state);
-  // next step: add players modal
-  openManagePlayersModal(true);
-  renderAll();
-}
-
-/* ---------- Players Modal ---------- */
-function openManagePlayersModal(isForNewTeam){
-  // build modal with simple table: name, pos1, pos2, add/remove, save
-  const modal = document.createElement("div");
-  modal.className = "modalBack";
-  modal.style.display = "flex";
-  modal.innerHTML = `
-    <div class="modal">
-      <div class="row"><h3 class="grow">Manage Players</h3><button id="closePlayers" class="ghost small">Close</button></div>
-      <div style="height:8px"></div>
-      <div id="playersTable"></div>
-      <div style="height:8px"></div>
-      <div class="row">
-        <button id="addPlayerLocal" class="primary small">+ Add Player</button>
-        <div class="grow"></div>
-        <button id="savePlayers" class="primary">Save</button>
-      </div>
-    </div>
-  `;
-  document.body.appendChild(modal);
-
-  const comp = currentComp();
-  const team = currentTeam();
-  let players = team ? team.players.slice() : Array.from({length:10},(_,i)=>({id:uid(),name:`Player ${i+1}`,pos1:"",pos2:""}));
-
-  function renderPlayersTable(){
-    const wrap = modal.querySelector("#playersTable");
-    wrap.innerHTML = "";
-    players.forEach((p,idx)=>{
-      const row = document.createElement("div");
-      row.className = "row";
-      row.style.marginBottom = "8px";
-      row.innerHTML = `
-        <input data-idx="${idx}" class="pname" style="flex:1" value="${escapeHtml(p.name)}" />
-        <input data-idx="${idx}" class="ppos1" style="width:120px" placeholder="Pos 1" value="${escapeHtml(p.pos1)}" />
-        <input data-idx="${idx}" class="ppos2" style="width:120px" placeholder="Pos 2" value="${escapeHtml(p.pos2)}" />
-        <button class="ghost small removeBtn">Remove</button>
-      `;
-      wrap.appendChild(row);
-
-      // wire quick filter on pos inputs
-      const pos1 = row.querySelector(".ppos1");
-      pos1.addEventListener("input", (e)=>{
-        // simple filter: accept only known position prefixes
-        const v = e.target.value.toUpperCase();
-        const match = POSITIONS.find(x=>x.startsWith(v));
-        if(match) e.target.value = match;
-        players[idx].pos1 = e.target.value;
-      });
-      const pos2 = row.querySelector(".ppos2");
-      pos2.addEventListener("input", (e)=>{
-        const v = e.target.value.toUpperCase();
-        const match = POSITIONS.find(x=>x.startsWith(v));
-        if(match) e.target.value = match;
-        players[idx].pos2 = e.target.value;
-      });
-
-      const nameIn = row.querySelector(".pname");
-      nameIn.addEventListener("focus", ()=> setTimeout(()=> nameIn.select(),0));
-      nameIn.addEventListener("input", (e)=> players[idx].name = e.target.value);
-
-      row.querySelector(".removeBtn").addEventListener("click", ()=>{
-        if(players.length <= 7) return alert("Minimum 7 players required.");
-        players.splice(idx,1);
-        renderPlayersTable();
-      });
-    });
+function ensureIntegrity(){
+  if(!state || !Array.isArray(state.competitions)){
+    state = defaultState();
   }
 
-  renderPlayersTable();
+  // if currentCompId invalid, set null
+  if(state.currentCompId && !state.competitions.some(c=>c.id===state.currentCompId)){
+    state.currentCompId = null;
+  }
 
-  modal.querySelector("#addPlayerLocal").addEventListener("click", ()=>{
-    if(players.length >= 15) return alert("Max 15 players.");
-    players.push({ id: uid(), name: `Player ${players.length+1}`, pos1:"", pos2:"" });
-    renderPlayersTable();
-  });
+  for(const c of state.competitions){
+    if(!c.teams) c.teams = [];
+    if(c.finalsActive == null) c.finalsActive = false;
+    if(!c.currentTeamId && c.teams.length) c.currentTeamId = c.teams[0].id;
+    if(c.currentTeamId && !c.teams.some(t=>t.id===c.currentTeamId)){
+      c.currentTeamId = c.teams[0]?.id || null;
+    }
 
-  modal.querySelector("#closePlayers").addEventListener("click", ()=> { modal.remove(); });
+    for(const t of c.teams){
+      if(!t.players) t.players = [];
+      if(!t.games || !t.games.length){
+        t.games = [newEmptyGame(c.format, t.players, 1)];
+        t.currentGameIndex = 0;
+      }
+      if(t.currentGameIndex == null) t.currentGameIndex = 0;
+      t.currentGameIndex = Math.max(0, Math.min(t.currentGameIndex, t.games.length-1));
 
-  modal.querySelector("#savePlayers").addEventListener("click", ()=>{
-    // commit to team
-    if(!team) return alert("No team selected.");
-    team.players = players;
-    // ensure playerStats for all games
-    for(const g of team.games){
-      for(const p of players){
-        if(!g.playerStats[p.id]) g.playerStats[p.id] = { goals:0, played:0 };
+      // Ensure each game has stats for each player
+      for(const g of t.games){
+        if(!g.periods) g.periods = Array.from({length:basePeriods(c.format)}, ()=>emptyPeriod());
+        // periods length = base + OT
+        const baseP = basePeriods(c.format);
+        while(g.periods.length < baseP) g.periods.push(emptyPeriod());
+
+        if(!g.playerStats) g.playerStats = initPlayerStats(t.players);
+        for(const p of t.players){
+          if(!g.playerStats[p.id]){
+            g.playerStats[p.id] = { goalsTotal:0, goalsByP:Array.from({length:6}, ()=>0) };
+          }
+          if(!Array.isArray(g.playerStats[p.id].goalsByP)){
+            g.playerStats[p.id].goalsByP = Array.from({length:6}, ()=>0);
+          }
+          while(g.playerStats[p.id].goalsByP.length < 6) g.playerStats[p.id].goalsByP.push(0);
+        }
+
+        if(g.selectedP == null) g.selectedP = 0;
+        if(g.liveP == null) g.liveP = 0;
+        if(g.otCount == null) g.otCount = 0;
+        if(g.otMinutes == null) g.otMinutes = OT_DEFAULT;
+        if(g.baseMinutes == null) g.baseMinutes = (c.format==="halves") ? TOURN_DEFAULT : LEAGUE_DEFAULT;
+
+        if(g.timerRunning == null) g.timerRunning = false;
+        if(g.timerRemaining == null) g.timerRemaining = g.baseMinutes * 60;
+        if(g.timerLastTick == null) g.timerLastTick = 0;
+        if(g.timerMode == null) g.timerMode = "countdown";
+        if(g.timerExtraElapsed == null) g.timerExtraElapsed = 0;
+
+        if(g.gameEnded == null) g.gameEnded = false;
+
+        // ensure OT periods exist if otCount=2
+        const needLen = baseP + (g.otCount || 0);
+        while(g.periods.length < needLen) g.periods.push(emptyPeriod());
       }
     }
-    save(state);
-    modal.remove();
-    renderAll();
-  });
-
-  // if opened as part of new team flow, keep modal open (user edits then saves)
-}
-
-/* ---------- Render Players Inputs & Positions ---------- */
-function renderPlayersCard(){
-  const el = document.getElementById("playersCard");
-  const team = currentTeam();
-  if(!team) { el.style.display = "none"; return; }
-  el.style.display = "block";
-  // show top 5 players names for quick glance
-  const list = team.players.slice(0,10).map(p=>p.name).join(", ");
-  el.querySelector(".grow").nextSibling && (el.querySelector(".grow").nextSibling.textContent = "");
-}
-
-function renderPeriodSegAndScores(){
-  const g = currentGame();
-  if(!g) return;
-  const seg = document.getElementById("periodSeg");
-  seg.innerHTML = "";
-  for(let i=0;i<g.periods.length;i++){
-    const b = document.createElement("button");
-    b.textContent = periodLabelForRender(i);
-    b.className = (g.selectedP===i) ? "active" : "";
-    b.addEventListener("click", ()=>{
-      g.selectedP = i; g.liveP = Math.min(g.liveP, g.periods.length-1);
-      save(state); renderAll();
-    });
-    seg.appendChild(b);
   }
-  document.getElementById("homeScore").textContent = totalHome(g);
-  document.getElementById("awayScore").textContent = totalAway(g);
 }
 
-function periodLabelForRender(idx){
-  const comp = currentComp();
-  if(!comp) return `P${idx+1}`;
-  const base = basePeriodsForFormat(comp.format);
-  if(idx < base) return comp.format==="halves" ? `H${idx+1}` : `Q${idx+1}`;
+ensureIntegrity();
+
+/* =========================
+   Current pointers
+========================= */
+function hasCompetitions(){ return state.competitions.length > 0; }
+function currentComp(){
+  if(!state.currentCompId) return null;
+  return state.competitions.find(c=>c.id===state.currentCompId) || null;
+}
+function currentTeam(){
+  const c = currentComp();
+  if(!c || !c.currentTeamId) return null;
+  return c.teams.find(t=>t.id===c.currentTeamId) || null;
+}
+function currentGame(){
+  const t = currentTeam();
+  if(!t) return null;
+  return t.games[t.currentGameIndex] || null;
+}
+
+function periodLabel(compFormat, idx, game){
+  const base = basePeriods(compFormat);
+  if(idx < base) return compFormat==="halves" ? `H${idx+1}` : `Q${idx+1}`;
   return `OT${idx-base+1}`;
 }
+function totalPeriods(compFormat, game){
+  return basePeriods(compFormat) + (game?.otCount || 0);
+}
+function isOTIndex(compFormat, idx){
+  return idx >= basePeriods(compFormat);
+}
 
-/* ---------- Positions Grid (show all periods on screen) ---------- */
-function renderPositionsGrid(){
-  const wrap = document.getElementById("positionsGrid");
-  wrap.innerHTML = "";
-  const team = currentTeam(), g = currentGame();
-  if(!team || !g) { wrap.style.display = "none"; return; }
-  wrap.style.display = "block";
+/* =========================
+   Finals activation
+========================= */
+function ensureFinalsGames(comp, team){
+  // If finalsActive: ensure "Semi Final" and "Grand Final" exist at end
+  // If not active: remove those if they exist (and are empty? we’ll remove safely if labels match)
+  const finalsNames = ["Semi Final","Grand Final"];
 
-  const base = basePeriodsForFormat(currentComp().format);
-  // build a header row
-  const header = document.createElement("div");
-  header.style.display = "grid";
-  header.style.gridTemplateColumns = `100px repeat(${POSITIONS.length},1fr)`;
-  header.style.gap = "8px";
-  header.style.fontWeight = "900";
-  header.style.marginBottom = "6px";
-  header.innerHTML = `<div></div>` + POSITIONS.map(p=>`<div style="text-align:center">${p}</div>`).join("");
-  wrap.appendChild(header);
-
-  // for each period, show assignment row
-  for(let p=0;p<g.periods.length;p++){
-    const row = document.createElement("div");
-    row.style.display = "grid";
-    row.style.gridTemplateColumns = `100px repeat(${POSITIONS.length},1fr)`;
-    row.style.gap = "8px";
-    row.style.marginBottom = "6px";
-
-    const label = document.createElement("div");
-    label.style.fontWeight = (p===g.liveP) ? "900" : "600";
-    label.textContent = periodLabelForRender(p) + (p===g.liveP ? " • LIVE" : "");
-    row.appendChild(label);
-
-    for(const pos of POSITIONS){
-      const cell = document.createElement("div");
-      const pid = g.periods[p].assignments[pos] || "";
-      const pname = pid ? (team.players.find(x=>x.id===pid)?.name || "—") : "—";
-      cell.style.padding = "8px";
-      cell.style.border = "1px solid #eee";
-      cell.style.borderRadius = "8px";
-      cell.style.textAlign = "center";
-
-      // allow change when editing that period
-      if(g.selectedP === p){
-        const sel = document.createElement("select");
-        const opt0 = document.createElement("option");
-        opt0.value = ""; opt0.textContent = "—";
-        sel.appendChild(opt0);
-        team.players.forEach(pl=>{
-          const o = document.createElement("option");
-          o.value = pl.id;
-          const played = regulationPlayedDisplay(g, pl.id);
-          o.textContent = `${pl.name} (${played})`;
-          sel.appendChild(o);
-        });
-        sel.value = pid;
-        sel.addEventListener("change", ()=> {
-          g.periods[p].assignments[pos] = sel.value || null;
-          // ensure uniqueness
-          for(const other of POSITIONS){
-            if(other!==pos && g.periods[p].assignments[other]===sel.value) {
-              g.periods[p].assignments[other] = null;
-            }
-          }
-          save(state); renderAll();
-        });
-        cell.appendChild(sel);
-      } else {
-        cell.textContent = pname;
+  if(comp.finalsActive){
+    // add missing finals at end
+    for(const name of finalsNames){
+      if(!team.games.some(g=>g.name===name)){
+        team.games.push(newEmptyGame(comp.format, team.players, name));
       }
-
-      row.appendChild(cell);
     }
-    wrap.appendChild(row);
+  } else {
+    // remove finals games by name
+    team.games = team.games.filter(g => !finalsNames.includes(g.name));
+    team.currentGameIndex = Math.max(0, Math.min(team.currentGameIndex, team.games.length-1));
   }
-
-  // Bench: players not assigned in selected editing period
-  const benchHeader = document.createElement("div");
-  benchHeader.style.marginTop = "12px";
-  benchHeader.style.fontWeight = "900";
-  benchHeader.textContent = "Bench (editing period)";
-  wrap.appendChild(benchHeader);
-
-  const benchList = document.createElement("div");
-  benchList.style.display = "grid";
-  benchList.style.gap = "8px";
-  const assigned = new Set(Object.values(g.periods[g.selectedP].assignments||{}).filter(Boolean));
-  team.players.forEach(pl=>{
-    if(assigned.has(pl.id)) return;
-    const pill = document.createElement("div");
-    pill.className = "pill";
-    pill.innerHTML = `<div style="font-weight:900">${pl.name}</div><div class="muted">${pl.pos1||""} ${pl.pos2?"/ "+pl.pos2:""}</div>`;
-    benchList.appendChild(pill);
-  });
-  wrap.appendChild(benchList);
 }
 
-/* ---------- Regulation played display, with 0.5 for subs ---------- */
-function regulationPlayedDisplay(game, playerId){
-  const comp = currentComp();
-  const reg = basePeriodsForFormat(comp.format);
-  let sum = 0;
-  for(let i=0;i<reg;i++){
-    const credit = (game.playCredits && game.playCredits[i] && Number(game.playCredits[i][playerId])) || 0;
-    if(credit>0) sum += credit;
-    else {
-      // inferred
-      const assigned = Object.values(game.periods[i].assignments||{}).filter(Boolean);
-      sum += (assigned.includes(playerId) ? 1 : 0);
-    }
-  }
-  return (Math.abs(sum - Math.round(sum))<1e-9) ? String(Math.round(sum)) : sum.toFixed(1);
+/* =========================
+   Timer
+========================= */
+let timerInterval = null;
+function stopTimerLoop(){ if(timerInterval){ clearInterval(timerInterval); timerInterval=null; } }
+function fmtTime(sec){
+  sec = Math.max(0, Math.floor(sec));
+  const m = String(Math.floor(sec/60)).padStart(2,"0");
+  const s = String(sec%60).padStart(2,"0");
+  return `${m}:${s}`;
 }
-
-/* ---------- Scoring ---------- */
 function totalHome(game){ return game.periods.reduce((s,p)=>s+(p.homeScore||0),0); }
 function totalAway(game){ return game.periods.reduce((s,p)=>s+(p.awayScore||0),0); }
+function isDraw(game){ return totalHome(game) === totalAway(game); }
+
+function tickTimer(){
+  const comp = currentComp(), team = currentTeam(), game = currentGame();
+  if(!comp || !team || !game) return;
+  if(!game.timerRunning) return;
+
+  const now = Date.now();
+  if(!game.timerLastTick) game.timerLastTick = now;
+  const delta = Math.floor((now - game.timerLastTick)/1000);
+  if(delta <= 0) return;
+  game.timerLastTick = now;
+
+  if(game.timerMode === "countdown"){
+    game.timerRemaining = Math.max(0, game.timerRemaining - delta);
+
+    if(game.timerRemaining === 0){
+      game.timerRunning = false;
+      stopTimerLoop();
+
+      const base = basePeriods(comp.format);
+      const ot2Index = base + 1;
+
+      // OT2 play-on if still tied at 0
+      if(game.otCount === 2 && game.liveP === ot2Index && isDraw(game)){
+        game.timerMode = "countup";
+        game.timerExtraElapsed = 0;
+        renderAll();
+        saveState();
+        return;
+      }
+
+      renderAll();
+      saveState();
+      alert("Time!");
+      return;
+    }
+  } else {
+    game.timerExtraElapsed += delta;
+    const lead = Math.abs(totalHome(game) - totalAway(game));
+    if(lead >= 2){
+      game.timerRunning = false;
+      stopTimerLoop();
+      game.gameEnded = true;
+      saveState();
+      renderAll();
+      return;
+    }
+  }
+
+  saveState();
+  renderTimerOnly();
+}
+
+function startTimerLoop(){ if(timerInterval) return; timerInterval = setInterval(tickTimer, 250); }
+
+function toggleTimer(){
+  const comp = currentComp(), game = currentGame();
+  if(!comp || !game) return;
+  if(game.gameEnded) return;
+
+  if(game.timerRunning){
+    game.timerRunning = false;
+    stopTimerLoop();
+  } else {
+    game.timerRunning = true;
+    game.timerLastTick = Date.now();
+    startTimerLoop();
+  }
+  saveState();
+  renderTimerOnly();
+}
+
+function resetTimer(){
+  const comp = currentComp(), game = currentGame();
+  if(!comp || !game) return;
+
+  game.timerRunning = false;
+  game.timerLastTick = 0;
+  game.timerMode = "countdown";
+  game.timerExtraElapsed = 0;
+
+  const useMins = isOTIndex(comp.format, game.selectedP) ? game.otMinutes : game.baseMinutes;
+  game.timerRemaining = useMins * 60;
+
+  stopTimerLoop();
+  saveState();
+  renderTimerOnly();
+}
+
+/* =========================
+   Scoring / events
+========================= */
+function pushEvent(game, pIdx, type, payload){
+  game.periods[pIdx].events.push({ type, pIdx, payload, t: Date.now() });
+}
 
 function scoreTeam(which, delta){
-  const g = currentGame();
-  if(!g || g.gameEnded) return;
-  const idx = g.liveP;
-  if(which==="home") g.periods[idx].homeScore = clamp0((g.periods[idx].homeScore||0)+delta);
-  else g.periods[idx].awayScore = clamp0((g.periods[idx].awayScore||0)+delta);
-  // event
-  g.periods[idx].events.push({type:"score",which,delta,t:Date.now()});
-  save(state); renderAll();
+  const game = currentGame();
+  if(!game || game.gameEnded) return;
+
+  const pIdx = game.liveP;
+  if(which==="home"){
+    game.periods[pIdx].homeScore = clamp0((game.periods[pIdx].homeScore||0) + delta);
+  } else {
+    game.periods[pIdx].awayScore = clamp0((game.periods[pIdx].awayScore||0) + delta);
+  }
+
+  pushEvent(game, pIdx, "score", { which, delta });
+  saveState();
+  renderAll();
 }
 
 function scoreFromPosition(pos){
-  const g = currentGame();
-  if(!g || g.gameEnded) return;
-  const idx = g.liveP;
-  const pid = g.periods[idx].assignments[pos];
-  if(!pid) return alert(`Assign a player to ${pos} in LIVE period first.`);
-  g.periods[idx].homeScore += 1;
-  g.playerStats[pid] = g.playerStats[pid] || {goals:0,played:0};
-  g.playerStats[pid].goals += 1;
-  g.periods[idx].events.push({type:"playerGoal", pid, pos, t:Date.now()});
-  save(state); renderAll();
+  const comp = currentComp(), team = currentTeam(), game = currentGame();
+  if(!comp || !team || !game || game.gameEnded) return;
+  if(pos!=="GS" && pos!=="GA") return;
+
+  const pIdx = game.liveP;
+  const pid = game.periods[pIdx].assignments[pos];
+  if(!pid) return alert(`Assign a player to ${pos} in LIVE (${periodLabel(comp.format,pIdx,game)}) first.`);
+
+  game.periods[pIdx].homeScore += 1;
+
+  const st = game.playerStats[pid] || (game.playerStats[pid] = {goalsTotal:0,goalsByP:Array.from({length:6},()=>0)});
+  st.goalsTotal += 1;
+  st.goalsByP[pIdx] = (st.goalsByP[pIdx] || 0) + 1;
+
+  pushEvent(game, pIdx, "playerGoal", { pid, pos });
+  saveState();
+  renderAll();
 }
 
-function undoLast(){
-  const g = currentGame();
-  if(!g) return;
-  const idx = g.liveP;
-  const ev = g.periods[idx].events.pop();
-  if(!ev) return;
-  if(ev.type==="score"){
-    if(ev.which==="home") g.periods[idx].homeScore = clamp0(g.periods[idx].homeScore - ev.delta);
-    else g.periods[idx].awayScore = clamp0(g.periods[idx].awayScore - ev.delta);
-  } else if(ev.type==="playerGoal"){
-    g.periods[idx].homeScore = clamp0(g.periods[idx].homeScore - 1);
-    if(g.playerStats[ev.pid]) g.playerStats[ev.pid].goals = clamp0(g.playerStats[ev.pid].goals - 1);
+function undo(){
+  const game = currentGame();
+  if(!game || game.gameEnded) return;
+
+  const pIdx = game.liveP;
+  const events = game.periods[pIdx].events;
+  const last = events.pop();
+  if(!last) return;
+
+  if(last.type==="score"){
+    const {which, delta} = last.payload;
+    if(which==="home") game.periods[pIdx].homeScore = clamp0(game.periods[pIdx].homeScore - delta);
+    else game.periods[pIdx].awayScore = clamp0(game.periods[pIdx].awayScore - delta);
   }
-  save(state); renderAll();
+
+  if(last.type==="playerGoal"){
+    const {pid} = last.payload;
+    game.periods[pIdx].homeScore = clamp0(game.periods[pIdx].homeScore - 1);
+    const st = game.playerStats[pid];
+    if(st){
+      st.goalsTotal = clamp0(st.goalsTotal - 1);
+      st.goalsByP[pIdx] = clamp0((st.goalsByP[pIdx]||0) - 1);
+    }
+  }
+
+  saveState();
+  renderAll();
 }
 
-/* ---------- Copy positions ---------- */
-function copyPositions(fromIdx, toIdx){
-  const g = currentGame();
-  if(!g) return;
-  g.periods[toIdx].assignments = JSON.parse(JSON.stringify(g.periods[fromIdx].assignments||{}));
-  save(state); renderAll();
+/* =========================
+   Positions
+========================= */
+function setAssignment(pos, pid){
+  const comp = currentComp(), game = currentGame();
+  if(!comp || !game) return;
+  const pIdx = game.selectedP;
+  const per = game.periods[pIdx];
+
+  const next = pid || null;
+
+  if(next){
+    // prevent duplicate player in two positions (same period)
+    for(const p of POSITIONS){
+      if(p !== pos && per.assignments[p] === next){
+        per.assignments[p] = null;
+      }
+    }
+  }
+
+  per.assignments[pos] = next;
+  saveState();
+  renderAll();
 }
 
-/* ---------- Period end / OT handling ---------- */
-function endOrNext(){
-  const g = currentGame();
-  if(!g) return;
-  const base = basePeriodsForFormat(currentComp().format);
-  const lastIdx = g.periods.length-1;
+function copyAssignments(fromP, toP){
+  const game = currentGame();
+  if(!game) return;
+  game.periods[toP].assignments = JSON.parse(JSON.stringify(game.periods[fromP].assignments || {}));
+  saveState();
+}
 
-  // If OT1 and OT2 always present: if currently OT1 -> go to OT2
-  if(g.otCount===2 && g.liveP === base){ g.liveP = base+1; g.selectedP = base+1; save(state); renderAll(); return; }
+/* =========================
+   Overtime
+========================= */
+function canStartOT(comp, game){
+  return game.gameEnded && isDraw(game) && (game.otCount || 0) === 0;
+}
 
-  // If last period, mark ended (if OT rules allow)
-  if(g.liveP >= lastIdx){
-    g.gameEnded = true;
-    save(state); renderAll();
+function startOT(){
+  const comp = currentComp(), game = currentGame();
+  if(!comp || !game) return;
+  if(!canStartOT(comp, game)) return;
+
+  game.otCount = 2;
+  game.periods.push(emptyPeriod());
+  game.periods.push(emptyPeriod());
+
+  game.gameEnded = false;
+  const ot1Index = basePeriods(comp.format);
+  game.liveP = ot1Index;
+  game.selectedP = ot1Index;
+
+  game.timerMode = "countdown";
+  game.timerExtraElapsed = 0;
+  game.timerRunning = false;
+  game.timerLastTick = 0;
+  game.timerRemaining = game.otMinutes * 60;
+  stopTimerLoop();
+
+  saveState();
+  renderAll();
+}
+
+function endOrNextPeriod(){
+  const comp = currentComp(), game = currentGame();
+  if(!comp || !game) return;
+  if(game.gameEnded) return;
+
+  const base = basePeriods(comp.format);
+  const ot1Index = base;
+  const ot2Index = base + 1;
+  const lastIndex = totalPeriods(comp.format, game) - 1;
+
+  // Always go OT1 -> OT2 if OT running
+  if(game.otCount === 2 && game.liveP === ot1Index){
+    game.liveP = ot2Index;
+    game.selectedP = ot2Index;
+    resetTimer();
+    saveState();
+    renderAll();
     return;
   }
 
-  g.liveP += 1; g.selectedP = g.liveP;
-  save(state); renderAll();
+  // last period ends game
+  if(game.liveP >= lastIndex){
+    game.gameEnded = true;
+    game.timerRunning = false;
+    stopTimerLoop();
+    saveState();
+    renderAll();
+    return;
+  }
+
+  game.liveP += 1;
+  game.selectedP = game.liveP;
+  resetTimer();
+  saveState();
+  renderAll();
 }
 
-function startOTIfNeeded(){
-  const g = currentGame();
-  if(!g) return;
-  // only allow start OT if gameEnded and draw
-  if(!g.gameEnded) return alert("End game first (finish last period).");
-  if(totalHome(g) !== totalAway(g)) return alert("Not a draw.");
-  // add two OT periods
-  g.otCount = 2;
-  g.periods.push({assignments:{},homeScore:0,awayScore:0,events:[]});
-  g.periods.push({assignments:{},homeScore:0,awayScore:0,events:[]});
-  g.gameEnded = false;
-  g.liveP = basePeriodsForFormat(currentComp().format);
-  g.selectedP = g.liveP;
-  save(state); renderAll();
+function reopenGame(){
+  const game = currentGame();
+  if(!game) return;
+  game.gameEnded = false;
+  saveState();
+  renderAll();
 }
 
-/* ---------- Stats rendering ---------- */
-function renderStats(){
-  const wrap = document.getElementById("statsList");
-  wrap.innerHTML = "";
-  const g = currentGame();
+/* =========================
+   Competition / Team / Players
+========================= */
+function openHowto(){ document.getElementById("howtoBack").style.display="flex"; }
+function closeHowto(){ document.getElementById("howtoBack").style.display="none"; }
+
+function openCompModal(){
+  document.getElementById("newCompName").value = "";
+  document.getElementById("compBack").style.display="flex";
+}
+function closeCompModal(){ document.getElementById("compBack").style.display="none"; }
+
+function openTeamModal(){
+  document.getElementById("newTeamName").value = "";
+  document.getElementById("teamBack").style.display="flex";
+}
+function closeTeamModal(){ document.getElementById("teamBack").style.display="none"; }
+
+function openPlayersModal(){
+  renderPlayersTableModal();
+  document.getElementById("playersBack").style.display="flex";
+}
+function closePlayersModal(){ document.getElementById("playersBack").style.display="none"; }
+
+function createCompetition(){
+  const name = (document.getElementById("newCompName").value || "").trim() || `Competition ${state.competitions.length+1}`;
+  const format = document.querySelector('input[name="newCompFormat"]:checked')?.value || "quarters";
+
+  const comp = {
+    id: nowId(),
+    name,
+    format,
+    finalsActive: false,
+    currentTeamId: null,
+    teams: []
+  };
+
+  state.competitions.push(comp);
+  state.currentCompId = comp.id;
+  saveState();
+  closeCompModal();
+  renderAll();
+}
+
+function deleteCompetition(){
+  const comp = currentComp();
+  if(!comp) return;
+  if(!confirm(`Delete competition "${comp.name}"?`)) return;
+
+  state.competitions = state.competitions.filter(c=>c.id!==comp.id);
+  state.currentCompId = state.competitions[0]?.id || null;
+  saveState();
+  renderAll();
+}
+
+function switchCompetition(id){
+  stopTimerLoop();
+  state.currentCompId = id;
+  saveState();
+  renderAll();
+}
+
+function createTeam(){
+  const comp = currentComp();
+  if(!comp) return;
+
+  const name = (document.getElementById("newTeamName").value || "").trim() || `Team ${comp.teams.length+1}`;
+  const team = {
+    id: nowId(),
+    name,
+    players: [],
+    currentGameIndex: 0,
+    games: [ newEmptyGame(comp.format, [], 1) ]
+  };
+
+  comp.teams.push(team);
+  comp.currentTeamId = team.id;
+  saveState();
+  closeTeamModal();
+
+  // Immediately go to Players (gated flow)
+  renderAll();
+  openPlayersModal();
+}
+
+function deleteTeam(){
+  const comp = currentComp();
   const team = currentTeam();
-  if(!g || !team){ wrap.innerHTML = "<div class='muted'>No game selected</div>"; return; }
+  if(!comp || !team) return;
+  if(!confirm(`Delete team "${team.name}"?`)) return;
 
-  const table = document.createElement("div");
-  table.style.display = "grid";
-  table.style.gap = "8px";
+  comp.teams = comp.teams.filter(t=>t.id!==team.id);
+  comp.currentTeamId = comp.teams[0]?.id || null;
+  saveState();
+  renderAll();
+}
 
-  // Goals and played
-  team.players.forEach(p=>{
-    const row = document.createElement("div");
-    row.className = "pill";
-    const goals = (g.playerStats[p.id]?.goals) || 0;
-    const played = regulationPlayedDisplay(g, p.id);
-    row.innerHTML = `<div style="font-weight:900">${escapeHtml(p.name)}</div><div class="muted">Goals: ${goals} • Played: ${played}</div>`;
-    table.appendChild(row);
+function switchTeam(id){
+  stopTimerLoop();
+  const comp = currentComp();
+  if(!comp) return;
+  comp.currentTeamId = id;
+  saveState();
+  renderAll();
+}
+
+/* =========================
+   Players modal table
+========================= */
+function positionOptionsHtml(selected){
+  const opts = ['<option value="">—</option>']
+    .concat(POSITIONS.map(p=>`<option value="${p}">${p}</option>`))
+    .join("");
+  // We set value after insert to avoid escaping hassles
+  return opts;
+}
+
+function renderPlayersTableModal(){
+  const comp = currentComp();
+  const team = currentTeam();
+  if(!comp || !team) return;
+
+  document.getElementById("playersFormatHint").textContent =
+    (comp.format==="halves") ? "2 halves (tournament)" : "4 quarters (league)";
+
+  const tbody = document.getElementById("playersTbody");
+  tbody.innerHTML = "";
+
+  for(let i=0;i<team.players.length;i++){
+    const p = team.players[i];
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td><input type="text" data-idx="${i}" data-field="name" value="${escapeHtml(p.name||"")}" placeholder="Player name" /></td>
+      <td><select data-idx="${i}" data-field="pos1">${positionOptionsHtml()}</select></td>
+      <td><select data-idx="${i}" data-field="pos2">${positionOptionsHtml()}</select></td>
+    `;
+
+    const sel1 = tr.querySelector('select[data-field="pos1"]');
+    const sel2 = tr.querySelector('select[data-field="pos2"]');
+    sel1.value = p.pos1 || "";
+    sel2.value = p.pos2 || "";
+
+    tbody.appendChild(tr);
+  }
+
+  // Auto-select name on focus
+  tbody.querySelectorAll('input[type="text"]').forEach(inp=>{
+    inp.addEventListener("focus", ()=> setTimeout(()=>inp.select(),0));
+    inp.addEventListener("click", ()=> setTimeout(()=>inp.select(),0));
   });
 
-  wrap.appendChild(table);
+  // Wire changes
+  tbody.addEventListener("input", (e)=>{
+    const target = e.target;
+    const team = currentTeam();
+    if(!team) return;
+
+    const idx = Number(target.getAttribute("data-idx"));
+    const field = target.getAttribute("data-field");
+    if(Number.isNaN(idx) || !field) return;
+
+    if(field==="name"){
+      team.players[idx].name = target.value;
+      // Don’t rebuild the whole UI while typing; just save.
+      saveState();
+      renderPlayersGateOnly();
+      renderTopLabelsOnly();
+    }
+  });
+
+  tbody.addEventListener("change", (e)=>{
+    const target = e.target;
+    const team = currentTeam();
+    if(!team) return;
+
+    const idx = Number(target.getAttribute("data-idx"));
+    const field = target.getAttribute("data-field");
+    if(Number.isNaN(idx) || !field) return;
+
+    if(field==="pos1") team.players[idx].pos1 = target.value;
+    if(field==="pos2") team.players[idx].pos2 = target.value;
+
+    saveState();
+  });
+
+  renderPlayersModalWarn();
 }
 
-/* ---------- Render All ---------- */
-function renderAll(){
-  // initial visibility
-  document.getElementById("welcomeCard").style.display = state.competitions.length ? "none" : "block";
+function renderPlayersModalWarn(){
+  const team = currentTeam();
+  const warn = document.getElementById("playersModalWarn");
+  if(!team) return;
 
-  renderCompTabs();
-  renderTeamTabs();
+  const n = team.players.length;
+  if(n < MIN_PLAYERS){
+    warn.style.display = "block";
+    warn.textContent = `You currently have ${n} players. Add at least ${MIN_PLAYERS} to start using the app.`;
+  } else if(n > MAX_PLAYERS){
+    warn.style.display = "block";
+    warn.textContent = `Max is ${MAX_PLAYERS} players. Remove extras.`;
+  } else {
+    warn.style.display = "none";
+    warn.textContent = "";
+  }
+}
 
+function addPlayerRow(){
+  const team = currentTeam();
+  if(!team) return;
+  if(team.players.length >= MAX_PLAYERS) return alert(`Max players is ${MAX_PLAYERS}.`);
+
+  team.players.push({ id: nowId(), name: `Player ${team.players.length+1}`, pos1:"", pos2:"" });
+
+  // Ensure game stats keys exist for this new player
   const comp = currentComp();
-  if(!comp){ // hide main sections
-    ["gameCard","playersCard","periodCard","positionsCard","statsCard"].forEach(id=>document.getElementById(id).style.display="none");
+  for(const g of team.games){
+    if(!g.playerStats) g.playerStats = {};
+    g.playerStats[team.players[team.players.length-1].id] = { goalsTotal:0, goalsByP:Array.from({length:6},()=>0) };
+  }
+
+  saveState();
+  renderPlayersTableModal();
+}
+
+function removeLastPlayerRow(){
+  const team = currentTeam();
+  if(!team) return;
+  if(team.players.length <= 0) return;
+
+  const ok = confirm("Remove the last player row?");
+  if(!ok) return;
+
+  const removed = team.players.pop();
+
+  // Remove from all games assignments + stats
+  for(const g of team.games){
+    for(const per of g.periods){
+      for(const pos of POSITIONS){
+        if(per.assignments?.[pos] === removed.id) per.assignments[pos] = null;
+      }
+    }
+    if(g.playerStats) delete g.playerStats[removed.id];
+  }
+
+  saveState();
+  renderPlayersTableModal();
+}
+
+function playersDone(){
+  const team = currentTeam();
+  if(!team) return;
+
+  if(team.players.length < MIN_PLAYERS){
+    alert(`Please add at least ${MIN_PLAYERS} players.`);
+    return;
+  }
+  if(team.players.length > MAX_PLAYERS){
+    alert(`Max players is ${MAX_PLAYERS}. Please remove extras.`);
     return;
   }
 
-  // show top sections
-  document.getElementById("gameCard").style.display = "block";
-  document.getElementById("playersCard").style.display = "block";
-  document.getElementById("periodCard").style.display = "block";
-  document.getElementById("positionsCard").style.display = "block";
-  document.getElementById("statsCard").style.display = "block";
-
-  // team and game header
-  const team = currentTeam();
-  if(team){
-    document.getElementById("teamName").value = team.name;
-    const g = currentGame();
-    document.getElementById("gameLabel").textContent = `Game ${g.round} ${g.roundName ? "• "+g.roundName : ""}`;
+  // Ensure every game has correct stats keys
+  const comp = currentComp();
+  for(const g of team.games){
+    if(!g.playerStats) g.playerStats = {};
+    for(const p of team.players){
+      if(!g.playerStats[p.id]) g.playerStats[p.id] = { goalsTotal:0, goalsByP:Array.from({length:6},()=>0) };
+    }
+    // remove any stats keys for missing players
+    for(const pid of Object.keys(g.playerStats)){
+      if(!team.players.some(p=>p.id===pid)) delete g.playerStats[pid];
+    }
   }
 
-  renderPeriodSegAndScores();
-  renderPositionsGrid();
-  renderStats();
-  save(state);
+  saveState();
+  closePlayersModal();
+  renderAll();
 }
 
-/* ---------- Wiring DOM controls ---------- */
-document.getElementById("addCompBtn").addEventListener("click", openAddCompModal);
-document.getElementById("welcomeAddCompBtn").addEventListener("click", openAddCompModal);
-document.getElementById("addTeamBtn").addEventListener("click", openAddTeamModal);
+/* =========================
+   Games
+========================= */
+function addGame(){
+  const comp = currentComp();
+  const team = currentTeam();
+  if(!comp || !team) return;
 
-document.getElementById("managePlayersBtn").addEventListener("click", ()=> openManagePlayersModal(false));
+  const nextNum = team.games.filter(g=>g.name.startsWith("Game ")).length + 1;
+  team.games.push(newEmptyGame(comp.format, team.players, nextNum));
+  ensureFinalsGames(comp, team); // keep finals at end if active
+  team.currentGameIndex = Math.max(0, team.games.length-1);
 
-document.getElementById("addGameBtn").addEventListener("click", ()=>{
-  const team = currentTeam(); const comp = currentComp();
-  if(!team) return alert("Select a team first.");
-  const next = team.games.length+1;
-  team.games.push(newGame(next, team.players, comp.format));
-  team.currentGameIndex = team.games.length-1;
-  save(state); renderAll();
-});
-
-document.getElementById("homePlus").addEventListener("click", ()=>{ scoreTeam("home", +1); });
-document.getElementById("awayPlus").addEventListener("click", ()=>{ scoreTeam("away", +1); });
-document.getElementById("undoBtn").addEventListener("click", undoLast);
-
-document.getElementById("howtoBtn").addEventListener("click", ()=>{
-  alert("How-to: Create a competition → add teams → add players → add games. Use positions grid to plan. Use Home/Away +1 buttons to score. Stats show goals and played time.");
-});
-
-/* ---------- Initialization ---------- */
-(function init(){
-  // restore minimal example if none
-  if(!state.competitions || !state.competitions.length){
-    // keep blank to force user flow
-  }
+  stopTimerLoop();
+  saveState();
   renderAll();
-})();
+}
 
-/* ---------- Save on unload ---------- */
-window.addEventListener("beforeunload", ()=> save(state));
+function switchGame(i){
+  const team = currentTeam();
+  if(!team) return;
+  stopTimerLoop();
+  team.currentGameIndex = i;
+  saveState();
+  renderAll();
+}
 
+function prevGame(){
+  const team = currentTeam();
+  if(!team) return;
+  if(team.currentGameIndex <= 0) return;
+  stopTimerLoop();
+  team.currentGameIndex -= 1;
+  saveState();
+  renderAll();
+}
+
+function nextGame(){
+  const team = currentTeam();
+  if(!team) return;
+  if(team.currentGameIndex >= team.games.length-1) return;
+  stopTimerLoop();
+  team.currentGameIndex += 1;
+  saveState();
+  renderAll();
+}
+
+function resetCurrentGame(){
+  const comp = currentComp();
+  const team = currentTeam();
+  const game = currentGame();
+  if(!comp || !team || !game) return;
+
+  if(!confirm(`Reset "${game.name}"? This clears scores, timer and positions for this game only.`)) return;
+
+  const idx = team.currentGameIndex;
+  team.games[idx] = newEmptyGame(comp.format, team.players, game.name);
+  stopTimerLoop();
+  saveState();
+  renderAll();
+}
+
+/* =========================
+   Rendering helpers
+========================= */
+function playerById(team, pid){
+  return team.players.find(p=>p.id===pid) || null;
+}
+
+function benchPlayersForPeriod(team, game, pIdx){
+  const assigned = new Set(Object.values(game.periods[pIdx]?.assignments || {}).filter(Boolean));
+  return team.players.filter(p=>!assigned.has(p.id));
+}
+
+function computeHalvesPlayedAcrossCompetition(comp, team){
+  // Tournament totals: count if player appears in any on-court assignment for each half across all games
+  // (No OT included)
+  const reg = basePeriods(comp.format);
+  const totals = {};
+  for(const p of team.players) totals[p.id] = 0;
+
+  for(const g of team.games){
+    for(let pi=0; pi<reg; pi++){
+      const assigned = Object.values(g.periods[pi]?.assignments || {}).filter(Boolean);
+      for(const pid of assigned){
+        if(totals[pid] != null) totals[pid] += 1;
+      }
+    }
+  }
+  return totals;
+}
+
+function renderTimerOnly(){
+  const comp = currentComp(), game = currentGame();
+  if(!comp || !game) return;
+
+  document.getElementById("timerDisplay").textContent =
+    (game.timerMode==="countdown") ? fmtTime(game.timerRemaining) : fmtTime(game.timerExtraElapsed);
+
+  document.getElementById("timerModeTag").style.display = (game.timerMode==="countup") ? "inline-block" : "none";
+  document.getElementById("timerStartBtn").textContent = game.timerRunning ? "Pause" : "Start";
+}
+
+/* =========================
+   Roll-ups
+========================= */
+function initRollups(){
+  const cards = document.querySelectorAll(".card");
+  cards.forEach(card=>{
+    if(card.classList.contains("rollInit")) return;
+    card.classList.add("rollInit");
+
+    const firstRow = card.querySelector(".row");
+    if(!firstRow) return;
+
+    const btn = document.createElement("button");
+    btn.className = "rollBtn";
+    btn.type = "button";
+    btn.textContent = "▾";
+    firstRow.insertBefore(btn, firstRow.firstChild);
+
+    const body = document.createElement("div");
+    body.className = "rollBody";
+
+    let sibling = firstRow.nextSibling;
+    while(sibling){
+      const next = sibling.nextSibling;
+      body.appendChild(sibling);
+      sibling = next;
+    }
+    card.appendChild(body);
+
+    const key = `bbv2_roll_${card.id || ("card_" + Math.random().toString(16).slice(2))}`;
+    const saved = localStorage.getItem(key);
+    if(saved === "1"){
+      card.classList.add("collapsed");
+      btn.textContent = "▸";
+    }
+
+    btn.addEventListener("click", ()=>{
+      const collapsed = card.classList.toggle("collapsed");
+      btn.textContent = collapsed ? "▸" : "▾";
+      localStorage.setItem(key, collapsed ? "1" : "0");
+    });
+  });
+}
+
+/* =========================
+   Render (main)
+========================= */
+function renderCompSeg(){
+  const seg = document.getElementById("compSeg");
+  seg.innerHTML = "";
+  for(const c of state.competitions){
+    const b = document.createElement("button");
+    b.textContent = (c.name || "Competition").slice(0,20);
+    b.className = (c.id===state.currentCompId) ? "active" : "";
+    b.addEventListener("click", ()=> switchCompetition(c.id));
+    seg.appendChild(b);
+  }
+}
+
+function renderTeamSeg(comp){
+  const seg = document.getElementById("teamSeg");
+  seg.innerHTML = "";
+  for(const t of comp.teams){
+    const b = document.createElement("button");
+    b.textContent = (t.name || "Team").slice(0,18);
+    b.className = (t.id===comp.currentTeamId) ? "active" : "";
+    b.addEventListener("click", ()=> switchTeam(t.id));
+    seg.appendChild(b);
+  }
+}
+
+function renderPlayersGateOnly(){
+  const team = currentTeam();
+  if(!team){
+    document.getElementById("playersCountLabel").textContent = "0";
+    return;
+  }
+  document.getElementById("playersCountLabel").textContent = String(team.players.length);
+
+  const warn = document.getElementById("playersGateWarn");
+  if(team.players.length < MIN_PLAYERS){
+    warn.style.display = "block";
+    warn.textContent = `Add at least ${MIN_PLAYERS} players to unlock games, positions and scoring.`;
+  } else {
+    warn.style.display = "none";
+    warn.textContent = "";
+  }
+}
+
+function renderTopLabelsOnly(){
+  const comp = currentComp();
+  const team = currentTeam();
+  if(!comp) return;
+
+  document.getElementById("compName").value = comp.name || "";
+  document.getElementById("compFormatLabel").textContent = (comp.format==="halves") ? "2 halves (tournament)" : "4 quarters (league)";
+  document.getElementById("compFormatHint").textContent = (comp.format==="halves") ? "Timer options: 5–10 (default 8)" : "Timer options: 10/12/15 (default 10)";
+
+  document.getElementById("finalsToggle").checked = !!comp.finalsActive;
+
+  if(team){
+    document.getElementById("teamName").value = team.name || "";
+    renderPlayersGateOnly();
+  }
+}
+
+function renderGames(comp, team){
+  const game = currentGame();
+  document.getElementById("gameLabel").textContent = game?.name || "Game";
+  document.getElementById("gameCountLabel").textContent = `(${team.games.length} game${team.games.length===1?'':'s'})`;
+
+  document.getElementById("prevGameBtn").disabled = (team.currentGameIndex <= 0);
+  document.getElementById("nextGameBtn").disabled = (team.currentGameIndex >= team.games.length-1);
+
+  const seg = document.getElementById("gameSeg");
+  seg.innerHTML = "";
+  team.games.forEach((g,i)=>{
+    const b = document.createElement("button");
+    b.textContent = g.name.startsWith("Game ") ? `G${g.name.replace("Game ","")}` : g.name.replace(" ","\n");
+    b.className = (i===team.currentGameIndex) ? "active" : "";
+    b.addEventListener("click", ()=> switchGame(i));
+    seg.appendChild(b);
+  });
+
+  document.getElementById("opponent").value = game.opponent || "";
+  document.getElementById("gameDate").value = game.date || "";
+  document.getElementById("gameNotes").value = game.notes || "";
+}
+
+function renderPeriodSeg(comp, game){
+  const seg = document.getElementById("periodSeg");
+  seg.innerHTML = "";
+
+  for(let i=0;i<totalPeriods(comp.format, game);i++){
+    const b = document.createElement("button");
+    b.textContent = periodLabel(comp.format, i, game);
+    b.className = (game.selectedP===i) ? "active" : "";
+    b.addEventListener("click", ()=>{
+      game.selectedP = i;
+      resetTimer();
+      saveState();
+      renderAll();
+    });
+    seg.appendChild(b);
+  }
+
+  document.getElementById("editingPeriod").textContent = periodLabel(comp.format, game.selectedP, game);
+  document.getElementById("livePeriod").textContent = periodLabel(comp.format, game.liveP, game);
+}
+
+function renderMinutesSelect(comp, game){
+  const sel = document.getElementById("minutesSelect");
+  sel.innerHTML = "";
+
+  const list = (comp.format==="halves") ? TOURN_MINUTES : LEAGUE_MINUTES;
+  for(const m of list){
+    const opt = document.createElement("option");
+    opt.value = String(m);
+    opt.textContent = `${m} min`;
+    sel.appendChild(opt);
+  }
+
+  sel.value = String(game.baseMinutes);
+  sel.disabled = game.gameEnded || (game.timerMode==="countup");
+}
+
+function renderLiveWarn(comp, game){
+  const warn = document.getElementById("liveWarnBox");
+  if(game.selectedP !== game.liveP){
+    warn.style.display = "block";
+    warn.textContent = `Heads up: you're editing ${periodLabel(comp.format, game.selectedP, game)}, but LIVE scoring is ${periodLabel(comp.format, game.liveP, game)}. Scoring/undo applies to LIVE.`;
+  } else {
+    warn.style.display = "none";
+    warn.textContent = "";
+  }
+}
+
+function renderScores(comp, team, game){
+  const home = team.name?.trim() ? team.name.trim() : "Home";
+  const away = game.opponent?.trim() ? game.opponent.trim() : "Away";
+
+  document.getElementById("homeLabel").textContent = home;
+  document.getElementById("awayLabel").textContent = away;
+
+  document.getElementById("homeScore").textContent = totalHome(game);
+  document.getElementById("awayScore").textContent = totalAway(game);
+
+  const liveA = game.periods[game.liveP]?.assignments || {};
+  document.getElementById("gsName").textContent = liveA.GS ? (playerById(team, liveA.GS)?.name || "—") : "—";
+  document.getElementById("gaName").textContent = liveA.GA ? (playerById(team, liveA.GA)?.name || "—") : "—";
+
+  const banner = document.getElementById("finalBanner");
+  const text = document.getElementById("finalBannerText");
+  banner.classList.remove("win","loss","draw");
+
+  if(game.gameEnded){
+    banner.style.display = "block";
+    const diff = totalHome(game) - totalAway(game);
+    if(diff > 0){ banner.classList.add("win"); text.textContent = `${home} won by ${diff}`; }
+    else if(diff < 0){ banner.classList.add("loss"); text.textContent = `${home} lost by ${Math.abs(diff)}`; }
+    else { banner.classList.add("draw"); text.textContent = "Draw"; }
+  } else {
+    banner.style.display = "none";
+  }
+}
+
+function updateEndButtons(comp, game){
+  const endBtn = document.getElementById("periodFinishedBtn");
+  const reopenBtn = document.getElementById("reopenBtn");
+  const startOTBtn = document.getElementById("startOTBtn");
+
+  startOTBtn.style.display = canStartOT(comp, game) ? "inline-block" : "none";
+
+  const base = basePeriods(comp.format);
+  const ot1Index = base;
+  const ot2Index = base + 1;
+
+  if(game.gameEnded){
+    endBtn.textContent = "Game ended";
+    endBtn.disabled = true;
+    reopenBtn.style.display = "inline-block";
+  } else {
+    reopenBtn.style.display = "none";
+    endBtn.disabled = false;
+
+    if(game.otCount === 2 && game.liveP === ot1Index){
+      endBtn.textContent = "OT1 finished → OT2";
+    } else if(game.otCount === 2 && game.liveP === ot2Index){
+      endBtn.textContent = "End game";
+    } else {
+      const isLast = (game.liveP >= totalPeriods(comp.format, game)-1);
+      if(isLast){
+        endBtn.textContent = "End game";
+      } else {
+        endBtn.textContent = (comp.format==="halves") ? "Half finished → Next" : "Qtr finished → Next";
+      }
+    }
+  }
+
+  const lockIds = ["homePlus","homeMinus","awayPlus","awayMinus","undoBtn","gsPlus","gaPlus","setLiveToEditingBtn","timerResetBtn","timerStartBtn","minutesSelect"];
+  for(const id of lockIds){
+    const el = document.getElementById(id);
+    if(el) el.disabled = !!game.gameEnded || (id==="minutesSelect" && (game.timerMode==="countup"));
+  }
+}
+
+function renderPositions(comp, team, game){
+  const grid = document.getElementById("positionsGrid");
+  grid.innerHTML = "";
+  const pIdx = game.selectedP;
+
+  POSITIONS.forEach(pos=>{
+    const row = document.createElement("div");
+    row.className = "posRow";
+
+    const tag = document.createElement("div");
+    tag.className = "posTag";
+    tag.textContent = pos;
+
+    const sel = document.createElement("select");
+    sel.style.flex = "1";
+
+    const opt0 = document.createElement("option");
+    opt0.value = "";
+    opt0.textContent = "— select player —";
+    sel.appendChild(opt0);
+
+    team.players.forEach(p=>{
+      const opt = document.createElement("option");
+      opt.value = p.id;
+      opt.textContent = p.name || "Unnamed";
+      sel.appendChild(opt);
+    });
+
+    sel.value = game.periods[pIdx].assignments[pos] || "";
+    sel.addEventListener("change", ()=> setAssignment(pos, sel.value || null));
+
+    row.appendChild(tag);
+    row.appendChild(sel);
+
+    grid.appendChild(row);
+  });
+
+  // Bench names line
+  const bench = benchPlayersForPeriod(team, game, pIdx);
+  document.getElementById("benchCount").textContent = `${bench.length} on bench`;
+  document.getElementById("benchNamesLine").textContent =
+    bench.length ? bench.map(p=>p.name||"Unnamed").join(", ") : "No one on bench (all assigned).";
+}
+
+function renderCopyTargets(comp, game){
+  const sel = document.getElementById("copyTargetPeriod");
+  sel.innerHTML = "";
+  for(let i=0;i<totalPeriods(comp.format, game);i++){
+    if(i===game.selectedP) continue;
+    const opt = document.createElement("option");
+    opt.value = String(i);
+    opt.textContent = periodLabel(comp.format, i, game);
+    sel.appendChild(opt);
+  }
+}
+
+function wireCopyButtons(comp, game){
+  document.getElementById("copyToNextBtn").onclick = ()=>{
+    const next = Math.min(totalPeriods(comp.format, game)-1, game.selectedP + 1);
+    if(next === game.selectedP) return alert("Already at last period.");
+    const ok = confirm(`Copy positions from ${periodLabel(comp.format, game.selectedP, game)} → ${periodLabel(comp.format, next, game)}?\nThis will overwrite ${periodLabel(comp.format, next, game)}.`);
+    if(!ok) return;
+    copyAssignments(game.selectedP, next);
+    renderAll();
+    alert("Copied.");
+  };
+
+  document.getElementById("copyToSelectedBtn").onclick = ()=>{
+    const target = Number(document.getElementById("copyTargetPeriod").value);
+    if(Number.isNaN(target)) return;
+    const ok = confirm(`Copy positions from ${periodLabel(comp.format, game.selectedP, game)} → ${periodLabel(comp.format, target, game)}?\nThis will overwrite ${periodLabel(comp.format, target, game)}.`);
+    if(!ok) return;
+    copyAssignments(game.selectedP, target);
+    renderAll();
+    alert("Copied.");
+  };
+}
+
+function renderStats(comp, team, game){
+  const wrap = document.getElementById("statsWrap");
+
+  // per-player game goals + preferred positions
+  const rows = team.players
+    .map(p=>({
+      name: p.name || "Unnamed",
+      pid: p.id,
+      pos1: p.pos1 || "—",
+      pos2: p.pos2 || "—",
+      goals: game.playerStats[p.id]?.goalsTotal || 0
+    }))
+    .sort((a,b)=> (b.goals-a.goals) || a.name.localeCompare(b.name));
+
+  wrap.innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Pref 1</th>
+          <th>Pref 2</th>
+          <th>Goals (game)</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.map(r=>`
+          <tr>
+            <td><b>${escapeHtml(r.name)}</b></td>
+            <td>${escapeHtml(r.pos1)}</td>
+            <td>${escapeHtml(r.pos2)}</td>
+            <td><b>${r.goals}</b></td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+  `;
+
+  // Positions by period (this game)
+  const pbw = document.getElementById("positionsByPeriodWrap");
+  pbw.innerHTML = "";
+  for(let pi=0; pi<basePeriods(comp.format); pi++){
+    const per = game.periods[pi];
+    const line = POSITIONS.map(pos=>{
+      const pid = per.assignments[pos];
+      const nm = pid ? (playerById(team, pid)?.name || "—") : "—";
+      return `<span class="kbd">${pos}</span> ${escapeHtml(nm)}`;
+    }).join(" &nbsp; ");
+
+    const div = document.createElement("div");
+    div.className = "pill";
+    div.style.display = "block";
+    div.innerHTML = `<div style="font-weight:950;margin-bottom:6px;">${periodLabel(comp.format, pi, game)}</div><div>${line}</div>`;
+    pbw.appendChild(div);
+  }
+
+  // Tournament totals (halves mode)
+  const details = document.getElementById("tournTotalsDetails");
+  const twrap = document.getElementById("tournTotalsWrap");
+
+  if(comp.format==="halves"){
+    details.style.display = "block";
+    const totals = computeHalvesPlayedAcrossCompetition(comp, team);
+
+    const trows = team.players
+      .map(p=>({ name: p.name||"Unnamed", halves: totals[p.id] || 0 }))
+      .sort((a,b)=> (b.halves-a.halves) || a.name.localeCompare(b.name));
+
+    twrap.innerHTML = `
+      <table>
+        <thead>
+          <tr><th>Player</th><th>Total halves played (competition)</th></tr>
+        </thead>
+        <tbody>
+          ${trows.map(r=>`
+            <tr>
+              <td><b>${escapeHtml(r.name)}</b></td>
+              <td><b>${r.halves}</b></td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+      <div class="muted" style="margin-top:8px;">
+        Counts a half if the player appears in any on-court position in that half (OT not included).
+      </div>
+    `;
+  } else {
+    details.style.display = "none";
+    twrap.innerHTML = "";
+  }
+}
+
+/* =========================
+   Main render flow + gating
+========================= */
+function renderAll(){
+  ensureIntegrity();
+
+  const comp = currentComp();
+  const team = currentTeam();
+  const game = currentGame();
+
+  // Welcome gating
+  const showWelcome = !hasCompetitions();
+  document.getElementById("welcomeCard").style.display = showWelcome ? "block" : "none";
+
+  const sections = ["compCard","teamCard","gameCard","periodCard","positionsCard","statsCard"];
+  sections.forEach(id => document.getElementById(id).style.display = showWelcome ? "none" : "block");
+
+  if(showWelcome){
+    renderCompSeg(); // empty
+    return;
+  }
+
+  // Competition UI
+  renderCompSeg();
+  renderTopLabelsOnly();
+
+  // Team gating
+  if(!comp.currentTeamId){
+    // Hide game/positions/stats until team exists
+    document.getElementById("gameCard").style.display = "none";
+    document.getElementById("periodCard").style.display = "none";
+    document.getElementById("positionsCard").style.display = "none";
+    document.getElementById("statsCard").style.display = "none";
+
+    renderTeamSeg(comp);
+    renderPlayersGateOnly();
+    return;
+  }
+
+  renderTeamSeg(comp);
+  renderPlayersGateOnly();
+
+  const playersOk = (team.players.length >= MIN_PLAYERS);
+
+  // Gate: hide main app until players ok
+  const gated = !playersOk;
+  document.getElementById("gameCard").style.display = gated ? "none" : "block";
+  document.getElementById("periodCard").style.display = gated ? "none" : "block";
+  document.getElementById("positionsCard").style.display = gated ? "none" : "block";
+  document.getElementById("statsCard").style.display = gated ? "none" : "block";
+
+  if(gated) return;
+
+  // Finals apply
+  ensureFinalsGames(comp, team);
+
+  // Render game + period + scoring + positions + stats
+  renderGames(comp, team);
+
+  renderPeriodSeg(comp, game);
+  renderMinutesSelect(comp, game);
+  renderTimerOnly();
+  renderLiveWarn(comp, game);
+  renderScores(comp, team, game);
+
+  renderCopyTargets(comp, game);
+  wireCopyButtons(comp, game);
+  renderPositions(comp, team, game);
+
+  renderStats(comp, team, game);
+
+  updateEndButtons(comp, game);
+
+  // Start timer loop only if running
+  if(game.timerRunning) startTimerLoop();
+}
+
+/* =========================
+   Wiring (UI events)
+========================= */
+document.getElementById("howtoBtn").addEventListener("click", openHowto);
+document.getElementById("howtoClose").addEventListener("click", closeHowto);
+document.getElementById("howtoOk").addEventListener("click", closeHowto);
+document.getElementById("howtoBack").addEventListener("click", (e)=>{ if(e.target.id==="howtoBack") closeHowto(); });
+
+document.getElementById("welcomeAddCompBtn").addEventListener("click", openCompModal);
+document.getElementById("addCompBtn").addEventListener("click", openCompModal);
+document.getElementById("compClose").addEventListener("click", closeCompModal);
+document.getElementById("compBack").addEventListener("click", (e)=>{ if(e.target.id==="compBack") closeCompModal(); });
+document.getElementById("compCreateBtn").addEventListener("click", createCompetition);
+
+document.getElementById("deleteCompBtn").addEventListener("click", deleteCompetition);
+
+document.getElementById("compName").addEventListener("input", (e)=>{
+  const comp = currentComp(); if(!comp) return;
+  comp.name = e.target.value;
+  saveState();
+  renderAll();
+});
+
+document.getElementById("finalsToggle").addEventListener("change", (e)=>{
+  const comp = currentComp(); const team = currentTeam();
+  if(!comp) return;
+  comp.finalsActive = !!e.target.checked;
+  if(team) ensureFinalsGames(comp, team);
+  saveState();
+  renderAll();
+});
+
+document.getElementById("addTeamBtn").addEventListener("click", openTeamModal);
+document.getElementById("teamClose").addEventListener("click", closeTeamModal);
+document.getElementById("teamBack").addEventListener("click", (e)=>{ if(e.target.id==="teamBack") closeTeamModal(); });
+document.getElementById("teamCreateBtn").addEventListener("click", createTeam);
+
+document.getElementById("deleteTeamBtn").addEventListener("click", deleteTeam);
+
+document.getElementById("teamName").addEventListener("input", (e)=>{
+  const team = currentTeam(); if(!team) return;
+  team.name = e.target.value;
+  saveState();
+  renderAll();
+});
+
+document.getElementById("managePlayersBtn").addEventListener("click", openPlayersModal);
+document.getElementById("playersClose").addEventListener("click", closePlayersModal);
+document.getElementById("playersBack").addEventListener("click", (e)=>{ if(e.target.id==="playersBack") closePlayersModal(); });
+
+document.getElementById("playersAddRowBtn").addEventListener("click", addPlayerRow);
+document.getElementById("playersRemoveRowBtn").addEventListener("click", removeLastPlayerRow);
+document.getElementById("playersDoneBtn").addEventListener("click", playersDone);
+
+// Games
+document.getElementById("addGameBtn").addEventListener("click", addGame);
+document.getElementById("prevGameBtn").addEventListener("click", prevGame);
+document.getElementById("nextGameBtn").addEventListener("click", nextGame);
+document.getElementById("resetGameBtn").addEventListener("click", resetCurrentGame);
+
+document.getElementById("opponent").addEventListener("input", (e)=>{
+  const game = currentGame(); if(!game) return;
+  game.opponent = e.target.value;
+  saveState(); renderAll();
+});
+document.getElementById("gameDate").addEventListener("input", (e)=>{
+  const game = currentGame(); if(!game) return;
+  game.date = e.target.value;
+  saveState(); renderAll();
+});
+document.getElementById("gameNotes").addEventListener("input", (e)=>{
+  const game = currentGame(); if(!game) return;
+  game.notes = e.target.value;
+  saveState();
+});
+
+// Period controls
+document.getElementById("setLiveToEditingBtn").addEventListener("click", ()=>{
+  const game = currentGame(); if(!game) return;
+  game.liveP = game.selectedP;
+  saveState(); renderAll();
+});
+
+document.getElementById("periodFinishedBtn").addEventListener("click", endOrNextPeriod);
+document.getElementById("startOTBtn").addEventListener("click", startOT);
+document.getElementById("reopenBtn").addEventListener("click", reopenGame);
+
+// Timer
+document.getElementById("minutesSelect").addEventListener("change", (e)=>{
+  const comp = currentComp(), game = currentGame();
+  if(!comp || !game) return;
+  game.baseMinutes = Number(e.target.value);
+
+  if(!game.timerRunning && !isOTIndex(comp.format, game.selectedP)){
+    game.timerRemaining = game.baseMinutes * 60;
+    game.timerLastTick = 0;
+  }
+  saveState();
+  renderAll();
+});
+
+document.getElementById("timerStartBtn").addEventListener("click", toggleTimer);
+document.getElementById("timerResetBtn").addEventListener("click", resetTimer);
+
+// Scoring
+document.getElementById("homePlus").addEventListener("click", ()=>scoreTeam("home", +1));
+document.getElementById("homeMinus").addEventListener("click", ()=>scoreTeam("home", -1));
+document.getElementById("awayPlus").addEventListener("click", ()=>scoreTeam("away", +1));
+document.getElementById("awayMinus").addEventListener("click", ()=>scoreTeam("away", -1));
+document.getElementById("gsPlus").addEventListener("click", ()=>scoreFromPosition("GS"));
+document.getElementById("gaPlus").addEventListener("click", ()=>scoreFromPosition("GA"));
+document.getElementById("undoBtn").addEventListener("click", undo);
+
+/* =========================
+   Service worker
+========================= */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  });
+}
+
+/* =========================
+   Init
+========================= */
+initRollups();
+renderAll();
+
+// If no competitions, keep it clean. Otherwise show how-to once per session (optional)
 </script>
 </body>
 </html>
