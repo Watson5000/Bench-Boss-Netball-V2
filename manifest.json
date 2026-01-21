@@ -1,0 +1,24 @@
+{
+  "name": "Bench Boss: Netball (V2)",
+  "short_name": "Bench Boss V2",
+  "description": "Bench Boss V2 – competition-first netball coaching app with rotations, scoring, timer, and overtime.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#111111",
+  "theme_color": "#111111",
+  "icons": [
+    {
+      "src": "bb-netball.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
