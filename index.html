@@ -1,2415 +1,279 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#111111" />
-  <link rel="manifest" href="manifest.json">
-  <title>Bench Boss: Netball</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#111111" />
+<title>Bench Boss: Netball (V2)</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 
-  <!-- Favicons / iOS -->
-  <link rel="icon" href="favicon.png" type="image/png">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
-
-  <style>
-    :root { --pad: 12px; --r: 14px; --b: 1px solid #ddd; }
-    body { margin:0; font-family:-apple-system,system-ui,Segoe UI,Roboto,Arial; background:#f6f6f6; }
-
-    header{
-      padding: calc(var(--pad) + 2px);
-      color:#fff;
-      background:
-        radial-gradient(900px 220px at 10% 20%, rgba(255,255,255,.12), transparent 60%),
-        linear-gradient(135deg, #0b0b0b 0%, #121212 45%, #1a1a1a 100%);
-      border-bottom: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 10px 24px rgba(0,0,0,.18);
-    }
-    header h1{margin:0;font-size:18px;letter-spacing:.2px;}
-    .brandRow{display:flex;align-items:center;gap:12px;min-width:0;}
-    .brandLogo{
-      width:40px;height:40px;border-radius:12px;object-fit:cover;
-      background:rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow:0 6px 14px rgba(0,0,0,.25);
-    }
-    .brandTitle{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-    .badge{
-      font-size:11px;padding:4px 8px;border-radius:999px;
-      background:rgba(255,255,255,.12);
-      border:1px solid rgba(255,255,255,.16);
-      font-weight:950;letter-spacing:.2px;
-    }
-    header .sub{
-      opacity:.92;font-size:12px;margin-top:6px;
-      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-    }
-    header .sub .dot{opacity:.6;}
-    header .sub .byline{opacity:.85;font-weight:800;}
-
-    #howtoBtn{
-      border-color: rgba(255,255,255,.25) !important;
-      color:#fff !important;
-      background: rgba(255,255,255,.10) !important;
-      backdrop-filter: blur(6px);
-    }
-
-    main{padding:var(--pad);display:grid;gap:var(--pad);}
-    .card{background:#fff;border:var(--b);border-radius:var(--r);padding:var(--pad);}
-    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
-    .grow{flex:1;}
-    .seg{display:flex;gap:8px;flex-wrap:wrap;}
-    .seg button{border:var(--b);background:#fff;padding:10px 12px;border-radius:999px;font-weight:950;}
-    .seg button.active{
-      background:#111;color:#fff;border-color:#111;
-      box-shadow:0 0 0 4px rgba(0,0,0,.12);
-      transform:scale(1.04);
-    }
-    button.primary{background:#111;color:#fff;border:1px solid #111;border-radius:12px;padding:12px 14px;font-weight:950;}
-    button.ghost{background:#fff;border:var(--b);border-radius:12px;padding:12px 14px;font-weight:950;}
-    button.small{padding:8px 10px;border-radius:10px;font-weight:950;}
-    button.danger{border-color:#c62828;color:#c62828;}
-    select,input[type="text"],input[type="date"]{border:var(--b);border-radius:12px;padding:10px 12px;font-size:16px;background:#fff;}
-    textarea{width:100%;min-height:70px;border:var(--b);border-radius:12px;padding:10px 12px;font-size:16px;background:#fff;}
-    .grid7{display:grid;grid-template-columns:1fr;gap:10px;}
-    @media (min-width:780px){.grid7{grid-template-columns:1fr 1fr;}}
-    .posRow{display:flex;gap:10px;align-items:center;}
-    .posTag{width:54px;min-width:54px;text-align:center;padding:8px 0;border-radius:10px;background:#f0f0f0;border:var(--b);font-weight:950;}
-    .muted{color:#666;font-size:13px;}
-    .list{display:grid;gap:8px;}
-    .pill{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:var(--b);border-radius:12px;background:#fff;gap:10px;}
-    .right{text-align:right;}
-    .kbd{font-family:ui-monospace,Menlo,monospace;font-size:12px;padding:2px 6px;border-radius:8px;background:#eee;border:1px solid #ddd;}
-    table{width:100%;border-collapse:collapse;}
-    th,td{border:var(--b);padding:8px 10px;text-align:left;}
-    th{background:#fafafa;}
-    details summary{cursor:pointer;font-weight:950;}
-    .warn{padding:10px 12px;border-radius:12px;border:1px solid #ffe082;background:#fff8e1;}
-    .scoreBig{font-size:40px;font-weight:950;line-height:1;}
-
-    .modalBack{
-      position:fixed; inset:0;
-      background:rgba(0,0,0,.45);
-      display:none; align-items:center; justify-content:center;
-      padding:16px; z-index:9999;
-    }
-    .modal{
-      width:min(820px, 100%);
-      background:#fff;
-      border:1px solid #ddd;
-      border-radius:16px;
-      padding:14px;
-    }
-    .modal h3{margin:0 0 6px 0}
-    .modal textarea{min-height:160px;font-family:ui-monospace,Menlo,monospace;font-size:12px;}
-
-    .finalBanner{
-      display:none;
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid #ddd;
-      background:#f3f3f3;
-      font-weight:950;
-      margin-top:10px;
-    }
-    .finalBanner.win{ background:#e8f5e9; border-color:#c8e6c9; }
-    .finalBanner.loss{ background:#ffebee; border-color:#ffcdd2; }
-    .finalBanner.draw{ background:#e3f2fd; border-color:#bbdefb; }
-    .finalBanner .small{ font-size:12px; font-weight:900; opacity:.85; }
-    .finalBanner .big{ font-size:18px; font-weight:950; margin-top:4px; }
-
-    .rollBtn{
-      border:1px solid #ddd;
-      background:#fff;
-      border-radius:12px;
-      padding:6px 8px;
-      font-weight:950;
-      line-height:1;
-      margin-right:8px;
-    }
-    .card.collapsed .rollBody{ display:none; }
-
-    .miniDanger{
-      border:1px solid #c62828;
-      color:#c62828;
-      background:#fff;
-      border-radius:12px;
-      padding:10px 12px;
-      font-weight:950;
-      line-height:1;
-    }
-  </style>
+<style>
+:root{--pad:12px;--r:14px;--b:1px solid #ddd}
+body{margin:0;font-family:-apple-system,system-ui,Segoe UI,Roboto,Arial;background:#f6f6f6}
+header{padding:calc(var(--pad)+2px);color:#fff;background:linear-gradient(135deg,#0b0b0b 0%,#121212 45%,#1a1a1a 100%);box-shadow:0 10px 24px rgba(0,0,0,.18)}
+header h1{margin:0;font-size:18px}
+main{padding:var(--pad);display:grid;gap:var(--pad)}
+.card{background:#fff;border:var(--b);border-radius:var(--r);padding:var(--pad)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.grow{flex:1}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg button{border:var(--b);background:#fff;padding:10px 12px;border-radius:999px;font-weight:900}
+.seg button.active{background:#111;color:#fff;border-color:#111}
+button.primary{background:#111;color:#fff;border:1px solid #111;border-radius:12px;padding:12px 14px;font-weight:900}
+button.ghost{background:#fff;border:var(--b);border-radius:12px;padding:12px 14px;font-weight:900}
+button.small{padding:8px 10px;border-radius:10px;font-weight:900}
+button.danger{border-color:#c62828;color:#c62828}
+input,select,textarea{border:var(--b);border-radius:12px;padding:10px 12px;font-size:16px}
+textarea{width:100%;min-height:70px}
+.muted{color:#666;font-size:13px}
+.list{display:grid;gap:8px}
+.pill{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:var(--b);border-radius:12px}
+.modalBack{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:9999}
+.modal{background:#fff;border:1px solid #ddd;border-radius:16px;padding:14px;width:min(900px,100%)}
+table{width:100%;border-collapse:collapse}
+th,td{border:var(--b);padding:8px 10px}
+th{background:#fafafa}
+.miniDanger{border:1px solid #c62828;color:#c62828;background:#fff;border-radius:10px;padding:8px 10px;font-weight:900}
+.scoreBig{font-size:40px;font-weight:900}
+.divider{height:1px;background:#eee;margin:10px 0}
+</style>
 </head>
-
 <body>
-<header>
-  <div class="row" style="justify-content:space-between; align-items:center;">
-    <div class="brandRow">
-      <img src="bb-netball.png" class="brandLogo" alt="Bench Boss logo">
-      <div>
-        <div class="brandTitle">
-          <h1>Bench Boss: Netball</h1>
-          <span class="badge">BETA</span>
-        </div>
-        <div class="sub">
-          <span>Competition • teams • games • rotations • OT</span>
-          <span class="dot">•</span>
-          <span class="byline">Designed by Matt Watson</span>
-          <span id="saveState" class="muted"></span>
-        </div>
-      </div>
-    </div>
 
-    <button class="ghost small" id="howtoBtn">How-to</button>
+<header>
+  <div class="row">
+    <h1 class="grow">Bench Boss: Netball <span class="muted">(V2)</span></h1>
   </div>
 </header>
 
 <main>
-  <!-- WELCOME -->
+  <!-- Welcome -->
   <section class="card" id="welcomeCard">
-    <div style="font-weight:950; font-size:18px;">Welcome 👋</div>
-    <div class="muted" style="margin-top:6px;">
-      This version uses <b>Competition → Team → Games</b>.<br>
-      Start by adding a <b>Competition</b> (Parkville, Tournament, Practice), then add your team(s) under it.
+    <div style="font-weight:900;font-size:18px">Welcome 👋</div>
+    <div class="muted" style="margin-top:6px">
+      Start by creating a <b>Competition</b>. The format is locked once created.
     </div>
     <div style="height:10px"></div>
-    <button class="primary" id="welcomeAddCompBtn">+ Add Competition</button>
+    <button class="primary" id="welcomeStartBtn">Create competition</button>
   </section>
 
-  <!-- TOP: COMP + TEAM + GAME -->
-  <section class="card" id="topCard">
+  <!-- Competition / Team -->
+  <section class="card" id="topCard" style="display:none">
     <div class="row">
       <div class="grow">
         <div class="muted">Competitions</div>
         <div class="seg" id="compSeg"></div>
       </div>
       <button class="primary small" id="addCompBtn">+ Add Comp</button>
-      <button class="ghost small danger" id="deleteCompBtn">Delete Comp</button>
     </div>
 
-    <div style="height:12px"></div>
+    <div class="divider"></div>
 
     <div class="row">
       <div class="grow">
-        <div class="muted">Competition name</div>
-        <input id="compName" type="text" placeholder="e.g. Parkville Winter 2026" />
+        <div class="muted">Competition</div>
+        <input id="compName" disabled>
       </div>
-
       <div class="grow">
-        <div class="muted">Format (this competition)</div>
-        <div style="font-weight:950; font-size:16px;"><span id="formatLabel">4 quarters</span></div>
+        <div class="muted">Format</div>
+        <div id="formatLabel" style="font-weight:900">—</div>
       </div>
-
-      <div class="grow">
-        <div class="muted">Teams (in this comp)</div>
-        <div class="seg" id="teamSeg"></div>
-      </div>
-
-      <button class="primary small" id="addTeamBtn">+ Add Team</button>
-      <button class="ghost small danger" id="deleteTeamBtn">Delete Team</button>
     </div>
 
-    <div style="height:12px"></div>
+    <div class="divider"></div>
 
+    <div class="row">
+      <div class="grow">
+        <div class="muted">Teams</div>
+        <div class="seg" id="teamSeg"></div>
+      </div>
+      <button class="primary small" id="addTeamBtn">+ Add Team</button>
+    </div>
+
+    <div style="height:10px"></div>
     <div class="row">
       <div class="grow">
         <div class="muted">Team name</div>
-        <input id="teamName" type="text" placeholder="e.g. Tigers U15" />
-      </div>
-
-      <div class="grow">
-        <div class="muted">Current Game</div>
-        <div style="font-weight:950; font-size:18px;">
-          <span id="roundLabel">Game 1</span> <span class="muted" id="roundCountLabel"></span>
-        </div>
-      </div>
-
-      <button class="ghost small" id="prevGameBtn">◀ Prev</button>
-      <button class="ghost small" id="nextGameBtn">Next ▶</button>
-      <button class="primary small" id="addGameBtn">+ Add Game</button>
-      <button class="ghost small danger" id="resetTeamBtn" title="Reset this team (players + games)">Reset Team</button>
-    </div>
-
-    <div class="row" style="margin-top:10px;">
-      <div class="muted">Games:</div>
-      <div class="seg" id="roundSeg"></div>
-    </div>
-
-    <div style="height:10px"></div>
-
-    <div class="row">
-      <div class="grow">
-        <div class="muted">Game name</div>
-        <input id="roundName" type="text" placeholder="e.g. vs Hawks / Semi Final" />
-      </div>
-      <div class="grow">
-        <div class="muted">Date</div>
-        <input id="gameDate" type="date" />
-      </div>
-      <div class="grow">
-        <div class="muted">Opponent</div>
-        <input id="opponent" type="text" placeholder="e.g. Raptors" />
-      </div>
-      <div class="row">
-        <button class="ghost small" id="newGameBtn" title="Reset this game only">Reset This Game</button>
-        <button class="ghost small" id="copySummaryBtn">Copy Game Summary</button>
-        <button class="ghost small" id="syncBtn">Sync</button>
+        <input id="teamName">
       </div>
     </div>
   </section>
 
-  <!-- PLAYERS -->
-<section class="card" id="setupCard">
-  <div class="row">
-    <div class="grow">
-      <div style="font-weight:950;margin-bottom:6px;">Players (for this team)</div>
-      <div class="muted">Tap to edit names + preferred positions</div>
-    </div>
-    <button class="primary small" id="editPlayersBtn">Edit Players</button>
-  </div>
-
-  <div style="height:10px"></div>
-  <div class="muted" id="playersQuickSummary"></div>
-</section>
-
-  <!-- PERIOD / SCORE / TIMER -->
-  <section class="card" id="periodCard">
+  <!-- Players -->
+  <section class="card" id="playersCard" style="display:none">
     <div class="row">
-      <div class="grow" style="font-weight:950;">Period (editing)</div>
-      <div class="seg" id="periodSeg"></div>
-    </div>
-
-    <div class="muted" style="margin-top:8px;">
-      Editing: <b id="editingPeriod">Q1</b> • Live scoring: <b id="livePeriodLabel">Q1</b>
-    </div>
-
-    <div class="row" style="margin-top:10px;">
-      <button class="ghost small" id="setLiveToEditingBtn">Set live = editing</button>
-      <button class="primary small" id="periodFinishedBtn">Period finished → Next</button>
-      <button class="primary small" id="startOTBtn" style="display:none;">Start OT (OT1 + OT2)</button>
-      <button class="ghost small danger" id="reopenBtn" style="display:none;">Re-open game</button>
-    </div>
-
-    <!-- TIMER -->
-    <div class="row" style="margin-top:10px;">
-      <div class="muted">Timer:</div>
-      <div style="font-weight:950; font-size:18px;">
-        <span id="timerDisplay">10:00</span>
-        <span id="timerModeTag" class="kbd" style="display:none;">PLAY ON</span>
+      <div class="grow">
+        <div style="font-weight:900">Players</div>
+        <div class="muted">Edit via popup (name + 2 preferred positions)</div>
       </div>
-
-      <select id="minutesSelect" style="max-width:170px;"></select>
-      <button class="primary small" id="timerStartBtn">Start</button>
-      <button class="ghost small" id="timerResetBtn">Reset</button>
+      <button class="primary small" id="editPlayersBtn">Edit players</button>
     </div>
+    <div style="height:10px"></div>
+    <div class="list" id="playersQuickList"></div>
+  </section>
 
-    <div style="height:12px"></div>
-
-    <div class="row" style="align-items:flex-end; justify-content:space-between;">
+  <!-- Game / Scoring (stub for now) -->
+  <section class="card" id="gameStub" style="display:none">
+    <div class="row">
+      <div class="grow">
+        <div style="font-weight:900">Game & Scoring</div>
+        <div class="muted">Scoring, timer and OT will be verified next.</div>
+      </div>
+    </div>
+    <div style="height:10px"></div>
+    <div class="row" style="justify-content:space-between">
       <div>
-        <div class="scoreBig" id="homeScore">0</div>
-        <div class="muted" id="homeLabel">Home</div>
+        <div class="scoreBig">0</div>
+        <div class="muted">Home</div>
       </div>
-
-      <div class="right">
-        <div class="scoreBig" id="awayScore">0</div>
-        <div class="muted" id="awayLabel">Away</div>
+      <div>
+        <div class="scoreBig">0</div>
+        <div class="muted">Away</div>
       </div>
     </div>
-
-    <div class="finalBanner" id="finalBanner">
-      <div class="small" id="finalBannerTop">FINAL</div>
-      <div class="big" id="finalBannerText">Result</div>
-    </div>
-
-    <div style="height:10px"></div>
-
-    <div class="row">
-      <button class="primary" id="homePlus">Home +1</button>
-      <button class="primary" id="gsPlus">+GS (<span id="gsName">—</span>)</button>
-      <button class="primary" id="gaPlus">+GA (<span id="gaName">—</span>)</button>
-      <button class="ghost" id="homeMinus">Home −1</button>
-
-      <div class="grow"></div>
-
-      <button class="primary" id="awayPlus">Away +1</button>
-      <button class="ghost" id="awayMinus">Away −1</button>
-      <button class="ghost" id="undoBtn" title="Undo last event (Live period)">Undo</button>
-    </div>
-
-    <div style="height:10px"></div>
-    <div class="warn muted" id="liveWarnBox" style="display:none;"></div>
   </section>
+</main>
 
-  <!-- POSITIONS -->
-  <section class="card" id="positionsCard">
+<!-- Competition Modal -->
+<div class="modalBack" id="compBack">
+  <div class="modal">
     <div class="row">
-      <div class="grow" style="font-weight:950;">Positions (On Court)</div>
-      <div class="muted">Bench auto-updates (editing period)</div>
+      <h3 class="grow">Create Competition</h3>
+      <button class="ghost small" onclick="closeComp()">Close</button>
     </div>
-
-    <div class="row" style="margin-top:10px;">
-      <div class="grow" style="font-weight:950;">Editing period (positions)</div>
-      <div class="seg" id="periodSegPos"></div>
-    </div>
-
+    <div class="muted">Format is locked once created.</div>
     <div style="height:10px"></div>
-
-    <div class="row" style="margin-bottom:10px;">
-      <div class="muted">Copy positions from this period to:</div>
-      <select id="copyTargetPeriod" style="max-width:170px;"></select>
-      <button class="ghost small" id="copyPositionsBtn">Copy</button>
-      <button class="ghost small" id="copyToNextBtn">Copy to next</button>
-    </div>
-
-    <div class="grid7" id="positionsGrid"></div>
-
+    <input id="newCompName" placeholder="Competition name">
+    <div style="height:10px"></div>
+    <label><input type="radio" name="newCompFormat" value="quarters" checked> 4 quarters</label>
+    <label style="margin-left:10px"><input type="radio" name="newCompFormat" value="halves"> 2 halves</label>
     <div style="height:12px"></div>
-
-    <div class="row">
-      <div class="grow" style="font-weight:950;">Bench (this period)</div>
-      <div class="muted" id="benchCount"></div>
-    </div>
-    <div class="list" id="benchList"></div>
-  </section>
-
-  <!-- STATS -->
-  <section class="card" id="statsCard">
-    <div class="row">
-      <div class="grow" style="font-weight:950;">Stats</div>
-      <div class="muted">This game</div>
-    </div>
-    <div style="height:12px"></div>
-    <div class="list" id="statsList"></div>
-
-    <div style="height:12px"></div>
-    <details>
-      <summary>Goal Log (LIVE period)</summary>
-      <div style="height:10px"></div>
-      <div class="list" id="goalLog"></div>
-    </details>
-  </section>
-
-  <!-- SUMMARY -->
-  <section class="card" id="summaryCard">
-    <div class="row">
-      <div class="grow" style="font-weight:950;">Period Summary (this game)</div>
-    </div>
-    <div style="height:10px"></div>
-    <div id="periodTableWrap"></div>
-
-    <div style="height:12px"></div>
-    <details>
-      <summary>All Periods Positions</summary>
-      <div style="height:10px"></div>
-      <div id="allPeriodsPositions"></div>
-    </details>
-  </section>
-
-  <!-- NOTES -->
-  <section class="card" id="notesCard">
-    <div class="row">
-      <div class="grow" style="font-weight:950;">Notes (this game)</div>
-      <div class="muted">Saved automatically</div>
-    </div>
-    <div style="height:10px"></div>
-    <textarea id="notes" placeholder="e.g. Injuries, umpire notes, rotation ideas…"></textarea>
-  </section>
-
-  <!-- HOW-TO MODAL -->
-  <div class="modalBack" id="howtoBack">
-    <div class="modal">
-      <div class="row">
-        <h3 class="grow">Quick How-to</h3>
-        <button class="ghost small" id="howtoClose">Close</button>
-      </div>
-
-      <div class="muted">
-        <div style="font-weight:950; color:#111; margin:10px 0 6px;">Competition → Team → Games</div>
-        <div>• Create a <b>Competition</b> (Parkville / Tournament / Practice).</div>
-        <div>• Add one or more <b>Teams</b> under that competition.</div>
-        <div>• Each team has its own <b>Games</b>.</div>
-
-        <div style="font-weight:950; color:#111; margin:12px 0 6px;">Editing vs Live</div>
-        <div>• <b>Editing</b> period = set on-court positions + bench plan.</div>
-        <div>• <b>Live</b> period = where scoring + undo applies.</div>
-        <div>• Use <b>Set live = editing</b> to align them.</div>
-
-        <div style="font-weight:950; color:#111; margin:12px 0 6px;">Bench planning</div>
-        <div>• Choose each bench player’s <b>Next</b> position.</div>
-        <div>• Tap <b>Sub In</b> to put them straight into that position.</div>
-        <div>• Court time is inferred from your plan until you <b>Sub In</b>, then it can become <b>0.5</b> for that period.</div>
-
-        <div style="font-weight:950; color:#111; margin:12px 0 6px;">Timer + halftime alert</div>
-        <div>• League mode (quarters) can optionally alert at halfway (“Make a change”).</div>
-        <div>• Halves mode does <b>not</b> show the halfway alert.</div>
-
-        <div style="font-weight:950; color:#111; margin:12px 0 6px;">Overtime</div>
-        <div>• If tied at end → <b>Start OT</b> (always plays <b>OT1 and OT2</b>).</div>
-        <div>• In OT2, if time hits 0 and still tied → flips to <b>play-on</b> until a team leads by <b>2</b> (auto-end).</div>
-        <div>• Use <b>Re-open game</b> if you ended by mistake.</div>
-      </div>
-
-      <div class="row" style="margin-top:12px;">
-        <button class="primary small" id="howtoDontShow">Don’t auto-show again</button>
-        <div class="grow"></div>
-        <button class="ghost small" id="howtoOk">OK</button>
-      </div>
-    </div>
+    <button class="primary" onclick="createComp()">Create</button>
   </div>
+</div>
 
-  <!-- SYNC MODAL (TEAM EXPORT/IMPORT) -->
-  <div class="modalBack" id="syncBack">
-    <div class="modal">
-      <div class="row">
-        <h3 class="grow">Sync (Export / Import) – This Team</h3>
-        <button class="ghost small" id="syncClose">Close</button>
-      </div>
-      <div class="muted">
-        Export on one device, import on the other. <b>Import replaces</b> this team in this competition on this device.
-      </div>
-      <div style="height:10px"></div>
-      <textarea id="syncText" placeholder="Export appears here. Import: paste exported text here…"></textarea>
-      <div class="row" style="margin-top:10px;">
-        <button class="primary small" id="syncExport">Export (Copy)</button>
-        <button class="ghost small" id="syncImport">Import (Paste & Replace)</button>
-        <div class="grow"></div>
-        <button class="ghost small danger" id="syncClear">Clear</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ADD COMP MODAL -->
-  <div class="modalBack" id="compBack">
-    <div class="modal">
-      <div class="row">
-        <h3 class="grow">Add Competition</h3>
-        <button class="ghost small" id="compClose">Close</button>
-      </div>
-
-      <div class="row">
-        <div class="grow">
-          <div class="muted">Competition name</div>
-          <input id="newCompName" type="text" placeholder="e.g. Parkville Winter 2026 / State Titles" />
-        </div>
-      </div>
-
-      <div style="height:10px"></div>
-
-      <div class="row">
-        <div class="grow">
-          <div class="muted">Format</div>
-          <label style="display:flex;align-items:center;gap:8px;margin:8px 0;">
-            <input type="radio" name="newCompFormat" value="quarters" checked />
-            <span><b>4 quarters</b> (league)</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:8px;margin:8px 0;">
-            <input type="radio" name="newCompFormat" value="halves" />
-            <span><b>2 halves</b> (tournament)</span>
-          </label>
-          <div class="muted">Tournament default <b>8 min</b>. League default <b>10 min</b>. OT default <b>3 min</b>.</div>
-        </div>
-      </div>
-
-      <div style="height:12px"></div>
-      <button class="primary" id="compCreateBtn">Create Competition</button>
-    </div>
-  </div>
-
-  <!-- ADD TEAM MODAL -->
-  <div class="modalBack" id="teamBack">
-    <div class="modal">
-      <div class="row">
-        <h3 class="grow">Add Team (under this competition)</h3>
-        <button class="ghost small" id="teamClose">Close</button>
-      </div>
-
-      <div class="row">
-        <div class="grow">
-          <div class="muted">Team name</div>
-          <input id="newTeamName" type="text" placeholder="e.g. Tigers U15 / Tigers A" />
-        </div>
-      </div>
-
-      <div style="height:12px"></div>
-
-      <div class="row">
-        <div class="grow">
-          <div class="muted">Import players from (optional)</div>
-          <select id="importPlayersSource"></select>
-        </div>
-        <button class="ghost small" id="importPlayersBtn" type="button">Import Players</button>
-      </div>
-      <div class="muted" id="importPlayersStatus" style="margin-top:6px;"></div>
-
-      <div style="height:12px"></div>
-      <button class="primary" id="teamCreateBtn">Create Team</button>
-    </div>
-  </div>
-<!-- PLAYERS MODAL -->
+<!-- Players Modal -->
 <div class="modalBack" id="playersBack">
   <div class="modal">
     <div class="row">
       <h3 class="grow">Players</h3>
-      <button class="ghost small" id="playersClose">Close</button>
+      <button class="ghost small" onclick="closePlayers()">Close</button>
     </div>
-
-    <div class="muted" style="margin-bottom:10px;">
-      Enter player name and up to 2 preferred positions
-    </div>
-
-    <table class="playersTable">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Pos 1</th>
-          <th>Pos 2</th>
-          <th>Del</th>
-        </tr>
-      </thead>
-      <tbody id="playersTableBody"></tbody>
+    <div class="muted">Name + two preferred positions.</div>
+    <div style="height:10px"></div>
+    <table>
+      <thead><tr><th>#</th><th>Name</th><th>Pos 1</th><th>Pos 2</th><th></th></tr></thead>
+      <tbody id="playersBody"></tbody>
     </table>
-
-    <div class="row" style="margin-top:12px;">
-      <button class="ghost small" id="playersAddRow">+ Add</button>
+    <div class="row" style="margin-top:10px">
+      <button class="ghost small" onclick="addPlayerRow()">+ Row</button>
       <div class="grow"></div>
-      <button class="primary small" id="playersSave">Save</button>
+      <button class="primary small" onclick="savePlayers()">Save</button>
     </div>
   </div>
 </div>
-</main>
 
 <script>
-  /* ===============================
-     STORAGE + CONSTANTS
-  =============================== */
-  const APP_KEY = "bb_competitions_v1_cleanstart";
-  const HOWTO_FLAG_KEY = "bb_howto_seen_v1";
+const POSITIONS=["GS","GA","WA","C","WD","GD","GK"];
+const APP_KEY="bb_v2_singlefile_clean";
+let app=JSON.parse(localStorage.getItem(APP_KEY)||"{}");
+if(!app.competitions) app={competitions:[],currentComp:null};
 
-  // Legacy keys (if you ever want to migrate from your previous build)
-  const LEGACY_TEAMS_INDEX_KEY = "netball_teams_index_v3_notdefault";
-  const LEGACY_TEAM_KEY_PREFIX = "netball_team_v3_";
+function save(){localStorage.setItem(APP_KEY,JSON.stringify(app));}
+function show(el){el.style.display="block"} function hide(el){el.style.display="none"}
+function hasComp(){return app.competitions.length>0}
+function comp(){return app.competitions.find(c=>c.id===app.currentComp)}
+function team(){return comp()?comp().teams.find(t=>t.id===comp().currentTeam):null}
 
-  const POSITIONS = ["GS","GA","WA","C","WD","GD","GK"];
-
-  const LEAGUE_MINUTES = [10,12,15];
-  const TOURN_MINUTES  = [5,6,7,8,9,10];
-
-  const OT_DEFAULT     = 3;
-  const TOURN_DEFAULT  = 8;
-  const LEAGUE_DEFAULT = 10;
-
-  const MIN_PLAYERS = 7;
-  const MAX_PLAYERS = 15;
-
-  let pendingImportedPlayers = null;
-
-  function safeJSONParse(raw){ try { return raw ? JSON.parse(raw) : null; } catch { return null; } }
-
-  function loadApp(){ return safeJSONParse(localStorage.getItem(APP_KEY)); }
-  function saveApp(app){ localStorage.setItem(APP_KEY, JSON.stringify(app)); }
-
-  function markSaved(){
-    const el = document.getElementById("saveState");
-    el.textContent = "Saved ✓";
-    setTimeout(()=> el.textContent = "", 700);
+function init(){
+  if(!hasComp()){show(welcomeCard);openComp()}
+  else{
+    hide(welcomeCard);
+    show(topCard);show(playersCard);show(gameStub);
+    render();
   }
-
-  /* ===============================
-     DATA MODEL (Competition → Team → Games)
-  =============================== */
-  function newPlayers10(){
-    return Array.from({length:10}, (_,i)=>({ id: crypto.randomUUID(), name: `Player ${i+1}` }));
-  }
-
-  function initPlayerStats(players){
-    const stats = {};
-    for(const p of players){
-      stats[p.id] = { goalsTotal: 0, goalsByP: Array.from({length:6}, ()=>0) };
-    }
-    return stats;
-  }
-
-  function emptyPeriod(){ return { assignments:{}, homeScore:0, awayScore:0, events:[] }; }
-  function basePeriods(format){ return (format==="halves") ? 2 : 4; }
-
-  function newEmptyGame(roundNumber, players, format){
-    const baseP = basePeriods(format);
-    const baseMins = (format==="halves") ? TOURN_DEFAULT : LEAGUE_DEFAULT;
-
-    return {
-      round: roundNumber,
-      roundName: "",
-      gameDate: "",
-      opponent: "",
-      notes: "",
-
-      selectedP: 0,
-      liveP: 0,
-
-      otCount: 0,
-      otMinutes: OT_DEFAULT,
-
-      gameEnded: false,
-
-      baseMinutes: baseMins,
-      timerRunning: false,
-      timerRemaining: baseMins * 60,
-      timerLastTick: 0,
-      timerMode: "countdown",
-      timerExtraElapsed: 0,
-
-      // halftime alert (quarters only) — per period, one-time
-      halfWarned: {},
-
-      periods: Array.from({length:baseP}, ()=>emptyPeriod()),
-      playerStats: initPlayerStats(players),
-
-      plannedPositions: {},
-      playCredits: {} // playCredits[pIdx][playerId] = 0.5 when Sub In
-    };
-  }
-
-  function newTeam(teamName){
-    const players = newPlayers10();
-    return {
-      id: crypto.randomUUID(),
-      name: teamName || "Team",
-      players,
-      games: [newEmptyGame(1, players, "quarters")],
-      currentGameIndex: 0
-    };
-  }
-
-  function newCompetition(name, format){
-    const compFormat = format || "quarters";
-    const comp = {
-      id: crypto.randomUUID(),
-      name: name || "Competition",
-      format: compFormat,
-      teams: [],
-      currentTeamId: null
-    };
-    return comp;
-  }
-
-  function defaultApp(){
-    return { competitions: [], currentCompId: null };
-  }
-
-  let app = loadApp() || defaultApp();
-
-  /* ===============================
-     LEGACY MIGRATION (best-effort)
-     - If you still have old data from the earlier "teams" version, we move it into competitions
-     - Grouped by format into "Imported (quarters)" / "Imported (halves)"
-  =============================== */
-  function tryLegacyMigration(){
-    if(app.competitions?.length) return;
-
-    const legacyIdx = safeJSONParse(localStorage.getItem(LEGACY_TEAMS_INDEX_KEY));
-    if(!legacyIdx?.teams?.length) return;
-
-    const grouped = { quarters: [], halves: [] };
-    for(const meta of legacyIdx.teams){
-      const raw = safeJSONParse(localStorage.getItem(LEGACY_TEAM_KEY_PREFIX + meta.id));
-      if(!raw) continue;
-
-      const fmt = (raw.format === "halves") ? "halves" : "quarters";
-      const team = {
-        id: crypto.randomUUID(),
-        name: meta.name || raw.teamName || "Imported Team",
-        players: raw.players || newPlayers10(),
-        games: raw.games || [newEmptyGame(1, raw.players || newPlayers10(), fmt)],
-        currentGameIndex: raw.currentGameIndex || 0
-      };
-      grouped[fmt].push(team);
-    }
-
-    const comps = [];
-    if(grouped.quarters.length){
-      const c = newCompetition("Imported (quarters)", "quarters");
-      c.teams = grouped.quarters;
-      c.currentTeamId = c.teams[0].id;
-      comps.push(c);
-    }
-    if(grouped.halves.length){
-      const c = newCompetition("Imported (halves)", "halves");
-      c.teams = grouped.halves;
-      c.currentTeamId = c.teams[0].id;
-      comps.push(c);
-    }
-
-    if(comps.length){
-      app.competitions = comps;
-      app.currentCompId = comps[0].id;
-      saveApp(app);
-    }
-  }
-
-  // tryLegacyMigration(); // disabled: start completely blank
-
-  /* ===============================
-     HELPERS / CURRENT POINTERS
-  =============================== */
-  function hasCompetitions(){ return Array.isArray(app.competitions) && app.competitions.length > 0; }
-  function currentCompetition(){
-    if(!hasCompetitions()) return null;
-    let c = app.competitions.find(x => x.id === app.currentCompId) || app.competitions[0];
-    if(!app.currentCompId) app.currentCompId = c.id;
-    return c;
-  }
-  function hasTeamsInComp(){
-    const c = currentCompetition();
-    return !!(c?.teams?.length);
-  }
-  function currentTeam(){
-    const c = currentCompetition();
-    if(!c?.teams?.length) return null;
-    let t = c.teams.find(x => x.id === c.currentTeamId) || c.teams[0];
-    if(!c.currentTeamId) c.currentTeamId = t.id;
-    return t;
-  }
-  function currentGame(){
-    const t = currentTeam();
-    if(!t) return null;
-    t.currentGameIndex = Math.max(0, Math.min(t.currentGameIndex || 0, (t.games?.length || 1) - 1));
-    return t.games[t.currentGameIndex];
-  }
-
-  function escapeHtml(str){ return (str||"").replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-  function clamp0(n){ return Math.max(0, n); }
-
-  function ensureIntegrity(){
-    if(!app.competitions) app.competitions = [];
-    if(app.currentCompId && !app.competitions.some(c=>c.id===app.currentCompId)){
-      app.currentCompId = app.competitions[0]?.id || null;
-    }
-
-    for(const c of app.competitions){
-      if(!c.teams) c.teams = [];
-      if(!c.format) c.format = "quarters";
-      if(c.currentTeamId && !c.teams.some(t=>t.id===c.currentTeamId)){
-        c.currentTeamId = c.teams[0]?.id || null;
-      }
-
-      for(const t of c.teams){
-        if(!t.players || t.players.length < MIN_PLAYERS) t.players = newPlayers10();
-        if(t.players.length > MAX_PLAYERS) t.players = t.players.slice(0, MAX_PLAYERS);
-        if(!t.games || !t.games.length) t.games = [newEmptyGame(1, t.players, c.format)];
-        if(t.currentGameIndex == null) t.currentGameIndex = 0;
-        t.currentGameIndex = Math.max(0, Math.min(t.currentGameIndex, t.games.length-1));
-
-        for(const g of t.games){
-          // ensure periods length matches format + OT
-          const baseP = basePeriods(c.format);
-          if(!Array.isArray(g.periods)) g.periods = [];
-          while(g.periods.length < baseP) g.periods.push(emptyPeriod());
-          const needLen = baseP + (g.otCount || 0);
-          while(g.periods.length < needLen) g.periods.push(emptyPeriod());
-
-          if(g.selectedP == null) g.selectedP = 0;
-          if(g.liveP == null) g.liveP = 0;
-
-          if(g.baseMinutes == null) g.baseMinutes = (c.format==="halves") ? TOURN_DEFAULT : LEAGUE_DEFAULT;
-          if(g.timerRunning == null) g.timerRunning = false;
-          if(g.timerRemaining == null) g.timerRemaining = g.baseMinutes * 60;
-          if(g.timerLastTick == null) g.timerLastTick = 0;
-          if(g.timerMode == null) g.timerMode = "countdown";
-          if(g.timerExtraElapsed == null) g.timerExtraElapsed = 0;
-          if(!g.halfWarned) g.halfWarned = {};
-
-          if(g.otMinutes == null) g.otMinutes = OT_DEFAULT;
-          if(g.gameEnded == null) g.gameEnded = false;
-
-          if(!g.playerStats) g.playerStats = {};
-          for(const p of t.players){
-            if(!g.playerStats[p.id]){
-              g.playerStats[p.id] = { goalsTotal:0, goalsByP:Array.from({length:6}, ()=>0) };
-            } else {
-              if(!Array.isArray(g.playerStats[p.id].goalsByP)) g.playerStats[p.id].goalsByP = Array.from({length:6}, ()=>0);
-              while(g.playerStats[p.id].goalsByP.length < 6) g.playerStats[p.id].goalsByP.push(0);
-            }
-          }
-          if(!g.plannedPositions) g.plannedPositions = {};
-          if(!g.playCredits) g.playCredits = {};
-        }
-      }
-    }
-  }
-
-  function saveAll(){
-    ensureIntegrity();
-    saveApp(app);
-    markSaved();
-  }
-
-  /* ===============================
-     PERIOD LABELS / TOTALS
-  =============================== */
-  function periodLabel(idx){
-    const c = currentCompetition();
-    const base = basePeriods(c.format);
-    if(idx < base) return (c.format==="halves") ? `H${idx+1}` : `Q${idx+1}`;
-    return `OT${idx-base+1}`;
-  }
-  function totalPeriods(game){
-    const c = currentCompetition();
-    return basePeriods(c.format) + (game.otCount || 0);
-  }
-  function isOTIndex(idx){
-    const c = currentCompetition();
-    return idx >= basePeriods(c.format);
-  }
-  function totalHome(game){ return game.periods.reduce((s,p)=>s+(p.homeScore||0),0); }
-  function totalAway(game){ return game.periods.reduce((s,p)=>s+(p.awayScore||0),0); }
-  function isDraw(game){ return totalHome(game) === totalAway(game); }
-
-  /* ===============================
-     COURT TIME (HYBRID)
-     - inferred from assignments (1) for regulation periods
-     - if Sub In used, credits can become 0.5 for incoming/outgoing (reg periods only)
-  =============================== */
-  function getPlayCredit(game, pIdx, playerId){
-    if(!game.playCredits) game.playCredits = {};
-    if(!game.playCredits[pIdx]) game.playCredits[pIdx] = {};
-    return Number(game.playCredits[pIdx][playerId] || 0);
-  }
-  function bumpPlayCredit(game, pIdx, playerId, val){
-    if(!game.playCredits) game.playCredits = {};
-    if(!game.playCredits[pIdx]) game.playCredits[pIdx] = {};
-    const cur = Number(game.playCredits[pIdx][playerId] || 0);
-    game.playCredits[pIdx][playerId] = Math.max(cur, val);
-  }
-  function inferredPlayedForPeriod(game, pIdx, playerId){
-    const assigned = Object.values(game.periods[pIdx]?.assignments || {}).filter(Boolean);
-    return assigned.includes(playerId) ? 1 : 0;
-  }
-  function regulationPeriodsPlayedHybrid(game, playerId){
-    const c = currentCompetition();
-    const regMax = basePeriods(c.format);
-    let sum = 0;
-    for(let i=0;i<regMax;i++){
-      const credit = getPlayCredit(game, i, playerId);
-      sum += credit > 0 ? credit : inferredPlayedForPeriod(game, i, playerId);
-    }
-    return sum;
-  }
-  function fmtPlayed(n){
-    return (Math.abs(n - Math.round(n)) < 1e-9) ? String(Math.round(n)) : n.toFixed(1);
-  }
-
-  function assignedIdsForP(game, pIdx){
-    const a = game.periods[pIdx]?.assignments || {};
-    return new Set(Object.values(a).filter(Boolean));
-  }
-  function benchPlayersForP(game, pIdx){
-    const assigned = assignedIdsForP(game, pIdx);
-    const t = currentTeam();
-    return t.players.filter(p=>!assigned.has(p.id));
-  }
-
-  function playerById(id){
-    const t = currentTeam();
-    return t?.players?.find(p=>p.id===id);
-  }
-
-  /* ===============================
-     BENCH PLANNING + SUB IN
-  =============================== */
-  function getPlannedPos(game, pIdx, playerId){
-    if(!game.plannedPositions) game.plannedPositions = {};
-    if(!game.plannedPositions[pIdx]) game.plannedPositions[pIdx] = {};
-    return game.plannedPositions[pIdx][playerId] || "";
-  }
-  function setPlannedPos(game, pIdx, playerId, pos){
-    if(!game.plannedPositions) game.plannedPositions = {};
-    if(!game.plannedPositions[pIdx]) game.plannedPositions[pIdx] = {};
-    game.plannedPositions[pIdx][playerId] = pos || "";
-    saveAll();
-  }
-
-  function subInFromBench(playerId){
-    const c = currentCompetition();
-    const g = currentGame();
-    if(g.gameEnded) return;
-
-    const pIdx = g.selectedP;
-    const pos = getPlannedPos(g, pIdx, playerId);
-    if(!pos) return alert("Set a Next position first.");
-
-    const per = g.periods[pIdx];
-    const outgoing = per.assignments[pos] || null;
-
-    // credit 0.5 in REGULATION ONLY
-    const regMax = basePeriods(c.format);
-    if(pIdx < regMax){
-      bumpPlayCredit(g, pIdx, playerId, 0.5);
-      if(outgoing && outgoing !== playerId) bumpPlayCredit(g, pIdx, outgoing, 0.5);
-    }
-
-    per.assignments[pos] = playerId;
-
-    // ensure not in two positions
-    for(const p of POSITIONS){
-      if(p !== pos && per.assignments[p] === playerId) per.assignments[p] = null;
-    }
-
-    setPlannedPos(g, pIdx, playerId, "");
-    saveAll();
-    renderAll();
-  }
-
-  /* ===============================
-     ADD / REMOVE PLAYERS
-  =============================== */
-  function clearPlayerFromTeam(pid){
-    const t = currentTeam();
-    for(const g of t.games){
-      for(let pi=0; pi<g.periods.length; pi++){
-        const per = g.periods[pi];
-        for(const pos of POSITIONS){
-          if(per.assignments?.[pos] === pid) per.assignments[pos] = null;
-        }
-        if(g.playCredits?.[pi]?.[pid] != null) delete g.playCredits[pi][pid];
-      }
-      if(g.plannedPositions){
-        for(const k of Object.keys(g.plannedPositions)){
-          if(g.plannedPositions[k] && g.plannedPositions[k][pid] != null){
-            delete g.plannedPositions[k][pid];
-          }
-        }
-      }
-      if(g.playerStats) delete g.playerStats[pid];
-    }
-  }
-
-  function addPlayer(){
-    const t = currentTeam();
-    if(!t) return;
-    if(t.players.length >= MAX_PLAYERS) return alert(`Max players is ${MAX_PLAYERS}.`);
-
-    const nextNum = t.players.length + 1;
-    const p = { id: crypto.randomUUID(), name: `Player ${nextNum}` };
-    t.players.push(p);
-
-    for(const g of t.games){
-      if(!g.playerStats) g.playerStats = {};
-      g.playerStats[p.id] = { goalsTotal:0, goalsByP:Array.from({length:6}, ()=>0) };
-    }
-
-    saveAll();
-    renderAll();
-  }
-
-  function removePlayer(pid){
-    const t = currentTeam();
-    if(!t) return;
-
-    if(t.players.length <= MIN_PLAYERS){
-      return alert(`You must keep at least ${MIN_PLAYERS} players (to cover 7 on court).`);
-    }
-
-    const p = playerById(pid);
-    const name = p?.name || "this player";
-    if(!confirm(`Remove ${name} from this team?\n\nThis will also remove them from all on-court selections + stats for this team.`)) return;
-
-    clearPlayerFromTeam(pid);
-    t.players = t.players.filter(x => x.id !== pid);
-
-    saveAll();
-    renderAll();
-  }
-
-  /* ===============================
-     TIMER (with half-time alert for QUARTERS ONLY)
-  =============================== */
-  let timerInterval = null;
-
-  function fmtTime(sec){
-    sec = Math.max(0, Math.floor(sec));
-    const m = String(Math.floor(sec / 60)).padStart(2,"0");
-    const s = String(sec % 60).padStart(2,"0");
-    return `${m}:${s}`;
-  }
-
-  function stopTimerLoop(){
-    if(timerInterval){ clearInterval(timerInterval); timerInterval = null; }
-  }
-  function startTimerLoop(){
-    if(timerInterval) return;
-    timerInterval = setInterval(tickTimer, 250);
-  }
-
-  function renderTimer(){
-    const g = currentGame();
-    if(!g) return;
-
-    document.getElementById("timerDisplay").textContent =
-      (g.timerMode==="countdown") ? fmtTime(g.timerRemaining) : fmtTime(g.timerExtraElapsed);
-
-    const tag = document.getElementById("timerModeTag");
-    tag.style.display = (g.timerMode==="countup") ? "inline-block" : "none";
-
-    document.getElementById("timerStartBtn").textContent = g.timerRunning ? "Pause" : "Start";
-  }
-
-  function tickTimer(){
-    const c = currentCompetition();
-    const g = currentGame();
-    if(!g || !g.timerRunning) return;
-
-    const now = Date.now();
-    if(!g.timerLastTick) g.timerLastTick = now;
-
-    const delta = Math.floor((now - g.timerLastTick) / 1000);
-    if(delta <= 0) return;
-
-    g.timerLastTick = now;
-
-    if(g.timerMode === "countdown"){
-      g.timerRemaining = Math.max(0, g.timerRemaining - delta);
-
-      // Halfway alert (ONLY for quarters format, NOT halves, and only in regulation)
-      if(c.format === "quarters" && !isOTIndex(g.liveP)){
-        const halfSec = Math.floor((g.baseMinutes * 60) / 2);
-        if(g.timerRemaining <= halfSec && !g.halfWarned[g.liveP]){
-          g.halfWarned[g.liveP] = true;
-          saveAll();
-          alert("Halfway — make a change");
-        }
-      }
-
-      if(g.timerRemaining === 0){
-        g.timerRunning = false;
-        stopTimerLoop();
-
-        const base = basePeriods(c.format);
-        const ot2Index = base + 1;
-
-        // OT2 play-on if still tied at 0
-        if(g.otCount === 2 && g.liveP === ot2Index && isDraw(g)){
-          g.timerMode = "countup";
-          g.timerExtraElapsed = 0;
-          saveAll();
-          renderAll();
-          return;
-        }
-
-        saveAll();
-        renderTimer();
-        alert("Time!");
-        return;
-      }
-
-    } else {
-      // countup play-on (OT2)
-      g.timerExtraElapsed += delta;
-      const lead = Math.abs(totalHome(g) - totalAway(g));
-      if(lead >= 2){
-        g.timerRunning = false;
-        stopTimerLoop();
-        g.gameEnded = true;
-        saveAll();
-        renderAll();
-        return;
-      }
-    }
-
-    saveAll();
-    renderTimer();
-  }
-
-  function toggleTimer(){
-    const g = currentGame();
-    if(!g) return;
-    if(g.gameEnded) return;
-
-    if(g.timerRunning){
-      g.timerRunning = false;
-      stopTimerLoop();
-    } else {
-      g.timerRunning = true;
-      g.timerLastTick = Date.now();
-      startTimerLoop();
-    }
-    saveAll();
-    renderTimer();
-  }
-
-  function resetTimer(){
-    const g = currentGame();
-    if(!g) return;
-
-    g.timerRunning = false;
-    g.timerLastTick = 0;
-    g.timerMode = "countdown";
-    g.timerExtraElapsed = 0;
-
-    if(isOTIndex(g.selectedP)) g.timerRemaining = g.otMinutes * 60;
-    else g.timerRemaining = g.baseMinutes * 60;
-
-    stopTimerLoop();
-    saveAll();
-    renderTimer();
-  }
-
-  /* ===============================
-     SCORING / EVENTS
-  =============================== */
-  function pushEvent(game, pIdx, type, payload){
-    game.periods[pIdx].events.push({ type, pIdx, payload, t: Date.now() });
-  }
-
-  function scoreTeam(which, delta){
-    const g = currentGame();
-    if(!g || g.gameEnded) return;
-
-    const pIdx = g.liveP;
-    if(which==="home") g.periods[pIdx].homeScore = clamp0((g.periods[pIdx].homeScore||0) + delta);
-    else g.periods[pIdx].awayScore = clamp0((g.periods[pIdx].awayScore||0) + delta);
-
-    pushEvent(g, pIdx, "score", { which, delta });
-    saveAll();
-    renderAll();
-  }
-
-  function scoreFromPosition(pos){
-    const g = currentGame();
-    if(!g || g.gameEnded) return;
-    if(pos!=="GS" && pos!=="GA") return;
-
-    const pIdx = g.liveP;
-    const pid = g.periods[pIdx].assignments[pos];
-    if(!pid) return alert(`Assign a player to ${pos} in LIVE (${periodLabel(pIdx)}) first.`);
-
-    g.periods[pIdx].homeScore += 1;
-
-    const st = g.playerStats[pid] || (g.playerStats[pid] = { goalsTotal:0, goalsByP:Array.from({length:6}, ()=>0) });
-    st.goalsTotal += 1;
-    st.goalsByP[pIdx] = (st.goalsByP[pIdx] || 0) + 1;
-
-    pushEvent(g, pIdx, "playerGoal", { pid, pos });
-    saveAll();
-    renderAll();
-  }
-
-  function undo(){
-    const g = currentGame();
-    if(!g || g.gameEnded) return;
-
-    const pIdx = g.liveP;
-    const events = g.periods[pIdx].events;
-    const last = events.pop();
-    if(!last) return;
-
-    if(last.type==="score"){
-      const {which, delta} = last.payload;
-      if(which==="home") g.periods[pIdx].homeScore = clamp0(g.periods[pIdx].homeScore - delta);
-      else g.periods[pIdx].awayScore = clamp0(g.periods[pIdx].awayScore - delta);
-    }
-
-    if(last.type==="playerGoal"){
-      const {pid} = last.payload;
-      g.periods[pIdx].homeScore = clamp0(g.periods[pIdx].homeScore - 1);
-      const st = g.playerStats[pid];
-      if(st){
-        st.goalsTotal = clamp0(st.goalsTotal - 1);
-        st.goalsByP[pIdx] = clamp0((st.goalsByP[pIdx]||0) - 1);
-      }
-    }
-
-    saveAll();
-    renderAll();
-  }
-
-  /* ===============================
-     POSITIONS (editing)
-  =============================== */
-  function setAssignment(pos, pid){
-    const g = currentGame();
-    if(!g) return;
-
-    const pIdx = g.selectedP;
-    const per = g.periods[pIdx];
-
-    const next = pid || null;
-    if(next){
-      for(const p of POSITIONS){
-        if(p !== pos && per.assignments[p] === next){
-          per.assignments[p] = null;
-        }
-      }
-    }
-    per.assignments[pos] = next;
-    saveAll();
-    renderAll();
-  }
-
-  function copyAssignments(fromP, toP){
-    const g = currentGame();
-    if(!g) return;
-    g.periods[toP].assignments = JSON.parse(JSON.stringify(g.periods[fromP].assignments || {}));
-    saveAll();
-  }
-
-  /* ===============================
-     OVERTIME (ALWAYS OT1 + OT2)
-  =============================== */
-  function canStartOT(game){
-    const c = currentCompetition();
-    return game.gameEnded && isDraw(game) && (game.otCount || 0) === 0 && basePeriods(c.format) >= 2;
-  }
-
-  function startOT(){
-    const c = currentCompetition();
-    const g = currentGame();
-    if(!g || !canStartOT(g)) return;
-
-    g.otCount = 2;
-    g.periods.push(emptyPeriod());
-    g.periods.push(emptyPeriod());
-
-    g.gameEnded = false;
-    const ot1Index = basePeriods(c.format);
-    g.liveP = ot1Index;
-    g.selectedP = ot1Index;
-
-    g.timerMode = "countdown";
-    g.timerExtraElapsed = 0;
-    g.timerRunning = false;
-    g.timerLastTick = 0;
-    g.timerRemaining = g.otMinutes * 60;
-    stopTimerLoop();
-
-    saveAll();
-    renderAll();
-  }
-
-  function endOrNextPeriod(){
-    const c = currentCompetition();
-    const g = currentGame();
-    if(!g || g.gameEnded) return;
-
-    const base = basePeriods(c.format);
-    const ot1Index = base;
-    const ot2Index = base + 1;
-    const lastIndex = totalPeriods(g) - 1;
-
-    // always go to OT2 after OT1
-    if(g.otCount === 2 && g.liveP === ot1Index){
-      g.liveP = ot2Index;
-      g.selectedP = ot2Index;
-      resetTimer();
-      saveAll();
-      renderAll();
-      return;
-    }
-
-    // last period -> end
-    if(g.liveP >= lastIndex){
-      g.gameEnded = true;
-      g.timerRunning = false;
-      stopTimerLoop();
-      saveAll();
-      renderAll();
-      return;
-    }
-
-    g.liveP += 1;
-    g.selectedP = g.liveP;
-    resetTimer();
-    saveAll();
-    renderAll();
-  }
-
-  function reopenGame(){
-    const g = currentGame();
-    if(!g) return;
-    g.gameEnded = false;
-    saveAll();
-    renderAll();
-  }
-
-  /* ===============================
-     COMPETITION / TEAM / GAME MGMT
-  =============================== */
-  function openCompModal(){
-  document.getElementById("newCompName").value = "";
-  document.getElementById("compBack").style.display = "flex";
-  setTimeout(()=>{ 
-    const el = document.getElementById("newCompName");
-    if(el){ el.focus(); el.select(); }
-  }, 50);
 }
-  function closeCompModal(){ document.getElementById("compBack").style.display = "none"; }
 
-  function createCompetitionFromModal(){
-    const name = (document.getElementById("newCompName").value || "").trim() || `Competition ${app.competitions.length+1}`;
-    const format = document.querySelector('input[name="newCompFormat"]:checked')?.value || "quarters";
-
-    const comp = newCompetition(name, format);
-    app.competitions.push(comp);
-    app.currentCompId = comp.id;
-
-    saveAll();
-    closeCompModal();
-    renderAll();
-  }
-
-  function deleteCurrentCompetition(){
-    const c = currentCompetition();
-    if(!c) return;
-    if(!confirm(`Delete competition "${c.name}"?\nThis removes all teams + games inside it.`)) return;
-
-    app.competitions = app.competitions.filter(x => x.id !== c.id);
-    app.currentCompId = app.competitions[0]?.id || null;
-
-    stopTimerLoop();
-    saveAll();
-    renderAll();
-  }
-
-  function switchCompetition(compId){
-    stopTimerLoop();
-    app.currentCompId = compId;
-    saveAll();
-    renderAll();
-  }
-
-  function openTeamModal(){
-    pendingImportedPlayers = null;
-    document.getElementById("newTeamName").value = "";
-    document.getElementById("importPlayersStatus").textContent = "";
-    populateImportPlayersDropdown();
-    document.getElementById("teamBack").style.display = "flex";
-  }
-  function closeTeamModal(){ document.getElementById("teamBack").style.display = "none"; }
-
-  function createTeamFromModal(){
-    const c = currentCompetition();
-    if(!c) return;
-
-    const name = (document.getElementById("newTeamName").value || "").trim() || `Team ${c.teams.length+1}`;
-
-    let players;
-    if(pendingImportedPlayers && pendingImportedPlayers.length){
-      players = pendingImportedPlayers.slice(0, MAX_PLAYERS).map((p,i)=>({
-        id: crypto.randomUUID(),
-        name: p.name || `Player ${i+1}`
-      }));
-    } else {
-      players = newPlayers10();
-    }
-
-    while(players.length < MIN_PLAYERS){
-      players.push({ id: crypto.randomUUID(), name: `Player ${players.length+1}` });
-    }
-
-    const team = {
-      id: crypto.randomUUID(),
-      name,
-      players,
-      games: [newEmptyGame(1, players, c.format)],
-      currentGameIndex: 0
-    };
-
-    c.teams.push(team);
-    c.currentTeamId = team.id;
-
-    pendingImportedPlayers = null;
-
-    closeTeamModal();
-    saveAll();
-    renderAll();
-  }
-
-  function deleteCurrentTeam(){
-    const c = currentCompetition();
-    const t = currentTeam();
-    if(!c || !t) return;
-
-    if(!confirm(`Delete team "${t.name}" from "${c.name}"?\nThis removes all games + players for this team.`)) return;
-
-    c.teams = c.teams.filter(x => x.id !== t.id);
-    c.currentTeamId = c.teams[0]?.id || null;
-
-    stopTimerLoop();
-    saveAll();
-    renderAll();
-  }
-
-  function switchTeam(teamId){
-    const c = currentCompetition();
-    if(!c) return;
-    stopTimerLoop();
-    c.currentTeamId = teamId;
-    saveAll();
-    renderAll();
-  }
-
-  function addGame(){
-    const c = currentCompetition();
-    const t = currentTeam();
-    if(!c || !t) return;
-
-    const nextRound = t.games.length + 1;
-    const g = newEmptyGame(nextRound, t.players, c.format);
-    t.games.push(g);
-    t.currentGameIndex = t.games.length - 1;
-
-    stopTimerLoop();
-    saveAll();
-    renderAll();
-  }
-
-  function goPrevGame(){
-    const t = currentTeam();
-    if(!t) return;
-    if(t.currentGameIndex <= 0) return;
-    stopTimerLoop();
-    t.currentGameIndex -= 1;
-    saveAll();
-    renderAll();
-  }
-  function goNextGame(){
-    const t = currentTeam();
-    if(!t) return;
-    if(t.currentGameIndex >= t.games.length - 1) return;
-    stopTimerLoop();
-    t.currentGameIndex += 1;
-    saveAll();
-    renderAll();
-  }
-
-  function resetThisGame(){
-    const c = currentCompetition();
-    const t = currentTeam();
-    const g = currentGame();
-    if(!c || !t || !g) return;
-
-    const idx = t.currentGameIndex;
-    const round = t.games[idx].round;
-    t.games[idx] = newEmptyGame(round, t.players, c.format);
-
-    stopTimerLoop();
-    saveAll();
-    renderAll();
-  }
-
-  function resetTeam(){
-    const c = currentCompetition();
-    const t = currentTeam();
-    if(!c || !t) return;
-
-    if(!confirm(`Reset team "${t.name}"?\nThis wipes players + all games for this team.`)) return;
-
-    const name = t.name;
-    const fresh = {
-      id: t.id,
-      name,
-      players: newPlayers10(),
-      games: [],
-      currentGameIndex: 0
-    };
-    fresh.games = [newEmptyGame(1, fresh.players, c.format)];
-
-    // replace team object in comp
-    const i = c.teams.findIndex(x => x.id === t.id);
-    c.teams[i] = fresh;
-    c.currentTeamId = fresh.id;
-
-    stopTimerLoop();
-    saveAll();
-    renderAll();
-  }
-
-  /* ===============================
-     IMPORT PLAYERS (ADD TEAM MODAL)
-     - imports from ANY team in ANY competition
-  =============================== */
-  function populateImportPlayersDropdown(){
-    const sel = document.getElementById("importPlayersSource");
-    sel.innerHTML = "";
-
-    const items = [];
-    for(const comp of app.competitions){
-      for(const team of comp.teams){
-        items.push({ compName: comp.name, teamId: team.id, label: `${comp.name} • ${team.name}` });
-      }
-    }
-
-    const optBlank = document.createElement("option");
-    optBlank.value = "";
-    optBlank.textContent = "— Select a team —";
-    sel.appendChild(optBlank);
-
-    for(const it of items){
-      const opt = document.createElement("option");
-      opt.value = it.teamId;
-      opt.textContent = it.label.slice(0, 60);
-      sel.appendChild(opt);
-    }
-
-    sel.disabled = items.length === 0;
-  }
-
-  function findTeamByIdAnywhere(teamId){
-    for(const comp of app.competitions){
-      const team = comp.teams.find(t => t.id === teamId);
-      if(team) return { comp, team };
-    }
-    return null;
-  }
-
-  function importPlayersIntoNewTeam(){
-    const sel = document.getElementById("importPlayersSource");
-    const status = document.getElementById("importPlayersStatus");
-    const teamId = sel?.value;
-
-    if(!teamId) return alert("Pick a team to import players from.");
-
-    const found = findTeamByIdAnywhere(teamId);
-    if(!found?.team?.players?.length) return alert("That team has no players saved.");
-
-    let names = found.team.players
-      .map(p => ({ name: (p.name || "").trim() }))
-      .filter(p => p.name.length > 0);
-
-    if(names.length > MAX_PLAYERS){
-      alert(`That team has ${names.length} players. Max is ${MAX_PLAYERS}, so only the first ${MAX_PLAYERS} will be imported.`);
-      names = names.slice(0, MAX_PLAYERS);
-    }
-
-    pendingImportedPlayers = names;
-    while(pendingImportedPlayers.length < MIN_PLAYERS){
-      pendingImportedPlayers.push({ name: `Player ${pendingImportedPlayers.length + 1}` });
-    }
-
-    status.textContent = `Imported ${pendingImportedPlayers.length} players (will be used for the new team).`;
-  }
-
-  /* ===============================
-     SYNC (Export/Import TEAM only)
-  =============================== */
-  async function copyText(text){
-    try { await navigator.clipboard.writeText(text); alert("Copied."); }
-    catch { alert("Copy failed (iPad Safari can block clipboard sometimes)."); }
-  }
-
-  function exportTeam(){
-    const c = currentCompetition();
-    const t = currentTeam();
-    if(!c || !t) return;
-
-    const payload = {
-      comp: { name: c.name, format: c.format },
-      team: t
-    };
-    const text = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-    document.getElementById("syncText").value = text;
-    copyText(text);
-  }
-
-  function importTeamReplace(){
-    const c = currentCompetition();
-    const t = currentTeam();
-    if(!c || !t) return;
-
-    const raw = (document.getElementById("syncText").value || "").trim();
-    if(!raw) return alert("Paste export text first.");
-
-    let payload;
-    try{
-      payload = JSON.parse(decodeURIComponent(escape(atob(raw))));
-    } catch {
-      return alert("That doesn’t look like valid export text.");
-    }
-
-    if(!payload?.team) return alert("Invalid payload.");
-    const imported = payload.team;
-
-    // force this team to use THIS competition format
-    // (games will be kept, but ensure periods match format)
-    imported.id = t.id; // replace-in-place
-    imported.name = imported.name || t.name;
-
-    // if players missing, keep existing
-    if(!Array.isArray(imported.players) || imported.players.length < MIN_PLAYERS){
-      imported.players = t.players;
-    }
-    if(imported.players.length > MAX_PLAYERS) imported.players = imported.players.slice(0, MAX_PLAYERS);
-
-    // ensure games exist
-    if(!Array.isArray(imported.games) || !imported.games.length){
-      imported.games = [newEmptyGame(1, imported.players, c.format)];
-      imported.currentGameIndex = 0;
-    }
-
-    // replace current team object
-    const idx = c.teams.findIndex(x => x.id === t.id);
-    c.teams[idx] = imported;
-    c.currentTeamId = imported.id;
-
-    stopTimerLoop();
-    saveAll();
-    closeSyncModal();
-    renderAll();
-    alert("Imported (team replaced).");
-  }
-
-  function openSyncModal(){ document.getElementById("syncBack").style.display = "flex"; }
-  function closeSyncModal(){ document.getElementById("syncBack").style.display = "none"; }
-
-  /* ===============================
-     HOW-TO
-  =============================== */
-  function openHowto(){ document.getElementById("howtoBack").style.display="flex"; }
-  function closeHowto(){ document.getElementById("howtoBack").style.display="none"; }
-  function markHowtoSeen(){ localStorage.setItem(HOWTO_FLAG_KEY, "1"); }
-  function hasSeenHowto(){ return localStorage.getItem(HOWTO_FLAG_KEY) === "1"; }
-  function closeHowtoAndContinue(){
-    markHowtoSeen();
-    closeHowto();
-    if(!hasCompetitions()) openCompModal();
-  }
-
-  /* ===============================
-     ROLL-UPS (adds arrow left of first row)
-  =============================== */
-  function initRollups(){
-    const cards = document.querySelectorAll(".card");
-    cards.forEach(card=>{
-      if(card.classList.contains("rollInit")) return;
-      card.classList.add("rollInit");
-
-      const firstRow = card.querySelector(".row");
-      if(!firstRow) return;
-
-      const btn = document.createElement("button");
-      btn.className = "rollBtn";
-      btn.type = "button";
-      btn.textContent = "▾";
-      btn.setAttribute("aria-label", "Collapse/expand");
-      firstRow.insertBefore(btn, firstRow.firstChild);
-
-      const body = document.createElement("div");
-      body.className = "rollBody";
-
-      let sibling = firstRow.nextSibling;
-      while(sibling){
-        const next = sibling.nextSibling;
-        body.appendChild(sibling);
-        sibling = next;
-      }
-      card.appendChild(body);
-
-      const key = `roll_${card.id || ("card_" + Math.random().toString(16).slice(2))}`;
-      const saved = localStorage.getItem(key);
-      if(saved === "1"){
-        card.classList.add("collapsed");
-        btn.textContent = "▸";
-      }
-
-      btn.addEventListener("click", ()=>{
-        const collapsed = card.classList.toggle("collapsed");
-        btn.textContent = collapsed ? "▸" : "▾";
-        localStorage.setItem(key, collapsed ? "1" : "0");
-      });
-    });
-  }
-
-  /* ===============================
-     RENDER
-  =============================== */
-  function formatLabel(format){ return (format==="halves") ? "2 halves" : "4 quarters"; }
-
-  function renderCompTabs(){
-    const seg = document.getElementById("compSeg");
-    seg.innerHTML = "";
-    if(!hasCompetitions()) return;
-
-    for(const comp of app.competitions){
-      const b = document.createElement("button");
-      b.textContent = (comp.name || "Competition").slice(0,18);
-      b.className = (comp.id===app.currentCompId) ? "active" : "";
-      b.addEventListener("click", ()=>switchCompetition(comp.id));
-      seg.appendChild(b);
-    }
-  }
-
-  function renderTeamTabs(){
-    const seg = document.getElementById("teamSeg");
-    seg.innerHTML = "";
-    const c = currentCompetition();
-    if(!c || !c.teams?.length) return;
-
-    for(const team of c.teams){
-      const b = document.createElement("button");
-      b.textContent = (team.name || "Team").slice(0,18);
-      b.className = (team.id===c.currentTeamId) ? "active" : "";
-      b.addEventListener("click", ()=>switchTeam(team.id));
-      seg.appendChild(b);
-    }
-  }
-
-  function renderTopFields(){
-    const c = currentCompetition();
-    document.getElementById("compName").value = c?.name || "";
-    document.getElementById("formatLabel").textContent = formatLabel(c?.format || "quarters");
-  }
-
-  function renderGameHeader(){
-    const c = currentCompetition();
-    const t = currentTeam();
-    const g = currentGame();
-
-    document.getElementById("teamName").value = t?.name || "";
-
-    document.getElementById("roundLabel").textContent = `Game ${g.round}`;
-    document.getElementById("roundCountLabel").textContent = `(${t.games.length} game${t.games.length===1?'':'s'})`;
-
-    document.getElementById("roundName").value = g.roundName || "";
-    document.getElementById("gameDate").value = g.gameDate || "";
-    document.getElementById("opponent").value = g.opponent || "";
-    document.getElementById("notes").value = g.notes || "";
-
-    document.getElementById("prevGameBtn").disabled = (t.currentGameIndex <= 0);
-    document.getElementById("nextGameBtn").disabled = (t.currentGameIndex >= t.games.length - 1);
-  }
-
-  function renderRoundSeg(){
-    const t = currentTeam();
-    const seg = document.getElementById("roundSeg");
-    seg.innerHTML = "";
-    for(let i=0;i<t.games.length;i++){
-      const g = t.games[i];
-      const b = document.createElement("button");
-      b.textContent = `G${g.round}`;
-      b.className = (i===t.currentGameIndex) ? "active" : "";
-      b.addEventListener("click", ()=>{
-        stopTimerLoop();
-        t.currentGameIndex = i;
-        saveAll();
-        renderAll();
-      });
-      seg.appendChild(b);
-    }
-  }
-
-  function renderPlayersInputs(){
-    const t = currentTeam();
-    const wrap = document.getElementById("playersInputs");
-    wrap.innerHTML = "";
-    wrap.style.gridTemplateColumns = (window.innerWidth >= 780) ? "1fr 1fr" : "1fr";
-
-    t.players.forEach((p, idx)=>{
-      const div = document.createElement("div");
-      div.className = "row";
-
-      div.innerHTML = `
-        <div class="grow">
-          <div class="muted">Player ${idx+1}</div>
-          <input type="text" value="${escapeHtml(p.name)}" data-pid="${p.id}" />
-        </div>
-        <button class="miniDanger" type="button" title="Remove player">−</button>
-      `;
-
-      const input = div.querySelector("input");
-
-      // ✅ Auto-select full name on tap/focus
-      input.addEventListener("focus", () => setTimeout(() => input.select(), 0));
-      input.addEventListener("click", () => setTimeout(() => input.select(), 0));
-
-      input.addEventListener("input", (e)=>{
-        p.name = e.target.value;
-        saveAll();
-        // IMPORTANT: do NOT rebuild player inputs on every keystroke
-        renderPositions();
-        renderBench();
-        renderScores();
-        renderStats();
-        renderAllPeriodsPositions();
-      });
-
-      const delBtn = div.querySelector("button.miniDanger");
-      delBtn.addEventListener("click", ()=> removePlayer(p.id));
-
-      wrap.appendChild(div);
-    });
-  }
-
-  function renderPeriodSeg(){
-    const g = currentGame();
-    function buildSeg(id){
-      const seg = document.getElementById(id);
-      seg.innerHTML = "";
-      for(let i=0;i<totalPeriods(g);i++){
-        const b = document.createElement("button");
-        b.textContent = periodLabel(i);
-        b.className = (g.selectedP===i) ? "active" : "";
-        b.addEventListener("click", ()=>{
-          g.selectedP = i;
-          resetTimer();
-          saveAll();
-          renderAll();
-        });
-        seg.appendChild(b);
-      }
-    }
-    buildSeg("periodSeg");
-    buildSeg("periodSegPos");
-    document.getElementById("editingPeriod").textContent = periodLabel(g.selectedP);
-    document.getElementById("livePeriodLabel").textContent = periodLabel(g.liveP);
-  }
-
-  function renderMinutesSelect(){
-    const c = currentCompetition();
-    const g = currentGame();
-    const sel = document.getElementById("minutesSelect");
-    sel.innerHTML = "";
-
-    const list = (c.format==="halves") ? TOURN_MINUTES : LEAGUE_MINUTES;
-    for(const m of list){
-      const opt = document.createElement("option");
-      opt.value = String(m);
-      opt.textContent = `${m} min`;
-      sel.appendChild(opt);
-    }
-    sel.value = String(g.baseMinutes);
-    sel.disabled = g.gameEnded || (g.timerMode==="countup");
-  }
-
-  function renderLiveWarn(){
-    const g = currentGame();
-    const warnBox = document.getElementById("liveWarnBox");
-    if(g.selectedP !== g.liveP){
-      warnBox.style.display = "block";
-      warnBox.textContent = `Heads up: you're editing ${periodLabel(g.selectedP)}, but LIVE scoring is ${periodLabel(g.liveP)}. Scoring/undo applies to LIVE.`;
-    } else {
-      warnBox.style.display = "none";
-      warnBox.textContent = "";
-    }
-  }
-
-  function renderScores(){
-    const t = currentTeam();
-    const g = currentGame();
-
-    const team = (t.name || "Home").trim() || "Home";
-    const opp  = (g.opponent || "Away").trim() || "Away";
-
-    document.getElementById("homeLabel").textContent = team;
-    document.getElementById("awayLabel").textContent = opp;
-
-    document.getElementById("homeScore").textContent = totalHome(g);
-    document.getElementById("awayScore").textContent = totalAway(g);
-
-    const liveA = g.periods[g.liveP]?.assignments || {};
-    document.getElementById("gsName").textContent = liveA.GS ? (playerById(liveA.GS)?.name || "—") : "—";
-    document.getElementById("gaName").textContent = liveA.GA ? (playerById(liveA.GA)?.name || "—") : "—";
-
-    const banner = document.getElementById("finalBanner");
-    const text = document.getElementById("finalBannerText");
-    banner.classList.remove("win","loss","draw");
-
-    if(g.gameEnded){
-      banner.style.display = "block";
-      const diff = totalHome(g) - totalAway(g);
-      if(diff > 0){ banner.classList.add("win"); text.textContent = `${team} won by ${diff}`; }
-      else if(diff < 0){ banner.classList.add("loss"); text.textContent = `${team} lost by ${Math.abs(diff)}`; }
-      else { banner.classList.add("draw"); text.textContent = `Draw`; }
-    } else {
-      banner.style.display = "none";
-    }
-  }
-
-  function renderPositions(){
-    const c = currentCompetition();
-    const t = currentTeam();
-    const g = currentGame();
-    const grid = document.getElementById("positionsGrid");
-    grid.innerHTML = "";
-    const pIdx = g.selectedP;
-    const max = basePeriods(c.format);
-
-    POSITIONS.forEach(pos=>{
-      const row = document.createElement("div");
-      row.className = "posRow";
-
-      const tag = document.createElement("div");
-      tag.className = "posTag";
-      tag.textContent = pos;
-
-      const sel = document.createElement("select");
-      sel.style.flex = "1";
-
-      const opt0 = document.createElement("option");
-      opt0.value = "";
-      opt0.textContent = "— select player —";
-      sel.appendChild(opt0);
-
-      t.players.forEach(p=>{
-        const opt = document.createElement("option");
-        opt.value = p.id;
-        const played = regulationPeriodsPlayedHybrid(g, p.id);
-        opt.textContent = `${p.name} • ${fmtPlayed(played)}/${max}`;
-        sel.appendChild(opt);
-      });
-
-      sel.value = g.periods[pIdx].assignments[pos] || "";
-      sel.addEventListener("change", ()=> setAssignment(pos, sel.value || null));
-
-      row.appendChild(tag);
-      row.appendChild(sel);
-      grid.appendChild(row);
-    });
-  }
-
-  function renderBench(){
-    const c = currentCompetition();
-    const t = currentTeam();
-    const g = currentGame();
-    const list = document.getElementById("benchList");
-    list.innerHTML = "";
-
-    const pIdx = g.selectedP;
-    const bench = benchPlayersForP(g, pIdx);
-    document.getElementById("benchCount").textContent = `${bench.length} on bench`;
-
-    const max = basePeriods(c.format);
-
-    bench.forEach(p=>{
-      const item = document.createElement("div");
-      item.className = "pill";
-
-      const played = regulationPeriodsPlayedHybrid(g, p.id);
-
-      const left = document.createElement("div");
-      left.innerHTML = `
-        <div style="font-weight:950">${escapeHtml(p.name)}</div>
-        <div class="muted">On court: ${fmtPlayed(played)}/${max}</div>
-      `;
-
-      const right = document.createElement("div");
-      right.style.display = "flex";
-      right.style.gap = "8px";
-      right.style.alignItems = "center";
-
-      const planned = getPlannedPos(g, pIdx, p.id);
-
-      const sel = document.createElement("select");
-      sel.innerHTML = `
-        <option value="">Next: —</option>
-        ${POSITIONS.map(pos=>`<option value="${pos}">Next: ${pos}</option>`).join("")}
-      `;
-      sel.value = planned;
-      sel.addEventListener("change", ()=> setPlannedPos(g, pIdx, p.id, sel.value));
-
-      const btn = document.createElement("button");
-      btn.className = "primary small";
-      btn.textContent = "Sub In";
-      btn.disabled = g.gameEnded;
-      btn.addEventListener("click", ()=> subInFromBench(p.id));
-
-      right.appendChild(sel);
-      right.appendChild(btn);
-
-      item.appendChild(left);
-      item.appendChild(right);
-
-      list.appendChild(item);
-    });
-  }
-
-  function renderStats(){
-    const c = currentCompetition();
-    const t = currentTeam();
-    const g = currentGame();
-    const list = document.getElementById("statsList");
-    list.innerHTML = "";
-
-    const sorted = [...t.players].sort((a,b)=>{
-      const ga = g.playerStats[a.id]?.goalsTotal || 0;
-      const gb = g.playerStats[b.id]?.goalsTotal || 0;
-      if(gb !== ga) return gb - ga;
-      return a.name.localeCompare(b.name);
-    });
-
-    const max = basePeriods(c.format);
-
-    sorted.forEach(p=>{
-      const gameGoals = g.playerStats[p.id]?.goalsTotal || 0;
-      const played = regulationPeriodsPlayedHybrid(g, p.id);
-
-      const item = document.createElement("div");
-      item.className = "pill";
-      item.innerHTML = `
-        <div>
-          <div style="font-weight:950">${escapeHtml(p.name)}</div>
-          <div class="muted">Reg periods on court: ${fmtPlayed(played)}/${max}</div>
-        </div>
-        <div class="right"><div><b>${gameGoals}</b> goals</div></div>
-      `;
-      list.appendChild(item);
-    });
-  }
-
-  function renderGoalLog(){
-    const g = currentGame();
-    const log = document.getElementById("goalLog");
-    log.innerHTML = "";
-    const pIdx = g.liveP;
-    const events = (g.periods[pIdx].events || []).filter(e=>e.type==="playerGoal");
-    if(events.length===0){
-      log.innerHTML = `<div class="muted">No credited goals in LIVE (${periodLabel(pIdx)}) yet.</div>`;
-      return;
-    }
-    [...events].reverse().forEach(e=>{
-      const dt = new Date(e.t);
-      const time = dt.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-      const p = playerById(e.payload.pid);
-      const item = document.createElement("div");
-      item.className = "pill";
-      item.innerHTML = `<div>${escapeHtml(p ? p.name : "Unknown")} <span class="muted">(${e.payload.pos})</span></div><div class="muted">${time}</div>`;
-      log.appendChild(item);
-    });
-  }
-
-  function renderPeriodTable(){
-    const t = currentTeam();
-    const g = currentGame();
-    const wrap = document.getElementById("periodTableWrap");
-
-    const team = (t.name || "Home").trim() || "Home";
-    const opp  = (g.opponent || "Away").trim() || "Away";
-
-    const rows = g.periods.map((p,i)=>`
-      <tr>
-        <td><b>${periodLabel(i)}</b>${(i===g.liveP) ? ' <span class="kbd">LIVE</span>' : ''}</td>
-        <td>${p.homeScore}</td>
-        <td>${p.awayScore}</td>
-      </tr>
-    `).join("");
-
-    wrap.innerHTML = `
-      <table>
-        <thead>
-          <tr>
-            <th>Period</th>
-            <th>${escapeHtml(team)}</th>
-            <th>${escapeHtml(opp)}</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${rows}
-          <tr>
-            <td><b>Total</b></td>
-            <td><b>${totalHome(g)}</b></td>
-            <td><b>${totalAway(g)}</b></td>
-          </tr>
-        </tbody>
-      </table>
-    `;
-  }
-
-  function renderAllPeriodsPositions(){
-    const g = currentGame();
-    const wrap = document.getElementById("allPeriodsPositions");
-    wrap.innerHTML = "";
-
-    for(let p=0;p<totalPeriods(g);p++){
-      const a = g.periods[p].assignments || {};
-      const line = POSITIONS.map(pos=>{
-        const pid = a[pos];
-        return `<span class="kbd">${pos}</span> ${escapeHtml(pid ? (playerById(pid)?.name || "—") : "—")}`;
-      }).join(" &nbsp; ");
-
-      const section = document.createElement("div");
-      section.className = "pill";
-      section.style.display = "block";
-      section.innerHTML = `<div style="font-weight:950;margin-bottom:6px;">${periodLabel(p)}${p===g.liveP ? ' <span class="kbd">LIVE</span>' : ''}</div><div>${line}</div>`;
-      wrap.appendChild(section);
-    }
-  }
-
-  function populateCopyTargets(){
-    const g = currentGame();
-    const sel = document.getElementById("copyTargetPeriod");
-    sel.innerHTML = "";
-    for(let i=0;i<totalPeriods(g);i++){
-      if(i===g.selectedP) continue;
-      const opt = document.createElement("option");
-      opt.value = String(i);
-      opt.textContent = periodLabel(i);
-      sel.appendChild(opt);
-    }
-  }
-
-  function wireCopyButtons(){
-    const g = currentGame();
-    document.getElementById("copyPositionsBtn").onclick = ()=>{
-      const target = Number(document.getElementById("copyTargetPeriod").value);
-      const ok = confirm(`Copy positions from ${periodLabel(g.selectedP)} to ${periodLabel(target)}?\nThis will overwrite ${periodLabel(target)} positions.`);
-      if(!ok) return;
-      copyAssignments(g.selectedP, target);
-      renderAll();
-      alert(`Copied ${periodLabel(g.selectedP)} positions to ${periodLabel(target)}.`);
-    };
-
-    document.getElementById("copyToNextBtn").onclick = ()=>{
-      const target = Math.min(totalPeriods(g)-1, g.selectedP + 1);
-      if(target === g.selectedP) return alert("Already at last period.");
-      const ok = confirm(`Copy positions from ${periodLabel(g.selectedP)} to ${periodLabel(target)}?\nThis will overwrite ${periodLabel(target)} positions.`);
-      if(!ok) return;
-      copyAssignments(g.selectedP, target);
-      renderAll();
-      alert(`Copied ${periodLabel(g.selectedP)} positions to ${periodLabel(target)}.`);
-    };
-  }
-
-  function updateEndButtons(){
-    const c = currentCompetition();
-    const g = currentGame();
-
-    const endBtn = document.getElementById("periodFinishedBtn");
-    const reopenBtn = document.getElementById("reopenBtn");
-    const startOTBtn = document.getElementById("startOTBtn");
-
-    startOTBtn.style.display = canStartOT(g) ? "inline-block" : "none";
-
-    const base = basePeriods(c.format);
-    const ot1Index = base;
-    const ot2Index = base + 1;
-
-    if(g.gameEnded){
-      endBtn.textContent = "Game ended";
-      endBtn.disabled = true;
-      reopenBtn.style.display = "inline-block";
-    } else {
-      reopenBtn.style.display = "none";
-      endBtn.disabled = false;
-
-      if(g.otCount === 2 && g.liveP === ot1Index){
-        endBtn.textContent = "OT1 finished → OT2";
-      } else if(g.otCount === 2 && g.liveP === ot2Index){
-        endBtn.textContent = "End game";
-      } else {
-        const isLast = (g.liveP >= totalPeriods(g)-1);
-        if(isLast){
-          endBtn.textContent = "End game";
-        } else {
-          endBtn.textContent = (c.format==="halves") ? "Half finished → Next" : "Qtr finished → Next";
-        }
-      }
-    }
-
-    const lockIds = ["homePlus","homeMinus","awayPlus","awayMinus","undoBtn","gsPlus","gaPlus","setLiveToEditingBtn","timerResetBtn","timerStartBtn","minutesSelect"];
-    for(const id of lockIds){
-      const el = document.getElementById(id);
-      if(el) el.disabled = !!g.gameEnded || (id==="minutesSelect" && (g.timerMode==="countup"));
-    }
-  }
-
-  function renderWelcome(){
-    const showWelcome = !hasCompetitions();
-    document.getElementById("welcomeCard").style.display = showWelcome ? "block" : "none";
-
-    const sections = ["topCard","setupCard","periodCard","positionsCard","statsCard","summaryCard","notesCard"];
-    for(const id of sections){
-      document.getElementById(id).style.display = showWelcome ? "none" : "block";
-    }
-  }
-
-  function renderAll(){
-    ensureIntegrity();
-    renderWelcome();
-    renderCompTabs();
-    if(!hasCompetitions()) return;
-
-    renderTopFields();
-    renderTeamTabs();
-
-    // if comp exists but no team yet, prompt add team
-    if(!hasTeamsInComp()){
-      // hide game sections but keep top card visible
-      const hideIds = ["setupCard","periodCard","positionsCard","statsCard","summaryCard","notesCard"];
-      hideIds.forEach(id => document.getElementById(id).style.display = "none");
-      return;
-    }
-
-    renderGameHeader();
-    renderRoundSeg();
-    renderPlayersInputs();
-    renderPeriodSeg();
-    renderMinutesSelect();
-    renderTimer();
-    renderLiveWarn();
-    renderScores();
-    renderPositions();
-    renderBench();
-    renderStats();
-    renderGoalLog();
-    renderPeriodTable();
-    renderAllPeriodsPositions();
-    populateCopyTargets();
-    wireCopyButtons();
-    updateEndButtons();
-  }
-
-  /* ===============================
-     WIRING
-  =============================== */
-  document.getElementById("howtoBtn").addEventListener("click", openHowto);
-  document.getElementById("howtoClose").addEventListener("click", closeHowtoAndContinue);
-  document.getElementById("howtoOk").addEventListener("click", closeHowtoAndContinue);
-  document.getElementById("howtoDontShow").addEventListener("click", closeHowtoAndContinue);
-  document.getElementById("howtoBack").addEventListener("click", (e)=>{ if(e.target.id==="howtoBack") closeHowtoAndContinue(); });
-
-  document.getElementById("welcomeAddCompBtn").addEventListener("click", openCompModal);
-
-  document.getElementById("addCompBtn").addEventListener("click", openCompModal);
-  document.getElementById("compClose").addEventListener("click", closeCompModal);
-  document.getElementById("compCreateBtn").addEventListener("click", createCompetitionFromModal);
-  document.getElementById("compBack").addEventListener("click", (e)=>{ if(e.target.id==="compBack") closeCompModal(); });
-
-  document.getElementById("deleteCompBtn").addEventListener("click", deleteCurrentCompetition);
-
-  document.getElementById("addTeamBtn").addEventListener("click", openTeamModal);
-  document.getElementById("teamClose").addEventListener("click", closeTeamModal);
-  document.getElementById("teamCreateBtn").addEventListener("click", createTeamFromModal);
-  document.getElementById("teamBack").addEventListener("click", (e)=>{ if(e.target.id==="teamBack") closeTeamModal(); });
-
-  document.getElementById("importPlayersBtn").addEventListener("click", importPlayersIntoNewTeam);
-
-  document.getElementById("deleteTeamBtn").addEventListener("click", deleteCurrentTeam);
-
-  document.getElementById("compName").addEventListener("input", e=>{
-    const c = currentCompetition();
-    c.name = e.target.value;
-    saveAll();
-    renderCompTabs();
+function openComp(){show(compBack);setTimeout(()=>newCompName.focus(),0)}
+function closeComp(){hide(compBack)}
+function createComp(){
+  const name=newCompName.value.trim();
+  if(!name){alert("Enter a competition name");return}
+  const format=[...document.querySelectorAll('input[name="newCompFormat"]')].find(r=>r.checked).value;
+  const c={id:crypto.randomUUID(),name,format,teams:[],currentTeam:null};
+  app.competitions=[c];app.currentComp=c.id;save();closeComp();init();
+}
+
+function render(){
+  const c=comp();
+  compName.value=c.name;formatLabel.textContent=c.format;
+  renderTeams();renderPlayers();
+}
+
+function renderTeams(){
+  const c=comp();
+  const seg=document.getElementById("teamSeg");seg.innerHTML="";
+  c.teams.forEach(t=>{
+    const b=document.createElement("button");
+    b.textContent=t.name;b.className=(t.id===c.currentTeam)?"active":"";
+    b.onclick=()=>{c.currentTeam=t.id;save();render();};
+    seg.appendChild(b);
   });
+}
 
-  document.getElementById("teamName").addEventListener("input", e=>{
-    const t = currentTeam();
-    t.name = e.target.value;
-    saveAll();
-    renderTeamTabs();
-    renderScores();
-    renderPeriodTable();
-  });
+addTeamBtn.onclick=()=>{
+  const c=comp();
+  const t={id:crypto.randomUUID(),name:"Team "+(c.teams.length+1),players:[]};
+  c.teams.push(t);c.currentTeam=t.id;save();render();
+};
 
-  document.getElementById("opponent").addEventListener("input", e=>{
-    const g = currentGame();
-    g.opponent = e.target.value;
-    saveAll(); renderScores(); renderPeriodTable();
-  });
-  document.getElementById("roundName").addEventListener("input", e=>{
-    currentGame().roundName = e.target.value;
-    saveAll();
-  });
-  document.getElementById("gameDate").addEventListener("input", e=>{
-    currentGame().gameDate = e.target.value;
-    saveAll();
-  });
-  document.getElementById("notes").addEventListener("input", e=>{
-    currentGame().notes = e.target.value;
-    saveAll();
-  });
+editPlayersBtn.onclick=()=>{openPlayersModal(team()?.players||[])}
 
-  document.getElementById("addGameBtn").addEventListener("click", addGame);
-  document.getElementById("prevGameBtn").addEventListener("click", goPrevGame);
-  document.getElementById("nextGameBtn").addEventListener("click", goNextGame);
-  document.getElementById("newGameBtn").addEventListener("click", ()=>{
-    const g = currentGame();
-    if(confirm(`Reset only Game ${g.round}?`)) resetThisGame();
-  });
+let playersDraft=[];
+function openPlayersModal(players){
+  playersDraft=JSON.parse(JSON.stringify(players));
+  if(playersDraft.length===0) addPlayerRow();
+  renderPlayersTable();show(playersBack);
+}
+function closePlayers(){hide(playersBack)}
+function addPlayerRow(){playersDraft.push({id:crypto.randomUUID(),name:"",pos1:"",pos2:""});renderPlayersTable()}
+function renderPlayersTable(){
+  playersBody.innerHTML="";
+  playersDraft.forEach((p,i)=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${i+1}</td>
+      <td><input value="${p.name}"></td>
+      <td>${sel(p.pos1)}</td>
+      <td>${sel(p.pos2)}</td>
+      <td><button class="miniDanger">−</button></td>`;
+    const [n,s1,s2]=tr.querySelectorAll("input,select");
+    n.oninput=e=>p.name=e.target.value;
+    s1.onchange=e=>p.pos1=e.target.value;
+    s2.onchange=e=>p.pos2=e.target.value;
+    tr.querySelector("button").onclick=()=>{playersDraft.splice(i,1);renderPlayersTable()}
+    playersBody.appendChild(tr);
+  })
+}
+function sel(v){return `<select>${['<option value="">—</option>'].concat(POSITIONS.map(x=>`<option ${x===v?"selected":""}>${x}</option>`)).join("")}</select>`}
+function savePlayers(){
+  const t=team();t.players=playersDraft.filter(p=>p.name.trim()!=="");save();closePlayers();renderPlayers();
+}
+function renderPlayers(){
+  playersQuickList.innerHTML="";
+  if(!team()) return;
+  team().players.forEach(p=>{
+    const d=document.createElement("div");d.className="pill";
+    d.innerHTML=`<div><b>${p.name}</b><div class="muted">Pref: ${p.pos1||"—"}${p.pos2?" / "+p.pos2:""}</div></div>`;
+    playersQuickList.appendChild(d);
+  })
+}
 
-  document.getElementById("resetTeamBtn").addEventListener("click", resetTeam);
+welcomeStartBtn.onclick=openComp;
+addCompBtn.onclick=openComp;
 
-  document.getElementById("setLiveToEditingBtn").addEventListener("click", ()=>{
-    const g = currentGame();
-    g.liveP = g.selectedP;
-    saveAll(); renderAll();
-  });
-
-  document.getElementById("periodFinishedBtn").addEventListener("click", endOrNextPeriod);
-  document.getElementById("startOTBtn").addEventListener("click", startOT);
-  document.getElementById("reopenBtn").addEventListener("click", reopenGame);
-
-  document.getElementById("minutesSelect").addEventListener("change", e=>{
-    const g = currentGame();
-    g.baseMinutes = Number(e.target.value);
-    if(!g.timerRunning && !isOTIndex(g.selectedP)){
-      g.timerRemaining = g.baseMinutes * 60;
-      g.timerLastTick = 0;
-      // reset halfway warning for that period when minutes changed
-      g.halfWarned[g.liveP] = false;
-    }
-    saveAll();
-    renderAll();
-  });
-
-  document.getElementById("timerStartBtn").addEventListener("click", toggleTimer);
-  document.getElementById("timerResetBtn").addEventListener("click", resetTimer);
-
-  document.getElementById("homePlus").addEventListener("click", ()=>scoreTeam("home", +1));
-  document.getElementById("homeMinus").addEventListener("click", ()=>scoreTeam("home", -1));
-  document.getElementById("awayPlus").addEventListener("click", ()=>scoreTeam("away", +1));
-  document.getElementById("awayMinus").addEventListener("click", ()=>scoreTeam("away", -1));
-  document.getElementById("gsPlus").addEventListener("click", ()=>scoreFromPosition("GS"));
-  document.getElementById("gaPlus").addEventListener("click", ()=>scoreFromPosition("GA"));
-  document.getElementById("undoBtn").addEventListener("click", undo);
-
-  document.getElementById("copySummaryBtn").addEventListener("click", ()=>{
-    const t = currentTeam();
-    const g = currentGame();
-    const team = (t.name || "Home").trim() || "Home";
-    const opp  = (g.opponent || "Away").trim() || "Away";
-    const lines = [];
-    lines.push(`${currentCompetition().name} • ${team} • Game ${g.round}`);
-    if(g.gameDate) lines.push(`Date: ${g.gameDate}`);
-    if((g.roundName||"").trim()) lines.push(`Name: ${g.roundName.trim()}`);
-    lines.push(`${team} ${totalHome(g)} - ${totalAway(g)} ${opp}`);
-    lines.push("");
-    lines.push("Rotations:");
-    for(let p=0;p<totalPeriods(g);p++){
-      const a = g.periods[p].assignments || {};
-      const posText = POSITIONS.map(pos=>`${pos}: ${a[pos] ? (playerById(a[pos])?.name || "—") : "—"}`).join(" | ");
-      lines.push(`${periodLabel(p)}: ${posText}`);
-    }
-    if((g.notes||"").trim()){
-      lines.push("");
-      lines.push(`Notes: ${g.notes.trim()}`);
-    }
-    copyText(lines.join("\n"));
-  });
-
-  document.getElementById("syncBtn").addEventListener("click", ()=>{
-    document.getElementById("syncText").value = "";
-    openSyncModal();
-  });
-  document.getElementById("syncClose").addEventListener("click", closeSyncModal);
-  document.getElementById("syncBack").addEventListener("click", (e)=>{ if(e.target.id==="syncBack") closeSyncModal(); });
-  document.getElementById("syncExport").addEventListener("click", exportTeam);
-  document.getElementById("syncImport").addEventListener("click", importTeamReplace);
-  document.getElementById("syncClear").addEventListener("click", ()=>{ document.getElementById("syncText").value=""; });
-
-  document.getElementById("addPlayerBtn").addEventListener("click", addPlayer);
-
-  /* ===============================
-     INIT
-  =============================== */
-  ensureIntegrity();
-  initRollups();
-  renderAll();
-
-  if(!hasSeenHowto()){
-    openHowto();
-  } else if(!hasCompetitions()){
-    openCompModal();
-  }
-
+init();
 </script>
 </body>
 </html>
