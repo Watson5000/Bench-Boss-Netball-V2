@@ -531,7 +531,7 @@
 	// =====================
 // DROPBOX SYNC (Option 2)
 // =====================
-const DBX_APP_KEY   = "0qcaljdawqsl06b";
+const DBX_APP_KEY = "0qcaljdawqs106b";
 const DBX_FILE_PATH = "/benchboss.json";
 
 const DBX_TOKEN_KEY   = "bb_dbx_token_v1";
@@ -2673,13 +2673,32 @@ if(c.format === "halves"){
 
   function wireCopyButtons(){
     const g = currentGame();
-    document.getElementById("copyPositionsBtn").onclick = ()=>{
-      const target = Number(document.getElementById("copyTargetPeriod").value);
+    const btnCopy = document.getElementById("copyPositionsBtn");
+    const btnNext = document.getElementById("copyToNextBtn");
+
+    btnCopy.onclick = ()=>{
+      const raw = document.getElementById("copyTargetPeriod").value;
+      const target = Number(raw);
+      if(Number.isNaN(target)) return alert("Pick a target period first.");
+      const ok = confirm(`Copy positions from ${periodLabel(g.selectedP)} to ${periodLabel(target)}?
+This will overwrite ${periodLabel(target)} positions.`);
       if(!ok) return;
       copyAssignments(g.selectedP, target);
       renderAll();
       alert(`Copied ${periodLabel(g.selectedP)} positions to ${periodLabel(target)}.`);
     };
+
+    btnNext.onclick = ()=>{
+      const target = Math.min(totalPeriods(g)-1, g.selectedP + 1);
+      if(target === g.selectedP) return alert("Already at last period.");
+      const ok = confirm(`Copy positions from ${periodLabel(g.selectedP)} to ${periodLabel(target)}?
+This will overwrite ${periodLabel(target)} positions.`);
+      if(!ok) return;
+      copyAssignments(g.selectedP, target);
+      renderAll();
+      alert(`Copied ${periodLabel(g.selectedP)} positions to ${periodLabel(target)}.`);
+    };
+  };
 
     document.getElementById("copyToNextBtn").onclick = ()=>{
       const target = Math.min(totalPeriods(g)-1, g.selectedP + 1);
@@ -2910,24 +2929,36 @@ document.getElementById("dbxDisconnectBtn").addEventListener("click", dbxDisconn
   document.getElementById("copySummaryBtn").addEventListener("click", ()=>{
     const t = currentTeam();
     const g = currentGame();
+    const c = currentCompetition();
+    if(!t || !g || !c) return;
+
     const team = (t.name || "Home").trim() || "Home";
     const opp  = (g.opponent || "Away").trim() || "Away";
+
     const lines = [];
-    lines.push(`${currentCompetition().name} • ${team} • Game ${g.round}`);
+    lines.push(`${c.name} • ${team} • Game ${g.round}`);
     if(g.gameDate) lines.push(`Date: ${g.gameDate}`);
     if((g.roundName||"").trim()) lines.push(`Name: ${g.roundName.trim()}`);
     lines.push(`${team} ${totalHome(g)} - ${totalAway(g)} ${opp}`);
     lines.push("");
     lines.push("Rotations:");
+
     for(let p=0;p<totalPeriods(g);p++){
       const a = g.periods[p].assignments || {};
-      const posText = POSITIONS.map(pos=>`${pos}: ${a[pos] ? (playerById(a[pos])?.name || "—") : "—"}`).join(" | ");
+      const posText = POSITIONS.map(pos=>{
+        const pid = a[pos];
+        const nm = pid ? (playerById(pid)?.name || "—") : "—";
+        return `${pos}: ${nm}`;
+      }).join(" | ");
       lines.push(`${periodLabel(p)}: ${posText}`);
     }
+
     if((g.notes||"").trim()){
       lines.push("");
       lines.push(`Notes: ${g.notes.trim()}`);
     }
+
+    copyText(lines.join("\n"));
   });
 
   document.getElementById("syncBtn").addEventListener("click", ()=>{
