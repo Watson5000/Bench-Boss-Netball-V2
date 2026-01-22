@@ -599,8 +599,7 @@
      STORAGE + CONSTANTS
   =============================== */
   const APP_KEY = "bb_competitions_v1";
-  const HOWTO_FLAG_KEY = "bb_howto_seen_v1";
-
+  \1  const SETUP_KEY = "bb_setup_complete_v2";\n
   // Legacy keys (if you ever want to migrate from your previous build)
   const LEGACY_TEAMS_INDEX_KEY = "netball_teams_index_v3_notdefault";
   const LEGACY_TEAM_KEY_PREFIX = "netball_team_v3_";
@@ -706,7 +705,8 @@
       name: teamName || "Team",
       players,
       games: [newEmptyGame(1, players, "quarters")],
-      currentGameIndex: 0
+      currentGameIndex: 0,
+      playersEdited: false
     };
   }
 
@@ -823,6 +823,7 @@
       }
 
       for(const t of c.teams){
+        if(t.playersEdited == null) t.playersEdited = false;
         if(!t.players || t.players.length < MIN_PLAYERS) t.players = newPlayers10();
         if(t.players.length > MAX_PLAYERS) t.players = t.players.slice(0, MAX_PLAYERS);
         if(!t.games || !t.games.length) t.games = [newEmptyGame(1, t.players, c.format)];
@@ -963,66 +964,143 @@ function tournamentMaxHalves(){
     return 1;
   }
 
-  function buildAutoAssignmentsForHalf(game, halfIdx, tournamentTotals, extraPenaltyIds){
-    // Greedy fill positions, re-sorting each pick
-    const t = currentTeam();
-    const used = new Set();
-    const out = {};
-    for(const pos of POSITIONS){
-      const candidates = t.players
-        .filter(p=>!used.has(p.id))
-        .map(p=>{
-          const tot = tournamentTotals[p.id] || 0;
-          const penalty = extraPenaltyIds?.has(p.id) ? 0.5 : 0; // avoid repeating from H1 into H2
-          return {
-            p,
-            tot,
-            score: (tot + penalty) - (prefScoreForPos(p, pos) * 0.15)
-          };
-        })
-        .sort((a,b)=> a.score - b.score || (b.p.pos1===pos)-(a.p.pos1===pos) || a.p.name.localeCompare(b.p.name));
+  function buildAutoAssignmentsForHalf(players, totals, avoidSet){
+    // STRICT: only assign a player to a position if that position is in their preferred list (pos1/pos2).
+    // Returns { assignments, ok, missing:[pos...] }
+    avoidSet = avoidSet || new Set();
 
-      const pick = candidates[0]?.p;
-      if(pick){
-        out[pos] = pick.id;
-        used.add(pick.id);
+    const assignments = {};
+    const used = new Set();
+    const missing = [];
+
+    function prefers(p, pos){
+      return (p.pos1 === pos) || (p.pos2 === pos);
+    }
+
+    function pickPlayerForPos(pos){
+      const candidates = players
+        .filter(p => !used.has(p.id))
+        .filter(p => !avoidSet.has(p.id))
+        .filter(p => prefers(p, pos));
+
+      if(!candidates.length) return null;
+
+      // Prefer players with fewer halves so far (balance), then stable by name
+      candidates.sort((a,b)=>{
+        const da = (totals[a.id] || 0);
+        const db = (totals[b.id] || 0);
+        if(da !== db) return da - db;
+        return (a.name || "").localeCompare(b.name || "");
+      });
+      return candidates[0];
+    }
+
+    for(const pos of POSITIONS){
+      const p = pickPlayerForPos(pos);
+      if(p){
+        assignments[pos] = p.id;
+        used.add(p.id);
       } else {
-        out[pos] = null;
+        assignments[pos] = null;
+        missing.push(pos);
       }
     }
-    return out;
+
+    return { assignments, ok: missing.length === 0, missing };
   }
 
   function generateTournamentRotations(){
     const c = currentCompetition();
-    const g = currentGame();
     const t = currentTeam();
-    if(!c || !g || !t) return;
-    if(c.format !== "halves") return alert("Rotation Generator is for Tournament (2 halves) competitions only.");
+    if(!c || !t) return;
 
-    // Only regulation halves 0/1
-    const totals = {};
-    for(const p of t.players){
-      totals[p.id] = tournamentTotalHalvesForPlayer(p.id);
+    if(c.format !== "halves"){
+      alert("Rotation Generator is for Tournament (2 halves) competitions only.");
+      return;
     }
 
-    // H1
-    const h1 = buildAutoAssignmentsForHalf(g, 0, totals, null);
+    if(!t.games || t.games.length === 0){
+      alert("Add at least 1 game first.");
+      return;
+    }
 
-    // For H2, penalise those already in H1 so it spreads time
-    const h1Ids = new Set(Object.values(h1).filter(Boolean));
-    // Also add 1 half to their totals for planning H2
-    const totals2 = {...totals};
-    for(const id of h1Ids) totals2[id] = (totals2[id] || 0) + 1;
+    if(!confirm(`Generate Tournament Rotations for ALL ${t.games.length} game(s)?\n\nThis will overwrite H1/H2 positions in every game for this team.`)){
+      return;
+    }
 
-    const h2 = buildAutoAssignmentsForHalf(g, 1, totals2, h1Ids);
+    // Running totals across the tournament as we generate
+    const totals = {};
+    for(const p of t.players) totals[p.id] = 0;
 
-    g.periods[0].assignments = h1;
-    g.periods[1].assignments = h2;
+    const lines = [];
+    let anyMissing = false;
+    const missingDetails = [];
+
+    // Ensure every game has at least 2 halves
+    const regMax = 2;
+
+    for(let gi=0; gi<t.games.length; gi++){
+      const g = t.games[gi];
+
+      if(!Array.isArray(g.periods)) g.periods = [];
+      while(g.periods.length < regMax) g.periods.push(emptyPeriod());
+
+      // Build H1
+      const h1Res = buildAutoAssignmentsForHalf(t.players, totals, new Set());
+      if(!h1Res.ok){
+        anyMissing = true;
+        missingDetails.push(`Game ${g.round || (gi+1)} H1 missing: ${h1Res.missing.join(", ")}`);
+      }
+      // update totals from H1
+      const h1Ids = Object.values(h1Res.assignments).filter(Boolean);
+      h1Ids.forEach(pid => totals[pid] = (totals[pid] || 0) + 1);
+
+      // Build H2 (avoid re-using H1 players where possible)
+      const avoid = new Set(h1Ids);
+      const h2Res = buildAutoAssignmentsForHalf(t.players, totals, avoid);
+      if(!h2Res.ok){
+        anyMissing = true;
+        missingDetails.push(`Game ${g.round || (gi+1)} H2 missing: ${h2Res.missing.join(", ")}`);
+      }
+      const h2Ids = Object.values(h2Res.assignments).filter(Boolean);
+      h2Ids.forEach(pid => totals[pid] = (totals[pid] || 0) + 1);
+
+      // Apply to game
+      g.periods[0].assignments = JSON.parse(JSON.stringify(h1Res.assignments));
+      g.periods[1].assignments = JSON.parse(JSON.stringify(h2Res.assignments));
+
+      // Clear any planned "Next" positions for halves we just overwrote (keeps things tidy)
+      if(g.plannedPositions){
+        delete g.plannedPositions[0];
+        delete g.plannedPositions[1];
+      }
+
+      // Preview line
+      const fmtLine = (assignments)=> POSITIONS.map(pos=>{
+        const pid = assignments[pos];
+        return `${pos}: ${pid ? (playerById(pid)?.name || "—") : "—"}`;
+      }).join(" | ");
+
+      lines.push(`Game ${g.round || (gi+1)} • ${g.roundName ? g.roundName : ""}`.trim());
+      lines.push(`H1: ${fmtLine(h1Res.assignments)}`);
+      lines.push(`H2: ${fmtLine(h2Res.assignments)}`);
+      lines.push("");
+    }
 
     saveAll();
     renderAll();
-    alert("Generated rotations for H1 + H2.");
+
+    document.getElementById("rotationPreview").value = lines.join("\n").trim();
+
+    if(anyMissing){
+      alert(
+        "Some positions could not be filled using ONLY preferred positions.\n\n" +
+        missingDetails.join("\n") +
+        "\n\nFix: Edit Players → set pos1/pos2 so every position has at least one preferred player."
+      );
+    } else {
+      alert("Tournament rotations generated for all games.");
+    }
   }
 
   function renderRotationGen(){
@@ -1510,6 +1588,8 @@ function tournamentMaxHalves(){
     saveAll();
     closeCompModal();
     renderAll();
+    // Next step: add a team
+    if(!setupComplete()) openTeamModal();
   }
 
   function deleteCurrentCompetition(){
@@ -1568,7 +1648,8 @@ function tournamentMaxHalves(){
       name,
       players,
       games: [newEmptyGame(1, players, c.format)],
-      currentGameIndex: 0
+      currentGameIndex: 0,
+      playersEdited: false
     };
 
     c.teams.push(team);
@@ -1579,6 +1660,8 @@ function tournamentMaxHalves(){
     closeTeamModal();
     saveAll();
     renderAll();
+    // Next step: add players
+    if(!setupComplete()) openPlayersModal();
   }
 
   function deleteCurrentTeam(){
@@ -1667,7 +1750,8 @@ function tournamentMaxHalves(){
       name,
       players: newPlayers10(),
       games: [],
-      currentGameIndex: 0
+      currentGameIndex: 0,
+      playersEdited: false
     };
     fresh.games = [newEmptyGame(1, fresh.players, c.format)];
 
@@ -1825,10 +1909,34 @@ function tournamentMaxHalves(){
   function closeHowto(){ document.getElementById("howtoBack").style.display="none"; }
   function markHowtoSeen(){ localStorage.setItem(HOWTO_FLAG_KEY, "1"); }
   function hasSeenHowto(){ return localStorage.getItem(HOWTO_FLAG_KEY) === "1"; }
+
+  // Setup gating (hide all fields until Comp -> Team -> Players completed)
+  function setupComplete(){ return localStorage.getItem(SETUP_KEY) === "1"; }
+
+  function enforceSetupFlow(){
+    // Only run when setup not completed yet
+    if(setupComplete()) return;
+
+    if(!hasCompetitions()){
+      openCompModal();
+      return;
+    }
+    if(!hasTeamsInComp()){
+      openTeamModal();
+      return;
+    }
+    const t = currentTeam();
+    if(t && !t.playersEdited){
+      openPlayersModal();
+      return;
+    }
+    // If we reached here, mark setup complete
+    localStorage.setItem(SETUP_KEY, "1");
+  }
   function closeHowtoAndContinue(){
     markHowtoSeen();
     closeHowto();
-    if(!hasCompetitions()) openCompModal();
+    enforceSetupFlow();
   }
 
   /* ===============================
@@ -2069,7 +2177,9 @@ This will also remove them from all on-court selections + stats for this team.`)
   }
 
   function playersSaveAndClose(){
-    // persist what is currently in memory, then close
+    const t = currentTeam();
+    if(t) t.playersEdited = true;
+    localStorage.setItem(SETUP_KEY, "1");
     saveAll();
     closePlayersModal();
     renderAll();
@@ -2455,7 +2565,8 @@ if(c.format === "halves"){
   }
 
   function renderWelcome(){
-    const showWelcome = !hasCompetitions();
+    // On first run we hide everything and force Comp -> Team -> Players setup via popups
+    const showWelcome = !setupComplete();
     document.getElementById("welcomeCard").style.display = showWelcome ? "block" : "none";
 
     const sections = ["topCard","setupCard","periodCard","positionsCard","statsCard","summaryCard","notesCard"];
@@ -2467,17 +2578,24 @@ if(c.format === "halves"){
   function renderAll(){
     ensureIntegrity();
     renderWelcome();
+
+    // If setup not complete yet, force the setup popups and keep UI blank
+    if(!setupComplete()){
+      enforceSetupFlow();
+      return;
+    }
+
     renderCompTabs();
     if(!hasCompetitions()) return;
 
     renderTopFields();
     renderTeamTabs();
 
-    // if comp exists but no team yet, prompt add team
+    // If comp exists but no team yet, keep UI minimal and prompt add team
     if(!hasTeamsInComp()){
-      // hide game sections but keep top card visible
       const hideIds = ["setupCard","periodCard","positionsCard","statsCard","summaryCard","notesCard"];
       hideIds.forEach(id => document.getElementById(id).style.display = "none");
+      enforceSetupFlow();
       return;
     }
 
@@ -2503,6 +2621,7 @@ if(c.format === "halves"){
 
   /* ===============================
      WIRING
+
   =============================== */
   document.getElementById("howtoBtn").addEventListener("click", openHowto);
   document.getElementById("howtoClose").addEventListener("click", closeHowtoAndContinue);
@@ -2656,8 +2775,8 @@ if(c.format === "halves"){
 
   if(!hasSeenHowto()){
     openHowto();
-  } else if(!hasCompetitions()){
-    openCompModal();
+  } else {
+    enforceSetupFlow();
   }
 
 </script>
