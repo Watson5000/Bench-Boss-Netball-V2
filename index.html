@@ -524,48 +524,6 @@
 </div>
 </div>
 </div>
-  <!-- CLOUD BACKUP (DROPBOX OPTIONAL) -->
-  <section class="card" id="cloudCard">
-    <div class="row">
-      <div class="grow" style="font-weight:950;">Backup / Sync</div>
-      <div class="muted" id="dbStatus">Dropbox: not connected</div>
-    </div>
-    <div class="muted" style="margin-top:8px;">
-      Local data is saved on this device. Use backups to avoid losing everything if you clear cache or change devices.
-    </div>
-    <div class="row" style="margin-top:10px;">
-      <button class="ghost small" id="downloadBackupBtn">Download backup (.json)</button>
-      <button class="ghost small" id="importBackupBtn">Import backup (paste)</button>
-      <div class="grow"></div>
-      <button class="primary small" id="dbConnectBtn">Dropbox Connect</button>
-      <button class="ghost small" id="dbDisconnectBtn" style="display:none;">Disconnect</button>
-    </div>
-
-    <div class="row" style="margin-top:10px;">
-      <button class="primary small" id="dbBackupBtn" disabled>Backup to Dropbox</button>
-      <button class="ghost small" id="dbRestoreBtn" disabled>Restore from Dropbox</button>
-      <div class="grow"></div>
-      <span class="muted">Path:</span> <span class="kbd" id="dbPathTag">/BenchBoss/benchboss_backup.json</span>
-    </div>
-
-    <div class="modalBack" id="importBack">
-      <div class="modal">
-        <div class="row">
-          <h3 class="grow">Import backup</h3>
-          <button class="ghost small" id="importClose">Close</button>
-        </div>
-        <div class="muted">Paste backup JSON below. This will replace your current data on this device.</div>
-        <div style="height:10px"></div>
-        <textarea id="importText" placeholder="Paste backup JSON here…"></textarea>
-        <div class="row" style="margin-top:10px;">
-          <button class="primary small" id="importApply">Import & Replace</button>
-          <div class="grow"></div>
-          <button class="ghost small danger" id="importClear">Clear</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
 </main>
 <script>
 window.addEventListener('DOMContentLoaded', ()=>{
@@ -589,258 +547,6 @@ window.addEventListener('DOMContentLoaded', ()=>{
   const TOURN_DEFAULT  = 8;
   const LEAGUE_DEFAULT = 10;
 
-
-  /* ===============================
-     BACKUP / DROPBOX (OPTIONAL)
-     - Designed to NEVER break the app if Dropbox is misconfigured.
-     - Local backup always works (download + paste import).
-  =============================== */
-  const BACKUP_FILE_NAME = "benchboss_backup.json";
-  const DROPBOX_PATH = "/BenchBoss/benchboss_backup.json";
-  const DROPBOX_TOKEN_KEY = "bb_dropbox_access_token_v1";
-  // Put your Dropbox App key here (Create app in Dropbox Dev Console → Scoped access → Full Dropbox)
-  // IMPORTANT: add your GitHub Pages URL as a Redirect URI in the Dropbox app settings.
-  const DROPBOX_APP_KEY = ""; // e.g. "0qcaljdawqs106b" (APP KEY, not app secret)
-
-  function getDropboxToken(){ return localStorage.getItem(DROPBOX_TOKEN_KEY) || ""; }
-  function setDropboxToken(t){ if(t) localStorage.setItem(DROPBOX_TOKEN_KEY, t); }
-  function clearDropboxToken(){ localStorage.removeItem(DROPBOX_TOKEN_KEY); }
-
-  function downloadTextFile(filename, text){
-    const blob = new Blob([text], {type:"application/json"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(()=>URL.revokeObjectURL(url), 500);
-  }
-
-  // --- PKCE helpers (for Dropbox OAuth) ---
-  function b64url(bytes){
-    let str = btoa(String.fromCharCode.apply(null, bytes));
-    return str.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
-  }
-  async function sha256(str){
-    const buf = new TextEncoder().encode(str);
-    const hash = await crypto.subtle.digest("SHA-256", buf);
-    return new Uint8Array(hash);
-  }
-  function randomVerifier(len=64){
-    const arr = new Uint8Array(len);
-    crypto.getRandomValues(arr);
-    return b64url(arr);
-  }
-
-  async function startDropboxConnect(){
-    try{
-      if(!DROPBOX_APP_KEY) return alert("Dropbox App Key is blank. Add your app key in the code (DROPBOX_APP_KEY).");
-
-      const redirectUri = location.origin + location.pathname; // exact page URL
-      const verifier = randomVerifier(64);
-      sessionStorage.setItem("bb_dbx_verifier", verifier);
-
-      const challenge = b64url(await sha256(verifier));
-      const authUrl =
-        "https://www.dropbox.com/oauth2/authorize" +
-        "?client_id=" + encodeURIComponent(DROPBOX_APP_KEY) +
-        "&response_type=code" +
-        "&code_challenge=" + encodeURIComponent(challenge) +
-        "&code_challenge_method=S256" +
-        "&redirect_uri=" + encodeURIComponent(redirectUri);
-
-      location.href = authUrl;
-    } catch(err){
-      console.error(err);
-      alert("Dropbox connect failed to start. Check console for details.");
-    }
-  }
-
-  async function finishDropboxConnectIfNeeded(){
-    try{
-      const url = new URL(location.href);
-      const code = url.searchParams.get("code");
-      if(!code) return;
-
-      // Clean URL ASAP (so refresh doesn't re-run)
-      url.searchParams.delete("code");
-      history.replaceState(null, "", url.toString());
-
-      if(!DROPBOX_APP_KEY) return alert("Dropbox App Key is blank in code.");
-
-      const verifier = sessionStorage.getItem("bb_dbx_verifier") || "";
-      if(!verifier) return alert("Missing PKCE verifier (session expired). Tap Dropbox Connect again.");
-
-      const redirectUri = location.origin + location.pathname;
-
-      const body = new URLSearchParams();
-      body.set("code", code);
-      body.set("grant_type", "authorization_code");
-      body.set("client_id", DROPBOX_APP_KEY);
-      body.set("redirect_uri", redirectUri);
-      body.set("code_verifier", verifier);
-
-      const resp = await fetch("https://api.dropboxapi.com/oauth2/token", {
-        method:"POST",
-        headers: { "Content-Type":"application/x-www-form-urlencoded" },
-        body
-      });
-
-      if(!resp.ok){
-        const txt = await resp.text();
-        console.error("Dropbox token error:", txt);
-        alert("Dropbox connect failed. Most common cause: Redirect URI mismatch in Dropbox app settings.");
-        return;
-      }
-
-      const data = await resp.json();
-      if(data.access_token){
-        setDropboxToken(data.access_token);
-        sessionStorage.removeItem("bb_dbx_verifier");
-        updateDropboxUI();
-        alert("Dropbox connected.");
-      } else {
-        alert("Dropbox connect failed (no access token returned).");
-      }
-    } catch(err){
-      console.error(err);
-      // Never block app
-    }
-  }
-
-  async function dropboxUploadText(path, text){
-    const token = getDropboxToken();
-    if(!token) throw new Error("Not connected");
-    const resp = await fetch("https://content.dropboxapi.com/2/files/upload", {
-      method:"POST",
-      headers:{
-        "Authorization":"Bearer " + token,
-        "Content-Type":"application/octet-stream",
-        "Dropbox-API-Arg": JSON.stringify({ path, mode:"overwrite", autorename:false, mute:true })
-      },
-      body: text
-    });
-    if(!resp.ok){
-      const txt = await resp.text();
-      throw new Error("Upload failed: " + txt);
-    }
-    return await resp.json();
-  }
-
-  async function dropboxDownloadText(path){
-    const token = getDropboxToken();
-    if(!token) throw new Error("Not connected");
-    const resp = await fetch("https://content.dropboxapi.com/2/files/download", {
-      method:"POST",
-      headers:{
-        "Authorization":"Bearer " + token,
-        "Dropbox-API-Arg": JSON.stringify({ path })
-      }
-    });
-    if(!resp.ok){
-      const txt = await resp.text();
-      throw new Error("Download failed: " + txt);
-    }
-    return await resp.text();
-  }
-
-  function openImportModal(){
-    document.getElementById("importText").value = "";
-    document.getElementById("importBack").style.display = "flex";
-  }
-  function closeImportModal(){ document.getElementById("importBack").style.display = "none"; }
-
-  function updateDropboxUI(){
-    const token = getDropboxToken();
-    const status = document.getElementById("dbStatus");
-    const dis = document.getElementById("dbDisconnectBtn");
-    const b1 = document.getElementById("dbBackupBtn");
-    const b2 = document.getElementById("dbRestoreBtn");
-
-    if(token){
-      status.textContent = "Dropbox: connected ✓";
-      dis.style.display = "inline-block";
-      b1.disabled = false;
-      b2.disabled = false;
-    } else {
-      status.textContent = "Dropbox: not connected";
-      dis.style.display = "none";
-      b1.disabled = true;
-      b2.disabled = true;
-    }
-  }
-
-  function initBackupAndDropbox(){
-    try{
-      // Local backup
-      document.getElementById("downloadBackupBtn").addEventListener("click", ()=>{
-        const txt = JSON.stringify(app, null, 2);
-        downloadTextFile(BACKUP_FILE_NAME, txt);
-      });
-
-      document.getElementById("importBackupBtn").addEventListener("click", openImportModal);
-      document.getElementById("importClose").addEventListener("click", closeImportModal);
-      document.getElementById("importBack").addEventListener("click", (e)=>{ if(e.target.id==="importBack") closeImportModal(); });
-      document.getElementById("importClear").addEventListener("click", ()=>{ document.getElementById("importText").value=""; });
-
-      document.getElementById("importApply").addEventListener("click", ()=>{
-        const raw = (document.getElementById("importText").value || "").trim();
-        if(!raw) return alert("Paste JSON first.");
-        let next;
-        try{ next = JSON.parse(raw); } catch { return alert("That isn't valid JSON."); }
-        if(!next || !Array.isArray(next.competitions)) return alert("This doesn't look like a Bench Boss backup.");
-        if(!confirm("Import will REPLACE your current data on this device. Continue?")) return;
-        app = next;
-        saveAll();
-        closeImportModal();
-        alert("Imported.");
-        renderAll();
-      });
-
-      // Dropbox
-      document.getElementById("dbConnectBtn").addEventListener("click", startDropboxConnect);
-      document.getElementById("dbDisconnectBtn").addEventListener("click", ()=>{
-        if(!confirm("Disconnect Dropbox on this device? (Your data remains in Dropbox.)")) return;
-        clearDropboxToken();
-        updateDropboxUI();
-      });
-
-      document.getElementById("dbBackupBtn").addEventListener("click", async ()=>{
-        try{
-          const txt = JSON.stringify(app, null, 2);
-          await dropboxUploadText(DROPBOX_PATH, txt);
-          alert("Backed up to Dropbox.");
-        } catch(err){
-          console.error(err);
-          alert(String(err.message || err));
-        }
-      });
-
-      document.getElementById("dbRestoreBtn").addEventListener("click", async ()=>{
-        try{
-          if(!confirm("Restore will REPLACE your current data on this device. Continue?")) return;
-          const txt = await dropboxDownloadText(DROPBOX_PATH);
-          const next = JSON.parse(txt);
-          if(!next || !Array.isArray(next.competitions)) return alert("Backup file didn't look valid.");
-          app = next;
-          saveAll();
-          alert("Restored from Dropbox.");
-          renderAll();
-        } catch(err){
-          console.error(err);
-          alert(String(err.message || err));
-        }
-      });
-
-      updateDropboxUI();
-      finishDropboxConnectIfNeeded(); // async; safe
-    } catch(err){
-      console.error(err);
-      // never block
-    }
-  }
   const MIN_PLAYERS = 7;
   const MAX_PLAYERS = 15;
 
@@ -855,26 +561,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
   }
 
 
-  function safeJSONParse(raw){ try { return raw ? JSON.parse(raw) : null; }
-  // UUID helper (works on iPad Safari even in non-HTTPS / file:// previews)
-  function uuid(){
-    try{
-      if(typeof crypto !== "undefined"){
-        if(typeof crypto.randomUUID === "function") return crypto.randomUUID();
-        if(typeof crypto.getRandomValues === "function"){
-          const a = new Uint8Array(16);
-          crypto.getRandomValues(a);
-          a[6] = (a[6] & 0x0f) | 0x40; // v4
-          a[8] = (a[8] & 0x3f) | 0x80; // variant
-          const hex = [...a].map(b=>b.toString(16).padStart(2,"0")).join("");
-          return `${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20)}`;
-        }
-      }
-    }catch(e){}
-    // last-resort fallback
-    return "id-" + Math.random().toString(16).slice(2) + "-" + Date.now().toString(16);
-  }
- catch { return null; } }
+  function safeJSONParse(raw){ try { return raw ? JSON.parse(raw) : null; } catch { return null; } }
 
   function loadApp(){ return safeJSONParse(localStorage.getItem(APP_KEY)); }
   function saveApp(app){ localStorage.setItem(APP_KEY, JSON.stringify(app)); }
@@ -1187,6 +874,23 @@ function tournamentTotalHalvesForPlayer(playerId){
   }
   return total;
 }
+
+
+// Total goals across all games in this tournament (halves format only)
+function tournamentTotalGoalsForPlayer(playerId){
+  const c = currentCompetition();
+  const t = currentTeam();
+  if(!c || !t) return 0;
+  if(c.format !== "halves") return 0;
+
+  let total = 0;
+  for(const game of (t.games || [])){
+    const st = game.playerStats?.[playerId];
+    total += Number(st?.goalsTotal || 0);
+  }
+  return total;
+}
+
 
 function tournamentMaxHalves(){
   const c = currentCompetition();
@@ -2627,6 +2331,7 @@ This will also remove them from all on-court selections + stats for this team.`)
 if(c.format === "halves"){
   const tourTotal = tournamentTotalHalvesForPlayer(p.id);
   const tourMax = tournamentMaxHalves();
+  const tourGoals = tournamentTotalGoalsForPlayer(p.id);
   subLine = `This game: ${fmtPlayed(playedThisGame)}/${max} • Tournament total: ${fmtPlayed(tourTotal)}/${tourMax}`;
 }
 
@@ -2637,7 +2342,7 @@ if(c.format === "halves"){
           <div style="font-weight:950">${escapeHtml(p.name)}</div>
           <div class="muted">${subLine}</div>
         </div>
-        <div class="right"><div><b>${gameGoals}</b> goals</div></div>
+        <div class="right"><div><b>${gameGoals}</b> goals</div>${(c.format==="halves") ? `<div class="muted">Tournament: ${tourGoals}</div>` : ``}</div>
       `;
       list.appendChild(item);
     });
@@ -2802,7 +2507,7 @@ if(c.format === "halves"){
     const showWelcome = !setupComplete();
     document.getElementById("welcomeCard").style.display = showWelcome ? "block" : "none";
 
-    const sections = ["topCard","setupCard","periodCard","positionsCard","statsCard","summaryCard","notesCard","cloudCard"];
+    const sections = ["topCard","setupCard","periodCard","positionsCard","statsCard","summaryCard","notesCard"];
     for(const id of sections){
       document.getElementById(id).style.display = showWelcome ? "none" : "block";
     }
@@ -3004,8 +2709,6 @@ if(c.format === "halves"){
   ensureIntegrity();
   initRollups();
   renderAll();
-
-  initBackupAndDropbox();
 
   if(!hasSeenHowto()){
     openHowto();
