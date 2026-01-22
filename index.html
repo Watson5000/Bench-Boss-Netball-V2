@@ -157,6 +157,10 @@
 </div>
 </div>
 <button class="ghost small" id="howtoBtn">How-to</button>
+<button class="ghost small" id="dbxConnectBtn">Dropbox Connect</button>
+<button class="ghost small" id="dbxUploadBtn">Upload</button>
+<button class="ghost small" id="dbxDownloadBtn">Download</button>
+<button class="ghost small" id="dbxDisconnectBtn">Disconnect</button>
 </div>
 </header>
 <main>
@@ -526,6 +530,253 @@
 </div>
 </main>
 <script>
+	// =====================
+// DROPBOX SYNC (Option 2)
+// =====================
+const DBX_APP_KEY   = "PASTE_YOUR_APP_KEY_HERE";
+const DBX_FILE_PATH = "/benchboss.json";
+
+const DBX_TOKEN_KEY   = "bb_dbx_token_v1";
+const DBX_REFRESH_KEY = "bb_dbx_refresh_v1";
+const DBX_REV_KEY     = "bb_dbx_rev_v1"; // last known remote rev
+
+function dbxGetToken(){ return localStorage.getItem(DBX_TOKEN_KEY) || ""; }
+function dbxSetToken(t){ localStorage.setItem(DBX_TOKEN_KEY, t || ""); }
+
+function dbxGetRefresh(){ return localStorage.getItem(DBX_REFRESH_KEY) || ""; }
+function dbxSetRefresh(t){ localStorage.setItem(DBX_REFRESH_KEY, t || ""); }
+
+function dbxGetRev(){ return localStorage.getItem(DBX_REV_KEY) || ""; }
+function dbxSetRev(r){ localStorage.setItem(DBX_REV_KEY, r || ""); }
+
+function dbxBase64url(bytes){
+  return btoa(String.fromCharCode(...bytes))
+    .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+
+async function dbxSha256(str){
+  const data = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  return new Uint8Array(hash);
+}
+
+async function dbxStartLogin(){
+  // PKCE verifier + challenge
+  const verifierBytes = crypto.getRandomValues(new Uint8Array(32));
+  const verifier = dbxBase64url(verifierBytes);
+  const challenge = dbxBase64url(await dbxSha256(verifier));
+
+  localStorage.setItem("bb_dbx_pkce_verifier", verifier);
+
+  // IMPORTANT: must match Dropbox redirect URI EXACTLY
+  const redirectUri = location.origin + location.pathname;
+
+  const authUrl =
+    "https://www.dropbox.com/oauth2/authorize" +
+    `?client_id=${encodeURIComponent(DBX_APP_KEY)}` +
+    `&response_type=code` +
+    `&code_challenge=${encodeURIComponent(challenge)}` +
+    `&code_challenge_method=S256` +
+    `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+    `&token_access_type=offline`;
+
+  location.href = authUrl;
+}
+
+async function dbxHandleRedirect(){
+  const params = new URLSearchParams(location.search);
+  const code = params.get("code");
+  if(!code) return false;
+
+  const redirectUri = location.origin + location.pathname;
+  const verifier = localStorage.getItem("bb_dbx_pkce_verifier") || "";
+  localStorage.removeItem("bb_dbx_pkce_verifier");
+
+  const body = new URLSearchParams();
+  body.set("code", code);
+  body.set("grant_type", "authorization_code");
+  body.set("client_id", DBX_APP_KEY);
+  body.set("redirect_uri", redirectUri);
+  body.set("code_verifier", verifier);
+
+  const res = await fetch("https://api.dropboxapi.com/oauth2/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body
+  });
+
+  if(!res.ok){
+    alert("Dropbox login failed.");
+    return true; // handled
+  }
+
+  const json = await res.json();
+  dbxSetToken(json.access_token || "");
+  dbxSetRefresh(json.refresh_token || "");
+
+  history.replaceState({}, document.title, redirectUri);
+  alert("Dropbox connected.");
+  return true;
+}
+
+async function dbxRefreshToken(){
+  const refresh = dbxGetRefresh();
+  if(!refresh) return false;
+
+  const body = new URLSearchParams();
+  body.set("refresh_token", refresh);
+  body.set("grant_type", "refresh_token");
+  body.set("client_id", DBX_APP_KEY);
+
+  const res = await fetch("https://api.dropboxapi.com/oauth2/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body
+  });
+
+  if(!res.ok) return false;
+  const json = await res.json();
+  if(json.access_token) dbxSetToken(json.access_token);
+  return true;
+}
+
+async function dbxFetchJson(url, args){
+  const token = dbxGetToken();
+  if(!token) throw new Error("No Dropbox token");
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer " + token,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(args || {})
+  });
+
+  if(res.status === 401){
+    const ok = await dbxRefreshToken();
+    if(!ok) throw new Error("Dropbox auth expired");
+    return dbxFetchJson(url, args);
+  }
+  if(!res.ok) throw new Error("Dropbox API error");
+  return res.json();
+}
+
+async function dbxGetMetadata(){
+  return dbxFetchJson("https://api.dropboxapi.com/2/files/get_metadata", {
+    path: DBX_FILE_PATH
+  });
+}
+
+async function dbxDownload(){
+  const token = dbxGetToken();
+  if(!token) return;
+
+  const res = await fetch("https://content.dropboxapi.com/2/files/download", {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer " + token,
+      "Dropbox-API-Arg": JSON.stringify({ path: DBX_FILE_PATH })
+    }
+  });
+
+  if(res.status === 401){
+    const ok = await dbxRefreshToken();
+    if(!ok) throw new Error("Dropbox auth expired");
+    return dbxDownload();
+  }
+
+  if(res.status === 409){
+    // file not found yet
+    return;
+  }
+  if(!res.ok) throw new Error("Dropbox download failed");
+
+  const text = await res.text();
+  const metaHeader = res.headers.get("dropbox-api-result");
+  const meta = metaHeader ? JSON.parse(metaHeader) : null;
+
+  const remoteApp = JSON.parse(text);
+
+  // IMPORTANT: assumes your global model is named "app"
+  app = remoteApp;
+  saveApp(app);       // your existing function
+  ensureIntegrity();  // your existing function
+  renderAll();        // your existing function
+
+  if(meta?.rev) dbxSetRev(meta.rev);
+}
+
+async function dbxUpload(){
+  const token = dbxGetToken();
+  if(!token) return;
+
+  const content = JSON.stringify(app);
+  const lastRev = dbxGetRev();
+  const mode = lastRev ? { ".tag":"update", update:lastRev } : { ".tag":"overwrite" };
+
+  const res = await fetch("https://content.dropboxapi.com/2/files/upload", {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer " + token,
+      "Content-Type": "application/octet-stream",
+      "Dropbox-API-Arg": JSON.stringify({
+        path: DBX_FILE_PATH,
+        mode,
+        autorename: false,
+        mute: true
+      })
+    },
+    body: content
+  });
+
+  if(res.status === 401){
+    const ok = await dbxRefreshToken();
+    if(!ok) throw new Error("Dropbox auth expired");
+    return dbxUpload();
+  }
+
+  if(res.status === 409){
+    alert("Dropbox has a newer version. Downloading latest.");
+    await dbxDownload();
+    return;
+  }
+
+  if(!res.ok) throw new Error("Dropbox upload failed");
+  const meta = await res.json();
+  if(meta?.rev) dbxSetRev(meta.rev);
+}
+
+let dbxUploadTimer = null;
+function dbxScheduleUpload(){
+  if(!dbxGetToken()) return;
+  if(!navigator.onLine) return;
+
+  if(dbxUploadTimer) clearTimeout(dbxUploadTimer);
+  dbxUploadTimer = setTimeout(()=>{
+    dbxUpload().catch(()=>{});
+  }, 2500);
+}
+
+async function dbxSyncOnStartup(){
+  if(!dbxGetToken()) return;
+  if(!navigator.onLine) return;
+
+  try{
+    const meta = await dbxGetMetadata().catch(()=>null);
+    if(meta?.rev && meta.rev !== dbxGetRev()){
+      await dbxDownload();
+    }
+  }catch(e){}
+}
+
+function dbxDisconnect(){
+  localStorage.removeItem(DBX_TOKEN_KEY);
+  localStorage.removeItem(DBX_REFRESH_KEY);
+  localStorage.removeItem(DBX_REV_KEY);
+  alert("Dropbox disconnected.");
+}
+
 window.addEventListener('DOMContentLoaded', ()=>{
 
   /* ===============================
@@ -806,6 +1057,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
     ensureIntegrity();
     saveApp(app);
     markSaved();
+  dbxScheduleUpload();
   }
 
   /* ===============================
@@ -2608,6 +2860,10 @@ if(c.format === "halves"){
     currentGame().notes = e.target.value;
     saveAll();
   });
+  document.getElementById("dbxConnectBtn").addEventListener("click", dbxStartLogin);
+document.getElementById("dbxUploadBtn").addEventListener("click", ()=>dbxUpload().catch(()=>alert("Upload failed")));
+document.getElementById("dbxDownloadBtn").addEventListener("click", ()=>dbxDownload().catch(()=>alert("Download failed")));
+document.getElementById("dbxDisconnectBtn").addEventListener("click", dbxDisconnect);
 
   document.getElementById("addGameBtn").addEventListener("click", addGame);
   document.getElementById("prevGameBtn").addEventListener("click", goPrevGame);
@@ -2688,9 +2944,23 @@ if(c.format === "halves"){
   /* ===============================
      INIT
   =============================== */
+  (async ()=>{
   ensureIntegrity();
   initRollups();
   renderAll();
+
+  // 1) If Dropbox just redirected back with ?code=..., finish login
+  await dbxHandleRedirect();
+
+  // 2) If already connected, pull latest backup if needed
+  await dbxSyncOnStartup();
+
+  if(!hasSeenHowto()){
+    openHowto();
+  } else if(!hasCompetitions()){
+    openCompModal();
+  }
+})();
 
   if(!hasSeenHowto()){
     openHowto();
