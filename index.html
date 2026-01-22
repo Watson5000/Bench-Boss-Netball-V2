@@ -1,17 +1,16 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#111111" />
-  <link rel="manifest" href="manifest.json">
-  <title>Bench Boss: Netball</title>
-
-  <!-- Favicons / iOS -->
-  <link rel="icon" href="favicon.png" type="image/png">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
-
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<meta content="#111111" name="theme-color"/>
+<link href="manifest.json" rel="manifest"/>
+<title>Bench Boss: Netball</title>
+<!-- Favicons / iOS -->
+<link href="favicon.png" rel="icon" type="image/png"/>
+<link href="apple-touch-icon.png" rel="apple-touch-icon"/>
+<style>
     :root { --pad: 12px; --r: 14px; --b: 1px solid #ddd; }
     body { margin:0; font-family:-apple-system,system-ui,Segoe UI,Roboto,Arial; background:#f6f6f6; }
 
@@ -139,467 +138,402 @@
     }
   </style>
 </head>
-
 <body>
 <header>
-  <div class="row" style="justify-content:space-between; align-items:center;">
-    <div class="brandRow">
-      <img src="bb-netball.png" class="brandLogo" alt="Bench Boss logo">
-      <div>
-        <div class="brandTitle">
-          <h1>Bench Boss: Netball</h1>
-          <span class="badge">BETA</span>
-        </div>
-        <div class="sub">
-          <span>Competition • teams • games • rotations • OT</span>
-          <span class="dot">•</span>
-          <span class="byline">Designed by Matt Watson</span>
-          <span id="saveState" class="muted"></span>
-        </div>
-      </div>
-    </div>
-
-    <button class="ghost small" id="howtoBtn">How-to</button>
-  </div>
+<div class="row" style="justify-content:space-between; align-items:center;">
+<div class="brandRow">
+<img alt="Bench Boss logo" class="brandLogo" src="bb-netball.png"/>
+<div>
+<div class="brandTitle">
+<h1>Bench Boss: Netball</h1>
+<span class="badge">BETA</span>
+</div>
+<div class="sub">
+<span>Competition • teams • games • rotations • OT</span>
+<span class="dot">•</span>
+<span class="byline">Designed by Matt Watson</span>
+<span class="muted" id="saveState"></span>
+</div>
+</div>
+</div>
+<button class="ghost small" id="howtoBtn">How-to</button>
+</div>
 </header>
-
 <main>
-  <!-- WELCOME -->
-  <section class="card" id="welcomeCard">
-    <div style="font-weight:950; font-size:18px;">Welcome 👋</div>
-    <div class="muted" style="margin-top:6px;">
-      This version uses <b>Competition → Team → Games</b>.<br>
+<!-- WELCOME -->
+<section class="card" id="welcomeCard">
+<div style="font-weight:950; font-size:18px;">Welcome 👋</div>
+<div class="muted" style="margin-top:6px;">
+      This version uses <b>Competition → Team → Games</b>.<br/>
       Start by adding a <b>Competition</b> (Parkville, Tournament, Practice), then add your team(s) under it.
     </div>
-    <div style="height:10px"></div>
-    <button class="primary" id="welcomeAddCompBtn">+ Add Competition</button>
-  </section>
-
-  <!-- TOP: COMP + TEAM + GAME -->
-  <section class="card" id="topCard">
-    <div class="row">
-      <div class="grow">
-        <div class="muted">Competitions</div>
-        <div class="seg" id="compSeg"></div>
-      </div>
-      <button class="primary small" id="addCompBtn">+ Add Comp</button>
-      <button class="ghost small danger" id="deleteCompBtn">Delete Comp</button>
-    </div>
-
-    <div style="height:12px"></div>
-
-    <div class="row">
-      <div class="grow">
-        <div class="muted">Competition name</div>
-        <input id="compName" type="text" placeholder="e.g. Parkville Winter 2026" />
-      </div>
-
-      <div class="grow">
-        <div class="muted">Format (this competition)</div>
-        <div style="font-weight:950; font-size:16px;"><span id="formatLabel">4 quarters</span></div>
-      </div>
-
-      <div class="grow">
-        <div class="muted">Teams (in this comp)</div>
-        <div class="seg" id="teamSeg"></div>
-      </div>
-
-      <button class="primary small" id="addTeamBtn">+ Add Team</button>
-      <button class="ghost small danger" id="deleteTeamBtn">Delete Team</button>
-    </div>
-
-    <div style="height:12px"></div>
-
-    <div class="row">
-      <div class="grow">
-        <div class="muted">Team name</div>
-        <input id="teamName" type="text" placeholder="e.g. Tigers U15" />
-      </div>
-
-      <div class="grow">
-        <div class="muted">Current Game</div>
-        <div style="font-weight:950; font-size:18px;">
-          <span id="roundLabel">Game 1</span> <span class="muted" id="roundCountLabel"></span>
-        </div>
-      </div>
-
-      <button class="ghost small" id="prevGameBtn">◀ Prev</button>
-      <button class="ghost small" id="nextGameBtn">Next ▶</button>
-      <button class="primary small" id="addGameBtn">+ Add Game</button>
-      <button class="ghost small danger" id="resetTeamBtn" title="Reset this team (players + games)">Reset Team</button>
-    </div>
-
-    <div class="row" style="margin-top:10px;">
-      <div class="muted">Games:</div>
-      <div class="seg" id="roundSeg"></div>
-    </div>
-
-    <div style="height:10px"></div>
-
-    <div class="row">
-      <div class="grow">
-        <div class="muted">Game name</div>
-        <input id="roundName" type="text" placeholder="e.g. vs Hawks / Semi Final" />
-      </div>
-      <div class="grow">
-        <div class="muted">Date</div>
-        <input id="gameDate" type="date" />
-      </div>
-      <div class="grow">
-        <div class="muted">Opponent</div>
-        <input id="opponent" type="text" placeholder="e.g. Raptors" />
-      </div>
-      <div class="row">
-        <button class="ghost small" id="newGameBtn" title="Reset this game only">Reset This Game</button>
-        <button class="ghost small" id="copySummaryBtn">Copy Game Summary</button>
-        <button class="ghost small" id="syncBtn">Sync</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- PLAYERS -->
-<section class="card" id="setupCard">
-  <div class="row">
-    <div class="grow">
-      <div style="font-weight:950;margin-bottom:6px;">Players (for this team)</div>
-      <div class="muted">Tap to edit names + preferred positions</div>
-    </div>
-    <button class="primary small" id="editPlayersBtn">Edit Players</button>
-  </div>
-
-  <div style="height:10px"></div>
-  <div class="muted" id="playersQuickSummary"></div>
+<div style="height:10px"></div>
+<button class="primary" id="welcomeAddCompBtn">+ Add Competition</button>
 </section>
-
-
-  <!-- ROTATION GENERATOR (TOURNAMENT / HALVES ONLY) -->
-  <section class="card" id="rotationGenCard" style="display:none;">
-    <div class="row">
-      <div class="grow">
-        <div style="font-weight:950;margin-bottom:6px;">Rotation Generator (Tournament)</div>
-        <div class="muted">Auto-fills H1 + H2 using preferred positions and least halves played (tournament total).</div>
-      </div>
-      <button class="primary small" id="genRotBtn">Generate</button>
-    </div>
-    <div style="height:10px"></div>
-    <div class="muted" id="rotationGenPreview"></div>
-    <div style="height:10px"></div>
-    <div class="warn muted">Tip: You can still tweak any position after generating.</div>
-  </section>
-
-  <!-- PERIOD / SCORE / TIMER -->
-  <section class="card" id="periodCard">
-    <div class="row">
-      <div class="grow" style="font-weight:950;">Period (editing)</div>
-      <div class="seg" id="periodSeg"></div>
-    </div>
-
-    <div class="muted" style="margin-top:8px;">
+<!-- TOP: COMP + TEAM + GAME -->
+<section class="card" id="topCard">
+<div class="row">
+<div class="grow">
+<div class="muted">Competitions</div>
+<div class="seg" id="compSeg"></div>
+</div>
+<button class="primary small" id="addCompBtn">+ Add Comp</button>
+<button class="ghost small danger" id="deleteCompBtn">Delete Comp</button>
+</div>
+<div style="height:12px"></div>
+<div class="row">
+<div class="grow">
+<div class="muted">Competition name</div>
+<input id="compName" placeholder="e.g. Parkville Winter 2026" type="text"/>
+</div>
+<div class="grow">
+<div class="muted">Format (this competition)</div>
+<div style="font-weight:950; font-size:16px;"><span id="formatLabel">4 quarters</span></div>
+</div>
+<div class="grow">
+<div class="muted">Teams (in this comp)</div>
+<div class="seg" id="teamSeg"></div>
+</div>
+<button class="primary small" id="addTeamBtn">+ Add Team</button>
+<button class="ghost small danger" id="deleteTeamBtn">Delete Team</button>
+</div>
+<div style="height:12px"></div>
+<div class="row">
+<div class="grow">
+<div class="muted">Team name</div>
+<input id="teamName" placeholder="e.g. Tigers U15" type="text"/>
+</div>
+<div class="grow">
+<div class="muted">Current Game</div>
+<div style="font-weight:950; font-size:18px;">
+<span id="roundLabel">Game 1</span> <span class="muted" id="roundCountLabel"></span>
+</div>
+</div>
+<button class="ghost small" id="prevGameBtn">◀ Prev</button>
+<button class="ghost small" id="nextGameBtn">Next ▶</button>
+<button class="primary small" id="addGameBtn">+ Add Game</button>
+<button class="ghost small danger" id="resetTeamBtn" title="Reset this team (players + games)">Reset Team</button>
+</div>
+<div class="row" style="margin-top:10px;">
+<div class="muted">Games:</div>
+<div class="seg" id="roundSeg"></div>
+</div>
+<div style="height:10px"></div>
+<div class="row">
+<div class="grow">
+<div class="muted">Game name</div>
+<input id="roundName" placeholder="e.g. vs Hawks / Semi Final" type="text"/>
+</div>
+<div class="grow">
+<div class="muted">Date</div>
+<input id="gameDate" type="date"/>
+</div>
+<div class="grow">
+<div class="muted">Opponent</div>
+<input id="opponent" placeholder="e.g. Raptors" type="text"/>
+</div>
+<div class="row">
+<button class="ghost small" id="newGameBtn" title="Reset this game only">Reset This Game</button>
+<button class="ghost small" id="copySummaryBtn">Copy Game Summary</button>
+<button class="ghost small" id="syncBtn">Sync</button>
+</div>
+</div>
+</section>
+<!-- PLAYERS -->
+<section class="card" id="setupCard">
+<div class="row">
+<div class="grow">
+<div style="font-weight:950;margin-bottom:6px;">Players (for this team)</div>
+<div class="muted">Tap to edit names + preferred positions</div>
+</div>
+<button class="primary small" id="editPlayersBtn">Edit Players</button>
+</div>
+<div style="height:10px"></div>
+<div class="muted" id="playersQuickSummary"></div>
+</section>
+<!-- ROTATION GENERATOR (TOURNAMENT / HALVES ONLY) -->
+<section class="card" id="rotationGenCard" style="display:none;">
+<div class="row">
+<div class="grow">
+<div style="font-weight:950;margin-bottom:6px;">Rotation Generator (Tournament)</div>
+<div class="muted">Auto-fills H1 + H2 using preferred positions and least halves played (tournament total).</div>
+</div>
+<button class="primary small" id="genRotBtn">Generate</button>
+</div>
+<div style="height:10px"></div>
+<div class="muted" id="rotationGenPreview"></div>
+<div style="height:10px"></div>
+<div class="warn muted">Tip: You can still tweak any position after generating.</div>
+</section>
+<!-- PERIOD / SCORE / TIMER -->
+<section class="card" id="periodCard">
+<div class="row">
+<div class="grow" style="font-weight:950;">Period (editing)</div>
+<div class="seg" id="periodSeg"></div>
+</div>
+<div class="muted" style="margin-top:8px;">
       Editing: <b id="editingPeriod">Q1</b> • Live scoring: <b id="livePeriodLabel">Q1</b>
-    </div>
-
-    <div class="row" style="margin-top:10px;">
-      <button class="ghost small" id="setLiveToEditingBtn">Set live = editing</button>
-      <button class="primary small" id="periodFinishedBtn">Period finished → Next</button>
-      <button class="primary small" id="startOTBtn" style="display:none;">Start OT (OT1 + OT2)</button>
-      <button class="ghost small danger" id="reopenBtn" style="display:none;">Re-open game</button>
-    </div>
-
-    <!-- TIMER -->
-    <div class="row" style="margin-top:10px;">
-      <div class="muted">Timer:</div>
-      <div style="font-weight:950; font-size:18px;">
-        <span id="timerDisplay">10:00</span>
-        <span id="timerModeTag" class="kbd" style="display:none;">PLAY ON</span>
-      </div>
-
-      <select id="minutesSelect" style="max-width:170px;"></select>
-      <button class="primary small" id="timerStartBtn">Start</button>
-      <button class="ghost small" id="timerResetBtn">Reset</button>
-    </div>
-
-    <div style="height:12px"></div>
-
-    <div class="row" style="align-items:flex-end; justify-content:space-between;">
-      <div>
-        <div class="scoreBig" id="homeScore">0</div>
-        <div class="muted" id="homeLabel">Home</div>
-      </div>
-
-      <div class="right">
-        <div class="scoreBig" id="awayScore">0</div>
-        <div class="muted" id="awayLabel">Away</div>
-      </div>
-    </div>
-
-    <div class="finalBanner" id="finalBanner">
-      <div class="small" id="finalBannerTop">FINAL</div>
-      <div class="big" id="finalBannerText">Result</div>
-    </div>
-
-    <div style="height:10px"></div>
-
-    <div class="row">
-      <button class="primary" id="homePlus">Home +1</button>
-      <button class="primary" id="gsPlus">+GS (<span id="gsName">—</span>)</button>
-      <button class="primary" id="gaPlus">+GA (<span id="gaName">—</span>)</button>
-      <button class="ghost" id="homeMinus">Home −1</button>
-
-      <div class="grow"></div>
-
-      <button class="primary" id="awayPlus">Away +1</button>
-      <button class="ghost" id="awayMinus">Away −1</button>
-      <button class="ghost" id="undoBtn" title="Undo last event (Live period)">Undo</button>
-    </div>
-
-    <div style="height:10px"></div>
-    <div class="warn muted" id="liveWarnBox" style="display:none;"></div>
-  </section>
-
-  <!-- POSITIONS -->
-  <section class="card" id="positionsCard">
-    <div class="row">
-      <div class="grow" style="font-weight:950;">Positions (On Court)</div>
-      <div class="muted">Bench auto-updates (editing period)</div>
-    </div>
-
-    <div class="row" style="margin-top:10px;">
-      <div class="grow" style="font-weight:950;">Editing period (positions)</div>
-      <div class="seg" id="periodSegPos"></div>
-    </div>
-
-    <div style="height:10px"></div>
-
-    <div class="row" style="margin-bottom:10px;">
-      <div class="muted">Copy positions from this period to:</div>
-      <select id="copyTargetPeriod" style="max-width:170px;"></select>
-      <button class="ghost small" id="copyPositionsBtn">Copy</button>
-      <button class="ghost small" id="copyToNextBtn">Copy to next</button>
-    </div>
-
-    <div class="grid7" id="positionsGrid"></div>
-
-    <div style="height:12px"></div>
-
-    <div class="row">
-      <div class="grow" style="font-weight:950;">Bench (this period)</div>
-      <div class="muted" id="benchCount"></div>
-    </div>
-    <div class="list" id="benchList"></div>
-  </section>
-
-  <!-- STATS -->
-  <section class="card" id="statsCard">
-    <div class="row">
-      <div class="grow" style="font-weight:950;">Stats</div>
-      <div class="muted">This game</div>
-    </div>
-    <div style="height:12px"></div>
-    <div class="list" id="statsList"></div>
-
-    <div style="height:12px"></div>
-    <details>
-      <summary>Goal Log (LIVE period)</summary>
-      <div style="height:10px"></div>
-      <div class="list" id="goalLog"></div>
-    </details>
-  </section>
-
-  <!-- SUMMARY -->
-  <section class="card" id="summaryCard">
-    <div class="row">
-      <div class="grow" style="font-weight:950;">Period Summary (this game)</div>
-    </div>
-    <div style="height:10px"></div>
-    <div id="periodTableWrap"></div>
-
-    <div style="height:12px"></div>
-    <details>
-      <summary>All Periods Positions</summary>
-      <div style="height:10px"></div>
-      <div id="allPeriodsPositions"></div>
-    </details>
-  </section>
-
-  <!-- NOTES -->
-  <section class="card" id="notesCard">
-    <div class="row">
-      <div class="grow" style="font-weight:950;">Notes (this game)</div>
-      <div class="muted">Saved automatically</div>
-    </div>
-    <div style="height:10px"></div>
-    <textarea id="notes" placeholder="e.g. Injuries, umpire notes, rotation ideas…"></textarea>
-  </section>
-
-  <!-- HOW-TO MODAL -->
-  <div class="modalBack" id="howtoBack">
-    <div class="modal">
-      <div class="row">
-        <h3 class="grow">Quick How-to</h3>
-        <button class="ghost small" id="howtoClose">Close</button>
-      </div>
-
-      <div class="muted">
-        <div style="font-weight:950; color:#111; margin:10px 0 6px;">Competition → Team → Games</div>
-        <div>• Create a <b>Competition</b> (Parkville / Tournament / Practice).</div>
-        <div>• Add one or more <b>Teams</b> under that competition.</div>
-        <div>• Each team has its own <b>Games</b>.</div>
-
-        <div style="font-weight:950; color:#111; margin:12px 0 6px;">Editing vs Live</div>
-        <div>• <b>Editing</b> period = set on-court positions + bench plan.</div>
-        <div>• <b>Live</b> period = where scoring + undo applies.</div>
-        <div>• Use <b>Set live = editing</b> to align them.</div>
-
-        <div style="font-weight:950; color:#111; margin:12px 0 6px;">Bench planning</div>
-        <div>• Choose each bench player’s <b>Next</b> position.</div>
-        <div>• Tap <b>Sub In</b> to put them straight into that position.</div>
-        <div>• Court time is inferred from your plan until you <b>Sub In</b>, then it can become <b>0.5</b> for that period.</div>
-
-        <div style="font-weight:950; color:#111; margin:12px 0 6px;">Timer + halftime alert</div>
-        <div>• League mode (quarters) can optionally alert at halfway (“Make a change”).</div>
-        <div>• Halves mode does <b>not</b> show the halfway alert.</div>
-
-        <div style="font-weight:950; color:#111; margin:12px 0 6px;">Overtime</div>
-        <div>• If tied at end → <b>Start OT</b> (always plays <b>OT1 and OT2</b>).</div>
-        <div>• In OT2, if time hits 0 and still tied → flips to <b>play-on</b> until a team leads by <b>2</b> (auto-end).</div>
-        <div>• Use <b>Re-open game</b> if you ended by mistake.</div>
-      </div>
-
-      <div class="row" style="margin-top:12px;">
-        <button class="primary small" id="howtoDontShow">Don’t auto-show again</button>
-        <div class="grow"></div>
-        <button class="ghost small" id="howtoOk">OK</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SYNC MODAL (TEAM EXPORT/IMPORT) -->
-  <div class="modalBack" id="syncBack">
-    <div class="modal">
-      <div class="row">
-        <h3 class="grow">Sync (Export / Import) – This Team</h3>
-        <button class="ghost small" id="syncClose">Close</button>
-      </div>
-      <div class="muted">
+</div>
+<div class="row" style="margin-top:10px;">
+<button class="ghost small" id="setLiveToEditingBtn">Set live = editing</button>
+<button class="primary small" id="periodFinishedBtn">Period finished → Next</button>
+<button class="primary small" id="startOTBtn" style="display:none;">Start OT (OT1 + OT2)</button>
+<button class="ghost small danger" id="reopenBtn" style="display:none;">Re-open game</button>
+</div>
+<!-- TIMER -->
+<div class="row" style="margin-top:10px;">
+<div class="muted">Timer:</div>
+<div style="font-weight:950; font-size:18px;">
+<span id="timerDisplay">10:00</span>
+<span class="kbd" id="timerModeTag" style="display:none;">PLAY ON</span>
+</div>
+<select id="minutesSelect" style="max-width:170px;"></select>
+<button class="primary small" id="timerStartBtn">Start</button>
+<button class="ghost small" id="timerResetBtn">Reset</button>
+</div>
+<div style="height:12px"></div>
+<div class="row" style="align-items:flex-end; justify-content:space-between;">
+<div>
+<div class="scoreBig" id="homeScore">0</div>
+<div class="muted" id="homeLabel">Home</div>
+</div>
+<div class="right">
+<div class="scoreBig" id="awayScore">0</div>
+<div class="muted" id="awayLabel">Away</div>
+</div>
+</div>
+<div class="finalBanner" id="finalBanner">
+<div class="small" id="finalBannerTop">FINAL</div>
+<div class="big" id="finalBannerText">Result</div>
+</div>
+<div style="height:10px"></div>
+<div class="row">
+<button class="primary" id="homePlus">Home +1</button>
+<button class="primary" id="gsPlus">+GS (<span id="gsName">—</span>)</button>
+<button class="primary" id="gaPlus">+GA (<span id="gaName">—</span>)</button>
+<button class="ghost" id="homeMinus">Home −1</button>
+<div class="grow"></div>
+<button class="primary" id="awayPlus">Away +1</button>
+<button class="ghost" id="awayMinus">Away −1</button>
+<button class="ghost" id="undoBtn" title="Undo last event (Live period)">Undo</button>
+</div>
+<div style="height:10px"></div>
+<div class="warn muted" id="liveWarnBox" style="display:none;"></div>
+</section>
+<!-- POSITIONS -->
+<section class="card" id="positionsCard">
+<div class="row">
+<div class="grow" style="font-weight:950;">Positions (On Court)</div>
+<div class="muted">Bench auto-updates (editing period)</div>
+</div>
+<div class="row" style="margin-top:10px;">
+<div class="grow" style="font-weight:950;">Editing period (positions)</div>
+<div class="seg" id="periodSegPos"></div>
+</div>
+<div style="height:10px"></div>
+<div class="row" style="margin-bottom:10px;">
+<div class="muted">Copy positions from this period to:</div>
+<select id="copyTargetPeriod" style="max-width:170px;"></select>
+<button class="ghost small" id="copyPositionsBtn">Copy</button>
+<button class="ghost small" id="copyToNextBtn">Copy to next</button>
+</div>
+<div class="grid7" id="positionsGrid"></div>
+<div style="height:12px"></div>
+<div class="row">
+<div class="grow" style="font-weight:950;">Bench (this period)</div>
+<div class="muted" id="benchCount"></div>
+</div>
+<div class="list" id="benchList"></div>
+</section>
+<!-- STATS -->
+<section class="card" id="statsCard">
+<div class="row">
+<div class="grow" style="font-weight:950;">Stats</div>
+<div class="muted">This game</div>
+</div>
+<div style="height:12px"></div>
+<div class="list" id="statsList"></div>
+<div style="height:12px"></div>
+<details>
+<summary>Goal Log (LIVE period)</summary>
+<div style="height:10px"></div>
+<div class="list" id="goalLog"></div>
+</details>
+</section>
+<!-- SUMMARY -->
+<section class="card" id="summaryCard">
+<div class="row">
+<div class="grow" style="font-weight:950;">Period Summary (this game)</div>
+</div>
+<div style="height:10px"></div>
+<div id="periodTableWrap"></div>
+<div style="height:12px"></div>
+<details>
+<summary>All Periods Positions</summary>
+<div style="height:10px"></div>
+<div id="allPeriodsPositions"></div>
+</details>
+</section>
+<!-- NOTES -->
+<section class="card" id="notesCard">
+<div class="row">
+<div class="grow" style="font-weight:950;">Notes (this game)</div>
+<div class="muted">Saved automatically</div>
+</div>
+<div style="height:10px"></div>
+<textarea id="notes" placeholder="e.g. Injuries, umpire notes, rotation ideas…"></textarea>
+</section>
+<!-- HOW-TO MODAL -->
+<div class="modalBack" id="howtoBack">
+<div class="modal">
+<div class="row">
+<h3 class="grow">Quick How-to</h3>
+<button class="ghost small" id="howtoClose">Close</button>
+</div>
+<div class="muted">
+<div style="font-weight:950; color:#111; margin:10px 0 6px;">Competition → Team → Games</div>
+<div>• Create a <b>Competition</b> (Parkville / Tournament / Practice).</div>
+<div>• Add one or more <b>Teams</b> under that competition.</div>
+<div>• Each team has its own <b>Games</b>.</div>
+<div style="font-weight:950; color:#111; margin:12px 0 6px;">Editing vs Live</div>
+<div>• <b>Editing</b> period = set on-court positions + bench plan.</div>
+<div>• <b>Live</b> period = where scoring + undo applies.</div>
+<div>• Use <b>Set live = editing</b> to align them.</div>
+<div style="font-weight:950; color:#111; margin:12px 0 6px;">Bench planning</div>
+<div>• Choose each bench player’s <b>Next</b> position.</div>
+<div>• Tap <b>Sub In</b> to put them straight into that position.</div>
+<div>• Court time is inferred from your plan until you <b>Sub In</b>, then it can become <b>0.5</b> for that period.</div>
+<div style="font-weight:950; color:#111; margin:12px 0 6px;">Timer + halftime alert</div>
+<div>• League mode (quarters) can optionally alert at halfway (“Make a change”).</div>
+<div>• Halves mode does <b>not</b> show the halfway alert.</div>
+<div style="font-weight:950; color:#111; margin:12px 0 6px;">Overtime</div>
+<div>• If tied at end → <b>Start OT</b> (always plays <b>OT1 and OT2</b>).</div>
+<div>• In OT2, if time hits 0 and still tied → flips to <b>play-on</b> until a team leads by <b>2</b> (auto-end).</div>
+<div>• Use <b>Re-open game</b> if you ended by mistake.</div>
+</div>
+<div class="row" style="margin-top:12px;">
+<button class="primary small" id="howtoDontShow">Don’t auto-show again</button>
+<div class="grow"></div>
+<button class="ghost small" id="howtoOk">OK</button>
+</div>
+</div>
+</div>
+<!-- SYNC MODAL (TEAM EXPORT/IMPORT) -->
+<div class="modalBack" id="syncBack">
+<div class="modal">
+<div class="row">
+<h3 class="grow">Sync (Export / Import) – This Team</h3>
+<button class="ghost small" id="syncClose">Close</button>
+</div>
+<div class="muted">
         Export on one device, import on the other. <b>Import replaces</b> this team in this competition on this device.
       </div>
-      <div style="height:10px"></div>
-      <textarea id="syncText" placeholder="Export appears here. Import: paste exported text here…"></textarea>
-      <div class="row" style="margin-top:10px;">
-        <button class="primary small" id="syncExport">Export (Copy)</button>
-        <button class="ghost small" id="syncImport">Import (Paste & Replace)</button>
-        <div class="grow"></div>
-        <button class="ghost small danger" id="syncClear">Clear</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ADD COMP MODAL -->
-  <div class="modalBack" id="compBack">
-    <div class="modal">
-      <div class="row">
-        <h3 class="grow">Add Competition</h3>
-        <button class="ghost small" id="compClose">Close</button>
-      </div>
-
-      <div class="row">
-        <div class="grow">
-          <div class="muted">Competition name</div>
-          <input id="newCompName" type="text" placeholder="e.g. Parkville Winter 2026 / State Titles" />
-        </div>
-      </div>
-
-      <div style="height:10px"></div>
-
-      <div class="row">
-        <div class="grow">
-          <div class="muted">Format</div>
-          <label style="display:flex;align-items:center;gap:8px;margin:8px 0;">
-            <input type="radio" name="newCompFormat" value="quarters" checked />
-            <span><b>4 quarters</b> (league)</span>
-          </label>
-          <label style="display:flex;align-items:center;gap:8px;margin:8px 0;">
-            <input type="radio" name="newCompFormat" value="halves" />
-            <span><b>2 halves</b> (tournament)</span>
-          </label>
-          <div class="muted">Tournament default <b>8 min</b>. League default <b>10 min</b>. OT default <b>3 min</b>.</div>
-        </div>
-      </div>
-
-      <div style="height:12px"></div>
-      <button class="primary" id="compCreateBtn">Create Competition</button>
-    </div>
-  </div>
-
-  <!-- ADD TEAM MODAL -->
-  <div class="modalBack" id="teamBack">
-    <div class="modal">
-      <div class="row">
-        <h3 class="grow">Add Team (under this competition)</h3>
-        <button class="ghost small" id="teamClose">Close</button>
-      </div>
-
-      <div class="row">
-        <div class="grow">
-          <div class="muted">Team name</div>
-          <input id="newTeamName" type="text" placeholder="e.g. Tigers U15 / Tigers A" />
-        </div>
-      </div>
-
-      <div style="height:12px"></div>
-
-      <div class="row">
-        <div class="grow">
-          <div class="muted">Import players from (optional)</div>
-          <select id="importPlayersSource"></select>
-        </div>
-        <button class="ghost small" id="importPlayersBtn" type="button">Import Players</button>
-      </div>
-      <div class="muted" id="importPlayersStatus" style="margin-top:6px;"></div>
-
-      <div style="height:12px"></div>
-      <button class="primary" id="teamCreateBtn">Create Team</button>
-    </div>
-  </div>
+<div style="height:10px"></div>
+<textarea id="syncText" placeholder="Export appears here. Import: paste exported text here…"></textarea>
+<div class="row" style="margin-top:10px;">
+<button class="primary small" id="syncExport">Export (Copy)</button>
+<button class="ghost small" id="syncImport">Import (Paste &amp; Replace)</button>
+<div class="grow"></div>
+<button class="ghost small danger" id="syncClear">Clear</button>
+</div>
+</div>
+</div>
+<!-- ADD COMP MODAL -->
+<div class="modalBack" id="compBack">
+<div class="modal">
+<div class="row">
+<h3 class="grow">Add Competition</h3>
+<button class="ghost small" id="compClose">Close</button>
+</div>
+<div class="row">
+<div class="grow">
+<div class="muted">Competition name</div>
+<input id="newCompName" placeholder="e.g. Parkville Winter 2026 / State Titles" type="text"/>
+</div>
+</div>
+<div style="height:10px"></div>
+<div class="row">
+<div class="grow">
+<div class="muted">Format</div>
+<label style="display:flex;align-items:center;gap:8px;margin:8px 0;">
+<input checked="" name="newCompFormat" type="radio" value="quarters"/>
+<span><b>4 quarters</b> (league)</span>
+</label>
+<label style="display:flex;align-items:center;gap:8px;margin:8px 0;">
+<input name="newCompFormat" type="radio" value="halves"/>
+<span><b>2 halves</b> (tournament)</span>
+</label>
+<div class="muted">Tournament default <b>8 min</b>. League default <b>10 min</b>. OT default <b>3 min</b>.</div>
+</div>
+</div>
+<div style="height:12px"></div>
+<button class="primary" id="compCreateBtn">Create Competition</button>
+</div>
+</div>
+<!-- ADD TEAM MODAL -->
+<div class="modalBack" id="teamBack">
+<div class="modal">
+<div class="row">
+<h3 class="grow">Add Team (under this competition)</h3>
+<button class="ghost small" id="teamClose">Close</button>
+</div>
+<div class="row">
+<div class="grow">
+<div class="muted">Team name</div>
+<input id="newTeamName" placeholder="e.g. Tigers U15 / Tigers A" type="text"/>
+</div>
+</div>
+<div style="height:12px"></div>
+<div class="row">
+<div class="grow">
+<div class="muted">Import players from (optional)</div>
+<select id="importPlayersSource"></select>
+</div>
+<button class="ghost small" id="importPlayersBtn" type="button">Import Players</button>
+</div>
+<div class="muted" id="importPlayersStatus" style="margin-top:6px;"></div>
+<div style="height:12px"></div>
+<button class="primary" id="teamCreateBtn">Create Team</button>
+</div>
+</div>
 <!-- PLAYERS MODAL -->
 <div class="modalBack" id="playersBack">
-  <div class="modal">
-    <div class="row">
-      <h3 class="grow">Players</h3>
-      <button class="ghost small" id="playersClose">Close</button>
-    </div>
-
-    <div class="muted" style="margin-bottom:10px;">
+<div class="modal">
+<div class="row">
+<h3 class="grow">Players</h3>
+<button class="ghost small" id="playersClose">Close</button>
+</div>
+<div class="muted" style="margin-bottom:10px;">
       Enter player name and up to 2 preferred positions
     </div>
-
-    <table class="playersTable">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Pos 1</th>
-          <th>Pos 2</th>
-          <th>Del</th>
-        </tr>
-      </thead>
-      <tbody id="playersTableBody"></tbody>
-    </table>
-
-    <div class="row" style="margin-top:12px;">
-      <button class="ghost small" id="playersAddRow">+ Add</button>
-      <div class="grow"></div>
-      <button class="primary small" id="playersSave">Save</button>
-    </div>
-  </div>
+<table class="playersTable">
+<thead>
+<tr>
+<th>Name</th>
+<th>Pos 1</th>
+<th>Pos 2</th>
+<th>Del</th>
+</tr>
+</thead>
+<tbody id="playersTableBody"></tbody>
+</table>
+<div class="row" style="margin-top:12px;">
+<button class="ghost small" id="playersAddRow">+ Add</button>
+<div class="grow"></div>
+<button class="primary small" id="playersSave">Save</button>
+</div>
+</div>
 </div>
 </main>
-
 <script>
+window.addEventListener('DOMContentLoaded', ()=>{
+
   /* ===============================
      STORAGE + CONSTANTS
   =============================== */
   const APP_KEY = "bb_competitions_v1";
-  \1  const SETUP_KEY = "bb_setup_complete_v2";\n
+  const HOWTO_FLAG_KEY = "bb_howto_seen_v1";
+  const SETUP_KEY = "bb_setup_complete_v2";
   // Legacy keys (if you ever want to migrate from your previous build)
   const LEGACY_TEAMS_INDEX_KEY = "netball_teams_index_v3_notdefault";
   const LEGACY_TEAM_KEY_PREFIX = "netball_team_v3_";
@@ -1024,9 +958,6 @@ function tournamentMaxHalves(){
       return;
     }
 
-    if(!confirm(`Generate Tournament Rotations for ALL ${t.games.length} game(s)?\n\nThis will overwrite H1/H2 positions in every game for this team.`)){
-      return;
-    }
 
     // Running totals across the tournament as we generate
     const totals = {};
@@ -1090,14 +1021,9 @@ function tournamentMaxHalves(){
     saveAll();
     renderAll();
 
-    document.getElementById("rotationPreview").value = lines.join("\n").trim();
 
     if(anyMissing){
-      alert(
-        "Some positions could not be filled using ONLY preferred positions.\n\n" +
-        missingDetails.join("\n") +
-        "\n\nFix: Edit Players → set pos1/pos2 so every position has at least one preferred player."
-      );
+      alert("Generated rotations for all games, but some positions could not be filled using only preferred positions. Those slots were left blank — adjust player preferences or add more players for those positions.");
     } else {
       alert("Tournament rotations generated for all games.");
     }
@@ -1249,7 +1175,6 @@ function tournamentMaxHalves(){
 
     const p = playerById(pid);
     const name = p?.name || "this player";
-    if(!confirm(`Remove ${name} from this team?\n\nThis will also remove them from all on-court selections + stats for this team.`)) return;
 
     clearPlayerFromTeam(pid);
     t.players = t.players.filter(x => x.id !== pid);
@@ -1595,7 +1520,6 @@ function tournamentMaxHalves(){
   function deleteCurrentCompetition(){
     const c = currentCompetition();
     if(!c) return;
-    if(!confirm(`Delete competition "${c.name}"?\nThis removes all teams + games inside it.`)) return;
 
     app.competitions = app.competitions.filter(x => x.id !== c.id);
     app.currentCompId = app.competitions[0]?.id || null;
@@ -1669,7 +1593,6 @@ function tournamentMaxHalves(){
     const t = currentTeam();
     if(!c || !t) return;
 
-    if(!confirm(`Delete team "${t.name}" from "${c.name}"?\nThis removes all games + players for this team.`)) return;
 
     c.teams = c.teams.filter(x => x.id !== t.id);
     c.currentTeamId = c.teams[0]?.id || null;
@@ -1742,7 +1665,6 @@ function tournamentMaxHalves(){
     const t = currentTeam();
     if(!c || !t) return;
 
-    if(!confirm(`Reset team "${t.name}"?\nThis wipes players + all games for this team.`)) return;
 
     const name = t.name;
     const fresh = {
@@ -2503,7 +2425,6 @@ if(c.format === "halves"){
     const g = currentGame();
     document.getElementById("copyPositionsBtn").onclick = ()=>{
       const target = Number(document.getElementById("copyTargetPeriod").value);
-      const ok = confirm(`Copy positions from ${periodLabel(g.selectedP)} to ${periodLabel(target)}?\nThis will overwrite ${periodLabel(target)} positions.`);
       if(!ok) return;
       copyAssignments(g.selectedP, target);
       renderAll();
@@ -2513,7 +2434,6 @@ if(c.format === "halves"){
     document.getElementById("copyToNextBtn").onclick = ()=>{
       const target = Math.min(totalPeriods(g)-1, g.selectedP + 1);
       if(target === g.selectedP) return alert("Already at last period.");
-      const ok = confirm(`Copy positions from ${periodLabel(g.selectedP)} to ${periodLabel(target)}?\nThis will overwrite ${periodLabel(target)} positions.`);
       if(!ok) return;
       copyAssignments(g.selectedP, target);
       renderAll();
@@ -2754,7 +2674,6 @@ if(c.format === "halves"){
       lines.push("");
       lines.push(`Notes: ${g.notes.trim()}`);
     }
-    copyText(lines.join("\n"));
   });
 
   document.getElementById("syncBtn").addEventListener("click", ()=>{
@@ -2779,6 +2698,7 @@ if(c.format === "halves"){
     enforceSetupFlow();
   }
 
-</script>
+
+});</script>
 </body>
 </html>
