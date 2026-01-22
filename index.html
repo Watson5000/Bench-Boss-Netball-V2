@@ -20,8 +20,7 @@
       color:#fff;
       background:
         radial-gradient(900px 220px at 10% 20%, rgba(255,255,255,.12), transparent 60%),
-        linear-gradi
-ent(135deg, #0b0b0b 0%, #121212 45%, #1a1a1a 100%);
+        linear-gradient(135deg, #0b0b0b 0%, #121212 45%, #1a1a1a 100%);
       border-bottom: 1px solid rgba(255,255,255,.10);
       box-shadow: 0 10px 24px rgba(0,0,0,.18);
     }
@@ -40,8 +39,7 @@ ent(135deg, #0b0b0b 0%, #121212 45%, #1a1a1a 100%);
       border:1px solid rgba(255,255,255,.16);
       font-weight:950;letter-spacing:.2px;
     }
-    header .sub
-{
+    header .sub{
       opacity:.92;font-size:12px;margin-top:6px;
       display:flex;gap:10px;flex-wrap:wrap;align-items:center;
     }
@@ -61,8 +59,7 @@ ent(135deg, #0b0b0b 0%, #121212 45%, #1a1a1a 100%);
     .grow{flex:1;}
     .seg{display:flex;gap:8px;flex-wrap:wrap;}
     .seg button{border:var(--b);background:#fff;padding:10px 12px;border-radius:999px;font-weight:950;}
-    .seg button.act
-ive{
+    .seg button.active{
       background:#111;color:#fff;border-color:#111;
       box-shadow:0 0 0 4px rgba(0,0,0,.12);
       transform:scale(1.04);
@@ -73,8 +70,7 @@ ive{
     button.danger{border-color:#c62828;color:#c62828;}
     select,input[type="text"],input[type="date"]{border:var(--b);border-radius:12px;padding:10px 12px;font-size:16px;background:#fff;}
     textarea{width:100%;min-height:70px;border:var(--b);border-radius:12px;padding:10px 12px;font-size:16px;background:#fff;}
-    .grid7{display:grid;grid-template-columns:1fr;
-gap:10px;}
+    .grid7{display:grid;grid-template-columns:1fr;gap:10px;}
     @media (min-width:780px){.grid7{grid-template-columns:1fr 1fr;}}
     .posRow{display:flex;gap:10px;align-items:center;}
     .posTag{width:54px;min-width:54px;text-align:center;padding:8px 0;border-radius:10px;background:#f0f0f0;border:var(--b);font-weight:950;}
@@ -85,8 +81,7 @@ gap:10px;}
     .kbd{font-family:ui-monospace,Menlo,monospace;font-size:12px;padding:2px 6px;border-radius:8px;background:#eee;border:1px solid #ddd;}
     table{width:100%;border-collapse:collapse;}
     th,td{border:var(--b);padding:8px 10px;text-align:left;}
-    th{background:#fa
-fafa;}
+    th{background:#fafafa;}
     details summary{cursor:pointer;font-weight:950;}
     .warn{padding:10px 12px;border-radius:12px;border:1px solid #ffe082;background:#fff8e1;}
     .scoreBig{font-size:40px;font-weight:950;line-height:1;}
@@ -112,8 +107,7 @@ fafa;}
       padding:12px 14px;
       border-radius:14px;
       border:1px solid #ddd;
-      ba
-ckground:#f3f3f3;
+      background:#f3f3f3;
       font-weight:950;
       margin-top:10px;
     }
@@ -140,8 +134,7 @@ ckground:#f3f3f3;
       background:#fff;
       border-radius:12px;
       padding:10px 12px;
- 
-     font-weight:950;
+      font-weight:950;
       line-height:1;
     }
   </style>
@@ -172,8 +165,7 @@ ckground:#f3f3f3;
 
 <main>
   <!-- WELCOME -->
- 
- <section class="card" id="welcomeCard">
+  <section class="card" id="welcomeCard">
     <div style="font-weight:950; font-size:18px;">Welcome 👋</div>
     <div class="muted" style="margin-top:6px;">
       This version uses <b>Competition → Team → Games</b>.<br>
@@ -191,8 +183,7 @@ ckground:#f3f3f3;
         <div class="seg" id="compSeg"></div>
       </div>
       <button class="primary small" id="addCompBtn">+ Add Comp</button>
-      <button class="ghost small dang
-er" id="deleteCompBtn">Delete Comp</button>
+      <button class="ghost small danger" id="deleteCompBtn">Delete Comp</button>
     </div>
 
     <div style="height:12px"></div>
@@ -217,8 +208,7 @@ er" id="deleteCompBtn">Delete Comp</button>
       <button class="ghost small danger" id="deleteTeamBtn">Delete Team</button>
     </div>
 
-    <div 
-style="height:12px"></div>
+    <div style="height:12px"></div>
 
     <div class="row">
       <div class="grow">
@@ -239,8 +229,7 @@ style="height:12px"></div>
       <button class="ghost small danger" id="resetTeamBtn" title="Reset this team (players + games)">Reset Team</button>
     </div>
 
-    <
-div class="row" style="margin-top:10px;">
+    <div class="row" style="margin-top:10px;">
       <div class="muted">Games:</div>
       <div class="seg" id="roundSeg"></div>
     </div>
@@ -262,8 +251,7 @@ div class="row" style="margin-top:10px;">
       </div>
       <div class="row">
         <button class="ghost small" id="newGameBtn" title="Reset this game only">Reset This Game</button>
-        <button class="ghost small" i
-d="copySummaryBtn">Copy Game Summary</button>
+        <button class="ghost small" id="copySummaryBtn">Copy Game Summary</button>
         <button class="ghost small" id="syncBtn">Sync</button>
       </div>
     </div>
@@ -288,8 +276,7 @@ d="copySummaryBtn">Copy Game Summary</button>
   <section class="card" id="rotationGenCard" style="display:none;">
     <div class="row">
       <div class="grow">
-        <div style="font-weig
-ht:950;margin-bottom:6px;">Rotation Generator (Tournament)</div>
+        <div style="font-weight:950;margin-bottom:6px;">Rotation Generator (Tournament)</div>
         <div class="muted">Auto-fills H1 + H2 using preferred positions and least halves played (tournament total).</div>
       </div>
       <button class="primary small" id="genRotBtn">Generate</button>
@@ -308,8 +295,7 @@ ht:950;margin-bottom:6px;">Rotation Generator (Tournament)</div>
     </div>
 
     <div class="muted" style="margin-top:8px;">
-      Editing: <
-b id="editingPeriod">Q1</b> • Live scoring: <b id="livePeriodLabel">Q1</b>
+      Editing: <b id="editingPeriod">Q1</b> • Live scoring: <b id="livePeriodLabel">Q1</b>
     </div>
 
     <div class="row" style="margin-top:10px;">
@@ -324,8 +310,7 @@ b id="editingPeriod">Q1</b> • Live scoring: <b id="livePeriodLabel">Q1</b>
       <div class="muted">Timer:</div>
       <div style="font-weight:950; font-size:18px;">
         <span id="timerDisplay">10:00</span>
-        <span id="timerModeTag" class="kbd" style="display:none;">PLAY
- ON</span>
+        <span id="timerModeTag" class="kbd" style="display:none;">PLAY ON</span>
       </div>
 
       <select id="minutesSelect" style="max-width:170px;"></select>
@@ -349,8 +334,7 @@ b id="editingPeriod">Q1</b> • Live scoring: <b id="livePeriodLabel">Q1</b>
 
     <div class="finalBanner" id="finalBanner">
       <div class="small" id="finalBannerTop">FINAL</div>
-      <div class="big" id="finalBannerText">
-Result</div>
+      <div class="big" id="finalBannerText">Result</div>
     </div>
 
     <div style="height:10px"></div>
@@ -373,8 +357,7 @@ Result</div>
   </section>
 
   <!-- POSITIONS -->
-  <section class="card"
- id="positionsCard">
+  <section class="card" id="positionsCard">
     <div class="row">
       <div class="grow" style="font-weight:950;">Positions (On Court)</div>
       <div class="muted">Bench auto-updates (editing period)</div>
@@ -394,8 +377,7 @@ Result</div>
       <button class="ghost small" id="copyToNextBtn">Copy to next</button>
     </div>
 
-    <div class="grid7" id="posi
-tionsGrid"></div>
+    <div class="grid7" id="positionsGrid"></div>
 
     <div style="height:12px"></div>
 
@@ -424,8 +406,7 @@ tionsGrid"></div>
   </section>
 
   <!-- SUMMARY -->
-  <section class="card" id="s
-ummaryCard">
+  <section class="card" id="summaryCard">
     <div class="row">
       <div class="grow" style="font-weight:950;">Period Summary (this game)</div>
     </div>
@@ -451,8 +432,7 @@ ummaryCard">
   </section>
 
   <!-- HOW-TO MODAL -->
-  <div 
-class="modalBack" id="howtoBack">
+  <div class="modalBack" id="howtoBack">
     <div class="modal">
       <div class="row">
         <h3 class="grow">Quick How-to</h3>
@@ -468,8 +448,7 @@ class="modalBack" id="howtoBack">
         <div style="font-weight:950; color:#111; margin:12px 0 6px;">Editing vs Live</div>
         <div>• <b>Editing</b> period = set on-court positions + bench plan.</div>
         <div>• <b>Live</b> period = where scoring + undo applies.</div>
-   
-     <div>• Use <b>Set live = editing</b> to align them.</div>
+        <div>• Use <b>Set live = editing</b> to align them.</div>
 
         <div style="font-weight:950; color:#111; margin:12px 0 6px;">Bench planning</div>
         <div>• Choose each bench player’s <b>Next</b> position.</div>
@@ -481,8 +460,7 @@ class="modalBack" id="howtoBack">
         <div>• Halves mode does <b>not</b> show the halfway alert.</div>
 
         <div style="font-weight:950; color:#111; margin:12px 0 6px;">Overtime</div>
-        <div>
-• If tied at end → <b>Start OT</b> (always plays <b>OT1 and OT2</b>).</div>
+        <div>• If tied at end → <b>Start OT</b> (always plays <b>OT1 and OT2</b>).</div>
         <div>• In OT2, if time hits 0 and still tied → flips to <b>play-on</b> until a team leads by <b>2</b> (auto-end).</div>
         <div>• Use <b>Re-open game</b> if you ended by mistake.</div>
       </div>
@@ -500,8 +478,7 @@ class="modalBack" id="howtoBack">
     <div class="modal">
       <div class="row">
         <h3 class="grow">Sync (Export / Import) – This Team</h3>
-        <button class="ghost small" id="syncClose">
-Close</button>
+        <button class="ghost small" id="syncClose">Close</button>
       </div>
       <div class="muted">
         Export on one device, import on the other. <b>Import replaces</b> this team in this competition on this device.
@@ -520,8 +497,7 @@ Close</button>
   <!-- ADD COMP MODAL -->
   <div class="modalBack" id="compBack">
     <div class="modal">
-      <div class="row"
->
+      <div class="row">
         <h3 class="grow">Add Competition</h3>
         <button class="ghost small" id="compClose">Close</button>
       </div>
@@ -542,8 +518,7 @@ Close</button>
             <input type="radio" name="newCompFormat" value="quarters" checked />
             <span><b>4 quarters</b> (league)</span>
           </label>
-          <label style="display:flex;align-items:center;gap:8px;margin:
-8px 0;">
+          <label style="display:flex;align-items:center;gap:8px;margin:8px 0;">
             <input type="radio" name="newCompFormat" value="halves" />
             <span><b>2 halves</b> (tournament)</span>
           </label>
@@ -567,8 +542,7 @@ Close</button>
       <div class="row">
         <div class="grow">
           <div class="muted">Team name</div>
-     
-     <input id="newTeamName" type="text" placeholder="e.g. Tigers U15 / Tigers A" />
+          <input id="newTeamName" type="text" placeholder="e.g. Tigers U15 / Tigers A" />
         </div>
       </div>
 
@@ -592,7 +566,6 @@ Close</button>
   <div class="modal">
     <div class="row">
       <h3 class="grow">Players</h3>
-
       <button class="ghost small" id="playersClose">Close</button>
     </div>
 
@@ -625,7 +598,6 @@ Close</button>
   /* ===============================
      STORAGE + CONSTANTS
   =============================== */
-
   const APP_KEY = "bb_competitions_v1";
   const HOWTO_FLAG_KEY = "bb_howto_seen_v1";
 
@@ -647,11 +619,19 @@ Close</button>
 
   let pendingImportedPlayers = null;
 
+  // UUID helper (Safari/iOS fallback)
+  function uuid(){
+    try{
+      if(typeof crypto !== "undefined" && crypto.randomUUID) return uuid();
+    }catch(e){}
+    return "id-" + Math.random().toString(16).slice(2) + "-" + Date.now().toString(16);
+  }
+
+
   function safeJSONParse(raw){ try { return raw ? JSON.parse(raw) : null; } catch { return null; } }
 
   function loadApp(){ return safeJSONParse(localStorage.getItem(APP_KEY)); }
-  function saveApp(app){ 
-localStorage.setItem(APP_KEY, JSON.stringify(app)); }
+  function saveApp(app){ localStorage.setItem(APP_KEY, JSON.stringify(app)); }
 
   function markSaved(){
     const el = document.getElementById("saveState");
@@ -664,7 +644,7 @@ localStorage.setItem(APP_KEY, JSON.stringify(app)); }
   =============================== */
   function newPlayers10(){
     return Array.from({length:10}, (_,i)=>({
-      id: crypto.randomUUID(),
+      id: uuid(),
       name: `Player ${i+1}`,
       pos1: "",
       pos2: ""
@@ -680,7 +660,6 @@ localStorage.setItem(APP_KEY, JSON.stringify(app)); }
   }
 
   function emptyPeriod(){ return { assignments:{}, homeScore:0, awayScore:0, events:[] }; }
-
   function basePeriods(format){ return (format==="halves") ? 2 : 4; }
 
   function newEmptyGame(roundNumber, players, format){
@@ -713,8 +692,7 @@ localStorage.setItem(APP_KEY, JSON.stringify(app)); }
       halfWarned: {},
 
       periods: Array.from({length:baseP}, ()=>emptyPeriod()),
-      
-playerStats: initPlayerStats(players),
+      playerStats: initPlayerStats(players),
 
       plannedPositions: {},
       playCredits: {} // playCredits[pIdx][playerId] = 0.5 when Sub In
@@ -724,7 +702,7 @@ playerStats: initPlayerStats(players),
   function newTeam(teamName){
     const players = newPlayers10();
     return {
-      id: crypto.randomUUID(),
+      id: uuid(),
       name: teamName || "Team",
       players,
       games: [newEmptyGame(1, players, "quarters")],
@@ -735,7 +713,7 @@ playerStats: initPlayerStats(players),
   function newCompetition(name, format){
     const compFormat = format || "quarters";
     const comp = {
-      id: crypto.randomUUID(),
+      id: uuid(),
       name: name || "Competition",
       format: compFormat,
       teams: [],
@@ -750,8 +728,7 @@ playerStats: initPlayerStats(players),
 
   let app = loadApp() || defaultApp();
 
-  /* ===
-============================
+  /* ===============================
      LEGACY MIGRATION (best-effort)
      - If you still have old data from the earlier "teams" version, we move it into competitions
      - Grouped by format into "Imported (quarters)" / "Imported (halves)"
@@ -769,8 +746,7 @@ playerStats: initPlayerStats(players),
 
       const fmt = (raw.format === "halves") ? "halves" : "quarters";
       const team = {
-        id: crypto.randomUUID()
-,
+        id: uuid(),
         name: meta.name || raw.teamName || "Imported Team",
         players: raw.players || newPlayers10(),
         games: raw.games || [newEmptyGame(1, raw.players || newPlayers10(), fmt)],
@@ -796,7 +772,6 @@ playerStats: initPlayerStats(players),
     if(comps.length){
       app.competitions = comps;
       app.currentCompId = comps[0].id;
-
       saveApp(app);
     }
   }
@@ -821,8 +796,7 @@ playerStats: initPlayerStats(players),
     const c = currentCompetition();
     if(!c?.teams?.length) return null;
     let t = c.teams.find(x => x.id === c.currentTeamId) || c.teams[0];
-    if(!c.currentTeamId) c
-.currentTeamId = t.id;
+    if(!c.currentTeamId) c.currentTeamId = t.id;
     return t;
   }
   function currentGame(){
@@ -844,8 +818,7 @@ playerStats: initPlayerStats(players),
     for(const c of app.competitions){
       if(!c.teams) c.teams = [];
       if(!c.format) c.format = "quarters";
-      if
-(c.currentTeamId && !c.teams.some(t=>t.id===c.currentTeamId)){
+      if(c.currentTeamId && !c.teams.some(t=>t.id===c.currentTeamId)){
         c.currentTeamId = c.teams[0]?.id || null;
       }
 
@@ -860,8 +833,7 @@ playerStats: initPlayerStats(players),
           // ensure periods length matches format + OT
           const baseP = basePeriods(c.format);
           if(!Array.isArray(g.periods)) g.periods = [];
-          while(g.periods.length < base
-P) g.periods.push(emptyPeriod());
+          while(g.periods.length < baseP) g.periods.push(emptyPeriod());
           const needLen = baseP + (g.otCount || 0);
           while(g.periods.length < needLen) g.periods.push(emptyPeriod());
 
@@ -877,8 +849,7 @@ P) g.periods.push(emptyPeriod());
           if(!g.halfWarned) g.halfWarned = {};
 
           if(g.otMinutes == null) g.otMinutes = OT_DEFAULT;
- 
-         if(g.gameEnded == null) g.gameEnded = false;
+          if(g.gameEnded == null) g.gameEnded = false;
 
           if(!g.playerStats) g.playerStats = {};
           for(const p of t.players){
@@ -902,8 +873,7 @@ P) g.periods.push(emptyPeriod());
     markSaved();
   }
 
-  /* =============================
-==
+  /* ===============================
      PERIOD LABELS / TOTALS
   =============================== */
   function periodLabel(idx){
@@ -924,8 +894,7 @@ P) g.periods.push(emptyPeriod());
   function totalAway(game){ return game.periods.reduce((s,p)=>s+(p.awayScore||0),0); }
   function isDraw(game){ return totalHome(game) === totalAway(game); }
 
-  /* ==============================
-=
+  /* ===============================
      COURT TIME (HYBRID)
      - inferred from assignments (1) for regulation periods
      - if Sub In used, credits can become 0.5 for incoming/outgoing (reg periods only)
@@ -942,8 +911,7 @@ P) g.periods.push(emptyPeriod());
     game.playCredits[pIdx][playerId] = Math.max(cur, val);
   }
   function inferredPlayedForPeriod(game, pIdx, playerId){
-    const assigned = 
-Object.values(game.periods[pIdx]?.assignments || {}).filter(Boolean);
+    const assigned = Object.values(game.periods[pIdx]?.assignments || {}).filter(Boolean);
     return assigned.includes(playerId) ? 1 : 0;
   }
   function regulationPeriodsPlayedHybrid(game, playerId){
@@ -967,8 +935,7 @@ function tournamentTotalHalvesForPlayer(playerId){
 
   let total = 0;
   for(const game of (t.games || [])){
-    total += re
-gulationPeriodsPlayedHybrid(game, playerId);
+    total += regulationPeriodsPlayedHybrid(game, playerId);
   }
   return total;
 }
@@ -996,8 +963,7 @@ function tournamentMaxHalves(){
     return 1;
   }
 
-  function buildAutoAssignmentsForHa
-lf(game, halfIdx, tournamentTotals, extraPenaltyIds){
+  function buildAutoAssignmentsForHalf(game, halfIdx, tournamentTotals, extraPenaltyIds){
     // Greedy fill positions, re-sorting each pick
     const t = currentTeam();
     const used = new Set();
@@ -1019,8 +985,7 @@ lf(game, halfIdx, tournamentTotals, extraPenaltyIds){
       const pick = candidates[0]?.p;
       if(pick){
         out[pos] = pick.id;
-    
-    used.add(pick.id);
+        used.add(pick.id);
       } else {
         out[pos] = null;
       }
@@ -1047,8 +1012,7 @@ lf(game, halfIdx, tournamentTotals, extraPenaltyIds){
     // For H2, penalise those already in H1 so it spreads time
     const h1Ids = new Set(Object.values(h1).filter(Boolean));
     // Also add 1 half to their totals for planning H2
-    const t
-otals2 = {...totals};
+    const totals2 = {...totals};
     for(const id of h1Ids) totals2[id] = (totals2[id] || 0) + 1;
 
     const h2 = buildAutoAssignmentsForHalf(g, 1, totals2, h1Ids);
@@ -1077,7 +1041,6 @@ otals2 = {...totals};
     const h1 = g?.periods?.[0]?.assignments || {};
     const h2 = g?.periods?.[1]?.assignments || {};
 
-
     function line(a){
       return POSITIONS.map(pos=>{
         const pid = a[pos];
@@ -1105,8 +1068,7 @@ otals2 = {...totals};
     return t.players.filter(p=>!assigned.has(p.id));
   }
 
-  
-function playerById(id){
+  function playerById(id){
     const t = currentTeam();
     return t?.players?.find(p=>p.id===id);
   }
@@ -1128,8 +1090,7 @@ function playerById(id){
 
   function subInFromBench(playerId){
     const c = currentCompetition();
-    const g = currentGame(
-);
+    const g = currentGame();
     if(g.gameEnded) return;
 
     const pIdx = g.selectedP;
@@ -1158,8 +1119,7 @@ function playerById(id){
     renderAll();
   }
 
-  /* =============================
-==
+  /* ===============================
      ADD / REMOVE PLAYERS
   =============================== */
   function clearPlayerFromTeam(pid){
@@ -1184,13 +1144,12 @@ function playerById(id){
   }
 
   function addPlayer(){
-    const t = currentTea
-m();
+    const t = currentTeam();
     if(!t) return;
     if(t.players.length >= MAX_PLAYERS) return alert(`Max players is ${MAX_PLAYERS}.`);
 
     const nextNum = t.players.length + 1;
-    const p = { id: crypto.randomUUID(), name: `Player ${nextNum}` };
+    const p = { id: uuid(), name: `Player ${nextNum}` };
     t.players.push(p);
 
     for(const g of t.games){
@@ -1212,8 +1171,7 @@ m();
 
     const p = playerById(pid);
     const name = p?.name || "this player";
-    if(!confirm(`Remove ${name} from this team?\n\nThi
-s will also remove them from all on-court selections + stats for this team.`)) return;
+    if(!confirm(`Remove ${name} from this team?\n\nThis will also remove them from all on-court selections + stats for this team.`)) return;
 
     clearPlayerFromTeam(pid);
     t.players = t.players.filter(x => x.id !== pid);
@@ -1242,8 +1200,7 @@ s will also remove them from all on-court selections + stats for this team.`)) r
     timerInterval = setInterval(tickTimer, 250);
   }
 
-  function r
-enderTimer(){
+  function renderTimer(){
     const g = currentGame();
     if(!g) return;
 
@@ -1269,8 +1226,7 @@ enderTimer(){
 
     g.timerLastTick = now;
 
-    if(g.timerMode === "co
-untdown"){
+    if(g.timerMode === "countdown"){
       g.timerRemaining = Math.max(0, g.timerRemaining - delta);
 
       // Halfway alert (ONLY for quarters format, NOT halves, and only in regulation)
@@ -1293,8 +1249,7 @@ untdown"){
         // OT2 play-on if still tied at 0
         if(g.otCount === 2 && g.liveP === ot2Index && isDraw(g)){
           g.timerMode = "countup";
-          g.
-timerExtraElapsed = 0;
+          g.timerExtraElapsed = 0;
           saveAll();
           renderAll();
           return;
@@ -1335,8 +1290,7 @@ timerExtraElapsed = 0;
     } else {
       g.timerRunning = true;
       g.timerLastTick = Date.now();
- 
-     startTimerLoop();
+      startTimerLoop();
     }
     saveAll();
     renderTimer();
@@ -1371,8 +1325,7 @@ timerExtraElapsed = 0;
     if(!g || g.gameEnded) return;
 
     const pIdx = g.liveP;
-    if(which===
-"home") g.periods[pIdx].homeScore = clamp0((g.periods[pIdx].homeScore||0) + delta);
+    if(which==="home") g.periods[pIdx].homeScore = clamp0((g.periods[pIdx].homeScore||0) + delta);
     else g.periods[pIdx].awayScore = clamp0((g.periods[pIdx].awayScore||0) + delta);
 
     pushEvent(g, pIdx, "score", { which, delta });
@@ -1393,8 +1346,7 @@ timerExtraElapsed = 0;
 
     const st = g.playerStats[pid] || (g.playerStats[pid] = { goalsTotal:0, goalsByP:Array.from({length:6}, ()=>0) });
     st.goalsTotal += 1;
-    st.goalsByP[pIdx] = (st.goalsByP[pIdx] || 0) + 1
-;
+    st.goalsByP[pIdx] = (st.goalsByP[pIdx] || 0) + 1;
 
     pushEvent(g, pIdx, "playerGoal", { pid, pos });
     saveAll();
@@ -1422,8 +1374,7 @@ timerExtraElapsed = 0;
       const st = g.playerStats[pid];
       if(st){
         st.goalsTotal = clamp0(st.goalsTotal - 1);
-  
-      st.goalsByP[pIdx] = clamp0((st.goalsByP[pIdx]||0) - 1);
+        st.goalsByP[pIdx] = clamp0((st.goalsByP[pIdx]||0) - 1);
       }
     }
 
@@ -1457,8 +1408,7 @@ timerExtraElapsed = 0;
   function copyAssignments(fromP, toP){
     const g = currentGame();
     if(!g) return;
-    g.periods[toP].assignments = JSON.parse(JSON.stringify(g.periods[fromP].assignments 
-|| {}));
+    g.periods[toP].assignments = JSON.parse(JSON.stringify(g.periods[fromP].assignments || {}));
     saveAll();
   }
 
@@ -1489,8 +1439,7 @@ timerExtraElapsed = 0;
     g.timerRunning = false;
     g.timerLastTick = 0;
     g.timerRemaining = g.otMinutes * 60;
- 
-   stopTimerLoop();
+    stopTimerLoop();
 
     saveAll();
     renderAll();
@@ -1529,7 +1478,6 @@ timerExtraElapsed = 0;
     g.liveP += 1;
     g.selectedP = g.liveP;
     resetTimer();
-
     saveAll();
     renderAll();
   }
@@ -1555,8 +1503,7 @@ timerExtraElapsed = 0;
     const name = (document.getElementById("newCompName").value || "").trim() || `Competition ${app.competitions.length+1}`;
     const format = document.querySelector('input[name="newCompFormat"]:checked')?.value || "quarters";
 
-    c
-onst comp = newCompetition(name, format);
+    const comp = newCompetition(name, format);
     app.competitions.push(comp);
     app.currentCompId = comp.id;
 
@@ -1588,8 +1535,7 @@ onst comp = newCompetition(name, format);
   function openTeamModal(){
     pendingImportedPlayers = null;
     document.getElementById("newTeamName").value = "";
-    
-document.getElementById("importPlayersStatus").textContent = "";
+    document.getElementById("importPlayersStatus").textContent = "";
     populateImportPlayersDropdown();
     document.getElementById("teamBack").style.display = "flex";
   }
@@ -1604,22 +1550,21 @@ document.getElementById("importPlayersStatus").textContent = "";
     let players;
     if(pendingImportedPlayers && pendingImportedPlayers.length){
       players = pendingImportedPlayers.slice(0, MAX_PLAYERS).map((p,i)=>({
-        id: crypto.randomUUID(),
+        id: uuid(),
         name: p.name || `Player ${i+1}`,
         pos1: p.pos1 || "",
         pos2: p.pos2 || ""
       }));
     } else {
-      players = newPlayers10(
-);
+      players = newPlayers10();
     }
 
     while(players.length < MIN_PLAYERS){
-      players.push({ id: crypto.randomUUID(), name: `Player ${players.length+1}`, pos1:"", pos2:"" });
+      players.push({ id: uuid(), name: `Player ${players.length+1}`, pos1:"", pos2:"" });
     }
 
     const team = {
-      id: crypto.randomUUID(),
+      id: uuid(),
       name,
       players,
       games: [newEmptyGame(1, players, c.format)],
@@ -1644,8 +1589,7 @@ document.getElementById("importPlayersStatus").textContent = "";
     if(!confirm(`Delete team "${t.name}" from "${c.name}"?\nThis removes all games + players for this team.`)) return;
 
     c.teams = c.teams.filter(x => x.id !== t.id);
-    c.currentTeamId = c.teams[0]?
-.id || null;
+    c.currentTeamId = c.teams[0]?.id || null;
 
     stopTimerLoop();
     saveAll();
@@ -1685,8 +1629,7 @@ document.getElementById("importPlayersStatus").textContent = "";
     saveAll();
     renderAll();
   }
-  function goNe
-xtGame(){
+  function goNextGame(){
     const t = currentTeam();
     if(!t) return;
     if(t.currentGameIndex >= t.games.length - 1) return;
@@ -1719,8 +1662,7 @@ xtGame(){
     if(!confirm(`Reset team "${t.name}"?\nThis wipes players + all games for this team.`)) return;
 
     const name = t.name;
-    const 
-fresh = {
+    const fresh = {
       id: t.id,
       name,
       players: newPlayers10(),
@@ -1750,8 +1692,7 @@ fresh = {
     const items = [];
     for(const comp of app.competitions){
       for(const team of comp.teams){
-        items.push({ co
-mpName: comp.name, teamId: team.id, label: `${comp.name} • ${team.name}` });
+        items.push({ compName: comp.name, teamId: team.id, label: `${comp.name} • ${team.name}` });
       }
     }
 
@@ -1780,8 +1721,7 @@ mpName: comp.name, teamId: team.id, label: `${comp.name} • ${team.name}` });
 
   function importPlayersIntoNewTeam(){
     const sel = document.getElementById("importPlayersSource");
-    
-const status = document.getElementById("importPlayersStatus");
+    const status = document.getElementById("importPlayersStatus");
     const teamId = sel?.value;
 
     if(!teamId) return alert("Pick a team to import players from.");
@@ -1800,8 +1740,7 @@ const status = document.getElementById("importPlayersStatus");
 
     pendingImportedPlayers = names;
     while(pendingImportedPlayers.length < MIN_PLAYERS){
-      pendingImportedPlayers.push({ name: `Player ${pendingImporte
-dPlayers.length + 1}` });
+      pendingImportedPlayers.push({ name: `Player ${pendingImportedPlayers.length + 1}` });
     }
 
     status.textContent = `Imported ${pendingImportedPlayers.length} players (will be used for the new team).`;
@@ -1826,8 +1765,7 @@ dPlayers.length + 1}` });
     };
     const text = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
     document.getElementById("syncText").value = text;
-    copyTe
-xt(text);
+    copyText(text);
   }
 
   function importTeamReplace(){
@@ -1854,8 +1792,7 @@ xt(text);
     imported.name = imported.name || t.name;
 
     // if players missing, keep existing
-    if(!Array.
-isArray(imported.players) || imported.players.length < MIN_PLAYERS){
+    if(!Array.isArray(imported.players) || imported.players.length < MIN_PLAYERS){
       imported.players = t.players;
     }
     if(imported.players.length > MAX_PLAYERS) imported.players = imported.players.slice(0, MAX_PLAYERS);
@@ -1879,8 +1816,7 @@ isArray(imported.players) || imported.players.length < MIN_PLAYERS){
   }
 
   function openSyncModal(){ document.getElementById("syncBack").style.display = "flex"; }
-  function c
-loseSyncModal(){ document.getElementById("syncBack").style.display = "none"; }
+  function closeSyncModal(){ document.getElementById("syncBack").style.display = "none"; }
 
   /* ===============================
      HOW-TO
@@ -1899,8 +1835,7 @@ loseSyncModal(){ document.getElementById("syncBack").style.display = "none"; }
      ROLL-UPS (adds arrow left of first row)
   =============================== */
   function initRollups(){
-    const cards = document.querySelecto
-rAll(".card");
+    const cards = document.querySelectorAll(".card");
     cards.forEach(card=>{
       if(card.classList.contains("rollInit")) return;
       card.classList.add("rollInit");
@@ -1926,8 +1861,7 @@ rAll(".card");
       }
       card.appendChild(body);
 
-      const key = `roll_${card.id || ("car
-d_" + Math.random().toString(16).slice(2))}`;
+      const key = `roll_${card.id || ("card_" + Math.random().toString(16).slice(2))}`;
       const saved = localStorage.getItem(key);
       if(saved === "1"){
         card.classList.add("collapsed");
@@ -1953,8 +1887,7 @@ d_" + Math.random().toString(16).slice(2))}`;
     if(!hasCompetitions()) return;
 
     for(const comp of app.competitions){
-      co
-nst b = document.createElement("button");
+      const b = document.createElement("button");
       b.textContent = (comp.name || "Competition").slice(0,18);
       b.className = (comp.id===app.currentCompId) ? "active" : "";
       b.addEventListener("click", ()=>switchCompetition(comp.id));
@@ -1978,8 +1911,7 @@ nst b = document.createElement("button");
   }
 
   function renderTopFields(){
-    const c
- = currentCompetition();
+    const c = currentCompetition();
     document.getElementById("compName").value = c?.name || "";
     document.getElementById("formatLabel").textContent = formatLabel(c?.format || "quarters");
   }
@@ -1997,8 +1929,7 @@ nst b = document.createElement("button");
     document.getElementById("roundName").value = g.roundName || "";
     document.getElementById("gameDate").value = g.gameDate || "";
     document.getElementById("opponent").value = g.opponent || "";
-    document.getElementById("
-notes").value = g.notes || "";
+    document.getElementById("notes").value = g.notes || "";
 
     document.getElementById("prevGameBtn").disabled = (t.currentGameIndex <= 0);
     document.getElementById("nextGameBtn").disabled = (t.currentGameIndex >= t.games.length - 1);
@@ -2024,8 +1955,7 @@ notes").value = g.notes || "";
   }
 
   function renderPlayersQuickSummary(){
-    const
- t = currentTeam();
+    const t = currentTeam();
     const el = document.getElementById("playersQuickSummary");
     if(!t || !el) return;
     const named = t.players.filter(p => (p.name||"").trim().length > 0);
@@ -2048,8 +1978,7 @@ notes").value = g.notes || "";
     // ensure fields exist
     t.players.forEach(p=>{ if(p.pos1==null) p.pos1=""; if(p.pos2==null) p.pos2=""; });
     renderPlayersModalTable();
-    document.getElementById("pla
-yersBack").style.display = "flex";
+    document.getElementById("playersBack").style.display = "flex";
   }
   function closePlayersModal(){
     document.getElementById("playersBack").style.display = "none";
@@ -2071,8 +2000,7 @@ yersBack").style.display = "flex";
       inp.style.width = "100%";
       inp.addEventListener("focus", ()=> setTimeout(()=> inp.select(), 0));
       inp.addEventListener("click",  ()=> setTimeout(()=> inp.select(), 0));
-      inp.addEventListener("input", ()=>{ p.name = in
-p.value; });
+      inp.addEventListener("input", ()=>{ p.name = inp.value; });
       tdName.appendChild(inp);
 
       function buildPosSelect(which){
@@ -2094,8 +2022,7 @@ p.value; });
 
       const tdDel = document.createElement("td");
       const del = document.createElement("button");
-      
-del.className = "miniDanger";
+      del.className = "miniDanger";
       del.type = "button";
       del.textContent = "−";
       del.title = "Remove player";
@@ -2117,8 +2044,7 @@ This will also remove them from all on-court selections + stats for this team.`)
       tdDel.appendChild(del);
 
       tr.appendChild(tdName);
-      tr.appendChild(tdP1
-);
+      tr.appendChild(tdP1);
       tr.appendChild(tdP2);
       tr.appendChild(tdDel);
       body.appendChild(tr);
@@ -2129,7 +2055,7 @@ This will also remove them from all on-court selections + stats for this team.`)
     const t = currentTeam();
     if(!t) return;
     if(t.players.length >= MAX_PLAYERS) return alert(`Max players is ${MAX_PLAYERS}.`);
-    const p = { id: crypto.randomUUID(), name: `Player ${t.players.length+1}`, pos1:"", pos2:"" };
+    const p = { id: uuid(), name: `Player ${t.players.length+1}`, pos1:"", pos2:"" };
     t.players.push(p);
 
     for(const g of t.games){
@@ -2149,8 +2075,7 @@ This will also remove them from all on-court selections + stats for this team.`)
     renderAll();
   }
 
-  function renderPeriodSeg
-(){
+  function renderPeriodSeg(){
     const g = currentGame();
     function buildSeg(id){
       const seg = document.getElementById(id);
@@ -2175,8 +2100,7 @@ This will also remove them from all on-court selections + stats for this team.`)
   }
 
   function renderMinutesSelect(){
-    const c = current
-Competition();
+    const c = currentCompetition();
     const g = currentGame();
     const sel = document.getElementById("minutesSelect");
     sel.innerHTML = "";
@@ -2197,8 +2121,7 @@ Competition();
     const warnBox = document.getElementById("liveWarnBox");
     if(g.selectedP !== g.liveP){
       warnBox.style.display = "block";
-      warnBox.textContent = `Heads up: you're editing ${periodLabel(g.selectedP)}, but LIVE scoring is ${periodLabel(g.liveP)}. 
-Scoring/undo applies to LIVE.`;
+      warnBox.textContent = `Heads up: you're editing ${periodLabel(g.selectedP)}, but LIVE scoring is ${periodLabel(g.liveP)}. Scoring/undo applies to LIVE.`;
     } else {
       warnBox.style.display = "none";
       warnBox.textContent = "";
@@ -2220,8 +2143,7 @@ Scoring/undo applies to LIVE.`;
 
     const liveA = g.periods[g.liveP]?.assignments || {};
     document.getElementById("gsName").textContent = liveA.GS ? (playerById(liveA.GS)?.name || "—") : "—";
-    document.getElementById("gaName").textContent =
- liveA.GA ? (playerById(liveA.GA)?.name || "—") : "—";
+    document.getElementById("gaName").textContent = liveA.GA ? (playerById(liveA.GA)?.name || "—") : "—";
 
     const banner = document.getElementById("finalBanner");
     const text = document.getElementById("finalBannerText");
@@ -2242,7 +2164,6 @@ Scoring/undo applies to LIVE.`;
     const c = currentCompetition();
     const t = currentTeam();
     const g = currentGame();
-
     const grid = document.getElementById("positionsGrid");
     grid.innerHTML = "";
     const pIdx = g.selectedP;
@@ -2268,8 +2189,7 @@ Scoring/undo applies to LIVE.`;
         const opt = document.createElement("option");
         opt.value = p.id;
         const played = regulationPeriodsPlayedHybrid(g, p.id);
-        opt.textCon
-tent = `${p.name} • ${fmtPlayed(played)}/${max}`;
+        opt.textContent = `${p.name} • ${fmtPlayed(played)}/${max}`;
         sel.appendChild(opt);
       });
 
@@ -2296,8 +2216,7 @@ tent = `${p.name} • ${fmtPlayed(played)}/${max}`;
     const max = basePeriods(c.format);
 
     bench.forEach(p=>{
-      const item = document.createElement("div
-");
+      const item = document.createElement("div");
       item.className = "pill";
 
       const played = regulationPeriodsPlayedHybrid(g, p.id);
@@ -2321,8 +2240,7 @@ tent = `${p.name} • ${fmtPlayed(played)}/${max}`;
         ${POSITIONS.map(pos=>`<option value="${pos}">Next: ${pos}</option>`).join("")}
       `;
       sel.value = planned;
-      sel.addEventListener(
-"change", ()=> setPlannedPos(g, pIdx, p.id, sel.value));
+      sel.addEventListener("change", ()=> setPlannedPos(g, pIdx, p.id, sel.value));
 
       const btn = document.createElement("button");
       btn.className = "primary small";
@@ -2349,8 +2267,7 @@ tent = `${p.name} • ${fmtPlayed(played)}/${max}`;
 
     const sorted = [...t.players].sort((a,b)=>{
       const ga = g.playerStats[a.id]?.goalsTotal || 0;
-      const gb = g.playerStats[b.id]?.goalsTotal
- || 0;
+      const gb = g.playerStats[b.id]?.goalsTotal || 0;
       if(gb !== ga) return gb - ga;
       return a.name.localeCompare(b.name);
     });
@@ -2372,8 +2289,7 @@ if(c.format === "halves"){
       item.className = "pill";
       item.innerHTML = `
         <div>
-          <div style="font-weight:950">${escapeHtml(p.name)}</div
->
+          <div style="font-weight:950">${escapeHtml(p.name)}</div>
           <div class="muted">${subLine}</div>
         </div>
         <div class="right"><div><b>${gameGoals}</b> goals</div></div>
@@ -2396,8 +2312,7 @@ if(c.format === "halves"){
       const dt = new Date(e.t);
       const time = dt.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
       const p = playerById(e.payload.pid);
-      const item = docume
-nt.createElement("div");
+      const item = document.createElement("div");
       item.className = "pill";
       item.innerHTML = `<div>${escapeHtml(p ? p.name : "Unknown")} <span class="muted">(${e.payload.pos})</span></div><div class="muted">${time}</div>`;
       log.appendChild(item);
@@ -2422,8 +2337,7 @@ nt.createElement("div");
 
     wrap.innerHTML = `
       <table>
-    
-    <thead>
+        <thead>
           <tr>
             <th>Period</th>
             <th>${escapeHtml(team)}</th>
@@ -2451,8 +2365,7 @@ nt.createElement("div");
       const a = g.periods[p].assignments || {};
       const line = POSITIONS.map(pos=>{
         const pid = a[pos];
-        return `<span class="kbd">${pos}</span> ${escapeHtml(pid ? (playerById(pid)?
-.name || "—") : "—")}`;
+        return `<span class="kbd">${pos}</span> ${escapeHtml(pid ? (playerById(pid)?.name || "—") : "—")}`;
       }).join(" &nbsp; ");
 
       const section = document.createElement("div");
@@ -2476,8 +2389,7 @@ nt.createElement("div");
     }
   }
 
-  function wireCopyBu
-ttons(){
+  function wireCopyButtons(){
     const g = currentGame();
     document.getElementById("copyPositionsBtn").onclick = ()=>{
       const target = Number(document.getElementById("copyTargetPeriod").value);
@@ -2491,8 +2403,7 @@ ttons(){
     document.getElementById("copyToNextBtn").onclick = ()=>{
       const target = Math.min(totalPeriods(g)-1, g.selectedP + 1);
       if(target === g.selectedP) return alert("Already at last period.");
-      const ok = confirm(`Copy positions from ${periodLabel(g.selectedP)} to
- ${periodLabel(target)}?\nThis will overwrite ${periodLabel(target)} positions.`);
+      const ok = confirm(`Copy positions from ${periodLabel(g.selectedP)} to ${periodLabel(target)}?\nThis will overwrite ${periodLabel(target)} positions.`);
       if(!ok) return;
       copyAssignments(g.selectedP, target);
       renderAll();
@@ -2516,8 +2427,7 @@ ttons(){
 
     if(g.gameEnded){
       endBtn.textContent = "Game ended";
-      endBtn.
-disabled = true;
+      endBtn.disabled = true;
       reopenBtn.style.display = "inline-block";
     } else {
       reopenBtn.style.display = "none";
@@ -2538,8 +2448,7 @@ disabled = true;
     }
 
     const lockIds = ["homePlus","homeMinus","awayPlus","awayMinus","undoBtn","gsPlus","gaPlus","setLiveToEditingBtn","timerResetBtn","timerStartBtn","minutesSelect"];
-    
-for(const id of lockIds){
+    for(const id of lockIds){
       const el = document.getElementById(id);
       if(el) el.disabled = !!g.gameEnded || (id==="minutesSelect" && (g.timerMode==="countup"));
     }
@@ -2564,8 +2473,7 @@ for(const id of lockIds){
     renderTopFields();
     renderTeamTabs();
 
-    // if comp exists but no team yet, prompt a
-dd team
+    // if comp exists but no team yet, prompt add team
     if(!hasTeamsInComp()){
       // hide game sections but keep top card visible
       const hideIds = ["setupCard","periodCard","positionsCard","statsCard","summaryCard","notesCard"];
@@ -2595,8 +2503,7 @@ dd team
 
   /* ===============================
      WIRING
-  ====================
-=========== */
+  =============================== */
   document.getElementById("howtoBtn").addEventListener("click", openHowto);
   document.getElementById("howtoClose").addEventListener("click", closeHowtoAndContinue);
   document.getElementById("howtoOk").addEventListener("click", closeHowtoAndContinue);
@@ -2607,8 +2514,7 @@ dd team
 
   document.getElementById("addCompBtn").addEventListener("click", openCompModal);
   document.getElementById("compClose").addEventListener("click", closeCompModal);
-  document.getElementById("compCreateBtn").addEventLi
-stener("click", createCompetitionFromModal);
+  document.getElementById("compCreateBtn").addEventListener("click", createCompetitionFromModal);
   document.getElementById("compBack").addEventListener("click", (e)=>{ if(e.target.id==="compBack") closeCompModal(); });
 
   document.getElementById("deleteCompBtn").addEventListener("click", deleteCurrentCompetition);
@@ -2621,8 +2527,7 @@ stener("click", createCompetitionFromModal);
   document.getElementById("importPlayersBtn").addEventListener("click", importPlayersIntoNewTeam);
 
   // Players modal
-  document.getElementById("editPlayers
-Btn").addEventListener("click", openPlayersModal);
+  document.getElementById("editPlayersBtn").addEventListener("click", openPlayersModal);
   document.getElementById("genRotBtn").addEventListener("click", generateTournamentRotations);
   document.getElementById("playersClose").addEventListener("click", playersSaveAndClose);
   document.getElementById("playersAddRow").addEventListener("click", playersAddRow);
@@ -2635,8 +2540,7 @@ Btn").addEventListener("click", openPlayersModal);
     const c = currentCompetition();
     c.name = e.target.value;
     saveAll();
-    renderCompTab
-s();
+    renderCompTabs();
   });
 
   document.getElementById("teamName").addEventListener("input", e=>{
@@ -2663,8 +2567,7 @@ s();
   });
   document.getElementById("notes").addEventListener("input", e=>{
     currentGame().notes = e.target.value;
-   
- saveAll();
+    saveAll();
   });
 
   document.getElementById("addGameBtn").addEventListener("click", addGame);
@@ -2684,8 +2587,7 @@ s();
   });
 
   document.getElementById("periodFinishedBtn").addEventListener("click", endOrNextPeriod);
-  document.getElementById("st
-artOTBtn").addEventListener("click", startOT);
+  document.getElementById("startOTBtn").addEventListener("click", startOT);
   document.getElementById("reopenBtn").addEventListener("click", reopenGame);
 
   document.getElementById("minutesSelect").addEventListener("change", e=>{
@@ -2704,8 +2606,7 @@ artOTBtn").addEventListener("click", startOT);
   document.getElementById("timerStartBtn").addEventListener("click", toggleTimer);
   document.getElementById("timerResetBtn").addEventListener("click", resetTimer);
 
-  document.getElementById("homePlus").addEventListener("click", ()=>scoreTeam("home", 
-+1));
+  document.getElementById("homePlus").addEventListener("click", ()=>scoreTeam("home", +1));
   document.getElementById("homeMinus").addEventListener("click", ()=>scoreTeam("home", -1));
   document.getElementById("awayPlus").addEventListener("click", ()=>scoreTeam("away", +1));
   document.getElementById("awayMinus").addEventListener("click", ()=>scoreTeam("away", -1));
@@ -2718,8 +2619,7 @@ artOTBtn").addEventListener("click", startOT);
     const g = currentGame();
     const team = (t.name || "Home").trim() || "Home";
     const opp  = (g.opponent || "Away").trim() || "Away";
-    const lines
- = [];
+    const lines = [];
     lines.push(`${currentCompetition().name} • ${team} • Game ${g.round}`);
     if(g.gameDate) lines.push(`Date: ${g.gameDate}`);
     if((g.roundName||"").trim()) lines.push(`Name: ${g.roundName.trim()}`);
@@ -2738,8 +2638,7 @@ artOTBtn").addEventListener("click", startOT);
     copyText(lines.join("\n"));
   });
 
-  document.getElementById("syncBtn").addEventListener("click", (
-)=>{
+  document.getElementById("syncBtn").addEventListener("click", ()=>{
     document.getElementById("syncText").value = "";
     openSyncModal();
   });
@@ -2758,8 +2657,7 @@ artOTBtn").addEventListener("click", startOT);
   if(!hasSeenHowto()){
     openHowto();
   } else if(!hasCompetitions()){
-    openCompMod
-al();
+    openCompModal();
   }
 
 </script>
