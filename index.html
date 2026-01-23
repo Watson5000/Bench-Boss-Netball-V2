@@ -278,7 +278,7 @@
 <button class="ghost small" id="setLiveToEditingBtn">Set live = editing</button>
 <button class="primary small" id="periodFinishedBtn">Period finished → Next</button>
 <button class="primary small" id="startOTBtn" style="display:none;">Start OT (OT1 + OT2)</button>
-<button class="ghost small danger" id="reopenBtn" style="display:none;">Re-open game</button>
+<button class="ghost small danger" id="reopenBtn">Re-open game</button>
 </div>
 <!-- TIMER -->
 <div class="row" style="margin-top:10px;">
@@ -2472,18 +2472,21 @@ if(c.format === "halves"){
     const reopenBtn = document.getElementById("reopenBtn");
     const startOTBtn = document.getElementById("startOTBtn");
 
+    // OT button only when eligible
     startOTBtn.style.display = canStartOT(g) ? "inline-block" : "none";
 
     const base = basePeriods(c.format);
     const ot1Index = base;
     const ot2Index = base + 1;
 
+    // Always show Re-open (disabled unless the game is ended)
+    reopenBtn.style.display = "inline-block";
+    reopenBtn.disabled = !g.gameEnded;
+
     if(g.gameEnded){
       endBtn.textContent = "Game ended";
       endBtn.disabled = true;
-      reopenBtn.style.display = "inline-block";
     } else {
-      reopenBtn.style.display = "none";
       endBtn.disabled = false;
 
       if(g.otCount === 2 && g.liveP === ot1Index){
