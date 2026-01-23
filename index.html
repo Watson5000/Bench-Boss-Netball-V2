@@ -584,6 +584,21 @@ window.addEventListener('DOMContentLoaded', ()=>{
     }));
   }
 
+  // Normalize players coming from older/newer exports (string names, missing ids, different keys)
+  function normalizePlayers(players){
+    if(!Array.isArray(players)) return [];
+    return players.map((p,i)=>{
+      if(typeof p === "string") p = { name: p };
+      if(!p || typeof p !== "object") p = {};
+      const name = String(p.name || p.playerName || p.player || "").trim() || `Player ${i+1}`;
+      const id = (p.id && typeof p.id === "string") ? p.id : uuid();
+      const pos1 = String(p.pos1 || p.pref1 || p.position1 || p.preferred1 || "").trim();
+      const pos2 = String(p.pos2 || p.pref2 || p.position2 || p.preferred2 || "").trim();
+      return { id, name, pos1, pos2 };
+    });
+  }
+
+
   function initPlayerStats(players){
     const stats = {};
     for(const p of players){
@@ -1821,8 +1836,15 @@ function tournamentMaxHalves(){
     if(!Array.isArray(imported.players) || imported.players.length < MIN_PLAYERS){
       imported.players = t.players;
     }
+
+    // Normalize players for cross-version sync (names/ids/pos keys)
+    imported.players = normalizePlayers(imported.players);
+
     if(imported.players.length > MAX_PLAYERS) imported.players = imported.players.slice(0, MAX_PLAYERS);
 
+    while(imported.players.length < MIN_PLAYERS){
+      imported.players.push({ id: uuid(), name: `Player ${imported.players.length+1}`, pos1:"", pos2:"" });
+    }
     // ensure games exist
     if(!Array.isArray(imported.games) || !imported.games.length){
       imported.games = [newEmptyGame(1, imported.players, c.format)];
@@ -2317,28 +2339,31 @@ This will also remove them from all on-court selections + stats for this team.`)
     const t = currentTeam();
     const g = currentGame();
     const list = document.getElementById("statsList");
+    if(!t || !g || !list) return;
     list.innerHTML = "";
 
     const sorted = [...t.players].sort((a,b)=>{
-      const ga = g.playerStats[a.id]?.goalsTotal || 0;
-      const gb = g.playerStats[b.id]?.goalsTotal || 0;
+      const ga = g.playerStats?.[a.id]?.goalsTotal || 0;
+      const gb = g.playerStats?.[b.id]?.goalsTotal || 0;
       if(gb !== ga) return gb - ga;
-      return a.name.localeCompare(b.name);
+      return String(a.name||'').localeCompare(String(b.name||''));
     });
 
     const max = basePeriods(c.format);
 
     sorted.forEach(p=>{
-      const gameGoals = g.playerStats[p.id]?.goalsTotal || 0;
+      const gameGoals = g.playerStats?.[p.id]?.goalsTotal || 0;
       const playedThisGame = regulationPeriodsPlayedHybrid(g, p.id);
-	  let subLine = `Reg periods on court: ${fmtPlayed(playedThisGame)}/${max}`;
 
-if(c.format === "halves"){
-  const tourTotal = tournamentTotalHalvesForPlayer(p.id);
-  const tourMax = tournamentMaxHalves();
-  const tourGoals = tournamentTotalGoalsForPlayer(p.id);
-  subLine = `This game: ${fmtPlayed(playedThisGame)}/${max} • Tournament total: ${fmtPlayed(tourTotal)}/${tourMax}`;
-}
+      let subLine = `Reg periods on court: ${fmtPlayed(playedThisGame)}/${max}`;
+      let tourGoals = 0;
+
+      if(c.format === "halves"){
+        const tourTotal = tournamentTotalHalvesForPlayer(p.id);
+        const tourMax = tournamentMaxHalves();
+        tourGoals = tournamentTotalGoalsForPlayer(p.id);
+        subLine = `This game: ${fmtPlayed(playedThisGame)}/${max} • Tournament halves: ${fmtPlayed(tourTotal)}/${tourMax}`;
+      }
 
       const item = document.createElement("div");
       item.className = "pill";
@@ -2347,7 +2372,10 @@ if(c.format === "halves"){
           <div style="font-weight:950">${escapeHtml(p.name)}</div>
           <div class="muted">${subLine}</div>
         </div>
-        <div class="right"><div><b>${gameGoals}</b> goals</div>${(c.format==="halves") ? `<div class="muted">Tournament: ${tourGoals}</div>` : ``}</div>
+        <div class="right">
+          <div><b>${gameGoals}</b> goals</div>
+          ${(c.format==="halves") ? `<div class="muted">Tournament: ${tourGoals}</div>` : ``}
+        </div>
       `;
       list.appendChild(item);
     });
