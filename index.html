@@ -774,6 +774,9 @@ window.addEventListener('DOMContentLoaded', ()=>{
 
           if(g.selectedP == null) g.selectedP = 0;
           if(g.liveP == null) g.liveP = 0;
+          // clamp period pointers (prevents broken buttons after imports or format changes)
+          g.selectedP = Math.max(0, Math.min(g.selectedP, g.periods.length-1));
+          g.liveP     = Math.max(0, Math.min(g.liveP,     g.periods.length-1));
 
           if(g.baseMinutes == null) g.baseMinutes = (c.format==="halves") ? TOURN_DEFAULT : LEAGUE_DEFAULT;
           if(g.timerRunning == null) g.timerRunning = false;
