@@ -1884,6 +1884,8 @@ function tournamentMaxHalves(){
   function initRollups(){
     const cards = document.querySelectorAll(".card");
     cards.forEach(card=>{
+      if(card.id==="periodCard") return; // keep Period controls visible
+
       if(card.classList.contains("rollInit")) return;
       card.classList.add("rollInit");
 
